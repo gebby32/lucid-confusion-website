@@ -13,6 +13,12 @@ body {
   background-image: url("bg.webp");
   background-position: center;
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: cover;
 }
+
+/* Show the complete image without cropping on mobile */
+@media (max-width: 768px) {
+  body {
+    background-size: contain;
+  }
 }
