@@ -13,14 +13,5 @@ body {
   background-image: url("bg.webp");
   background-position: center;
   background-repeat: no-repeat;
-
-  /* Portrait: show the whole image; bars are allowed */
   background-size: contain;
-}
-
-/* Landscape on desktop or mobile: stretch to fill the screen */
-@media (orientation: landscape) {
-  body {
-    background-size: 100% 100%;
-  }
 }
