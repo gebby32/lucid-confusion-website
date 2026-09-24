@@ -1,0 +1,97 @@
+:root {
+  color-scheme: dark;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #eeeeef;
+  background: #0d0d11;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: #0d0d11;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 50% 0, rgba(113, 17, 150, 0.24), transparent 30rem),
+    #0d0d11;
+}
+
+.legal-page {
+  width: min(100% - 2rem, 48rem);
+  margin: 0 auto;
+  padding: 3rem 0 4rem;
+}
+
+.home-link {
+  display: inline-block;
+  margin-bottom: 2rem;
+  color: #a5ff9c;
+  font-size: 0.875rem;
+  text-decoration: none;
+}
+
+.home-link:hover,
+.home-link:focus-visible,
+.legal-page a:hover,
+.legal-page a:focus-visible {
+  text-decoration: underline;
+}
+
+h1,
+h2 {
+  color: #fff;
+  line-height: 1.2;
+}
+
+h1 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(2rem, 7vw, 3rem);
+  text-shadow: 0 0 18px rgba(67, 255, 67, 0.18);
+}
+
+h2 {
+  margin: 2.25rem 0 0.75rem;
+  font-size: 1.25rem;
+}
+
+p,
+li {
+  color: #d1d1d6;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+ul {
+  padding-left: 1.4rem;
+}
+
+.effective-date {
+  margin-bottom: 2rem;
+  color: #c78cff;
+}
+
+.legal-page a {
+  color: #a5ff9c;
+}
+
+.contact {
+  font-style: normal;
+  line-height: 1.75;
+}
+
+@media (max-width: 36rem) {
+  .legal-page {
+    width: min(100% - 2rem, 48rem);
+    padding-top: 1.5rem;
+  }
+}
