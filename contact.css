@@ -1,0 +1,16 @@
+#crt-content.contact-view { width: min(96vw, 112svh); background: transparent; border-radius: 0; pointer-events: auto; }
+#contact-frame { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+#contact-panel { position: absolute; inset: 14% 5.5%; overflow: auto; overscroll-behavior: contain; touch-action: pan-y pinch-zoom; padding: clamp(12px, 2vw, 26px); color: #39ff6a; text-align: left; font: clamp(16px, 1.6vw, 22px)/1.4 VT323, "Share Tech Mono", "IBM Plex Mono", monospace; scrollbar-width: thin; scrollbar-color: #39ff6a66 #071b1b; }
+#contact-panel:focus { outline: none; }
+#contact-fields { border: 0; padding: 0; margin: 0; display: grid; gap: clamp(10px, 1.5vh, 16px); min-width: 0; }
+.contact-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+#contact-panel label { display: block; min-width: 0; text-shadow: 0 0 3px #39ff6a30; }
+#contact-panel input:not([type="hidden"]):not([type="checkbox"]), #contact-panel textarea { display: block; width: 100%; margin-top: 5px; padding: 9px 12px; background: #fff; color: #15191a; border: 2px solid #b3bfc0; border-radius: 4px; font: max(16px, 1em)/1.35 VT323, "Share Tech Mono", "IBM Plex Mono", monospace; color-scheme: light; }
+#contact-panel textarea { resize: vertical; min-height: 95px; }
+#contact-panel button { padding: 11px 18px; border: 2px solid #a5c3ad; border-radius: 5px; background: linear-gradient(#e1e8e3, #8aaf93 48%, #246137 51%, #103e20); color: #effff2; font: bold 1em/1.3 VT323, "Share Tech Mono", "IBM Plex Mono", monospace; text-shadow: 0 1px 2px #000; cursor: pointer; }
+#contact-panel button:disabled { opacity: .6; cursor: wait; }
+#crt-content #contact-panel p { font: inherit; line-height: 1.5; text-shadow: none; margin: 12px 0 20px; }
+#contact-failure { padding-top: 18px; }
+#contact-success { padding-block: 12%; text-align: center; }
+#contact-panel strong { font-size: 1.1em; }
+@media (max-width: 600px) { .contact-pair { grid-template-columns: 1fr; gap: 10px; } }

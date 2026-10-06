@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from './assets/vendor/three/loaders/GLTFLoader.js';
 import { CabinetScreen, zoomToScreen } from './assets/arcade/screen-controller.js';
+import './contact.js';
 
 // Set href to a real destination when each section is ready. No invented routes.
 const cabinets = [
@@ -33,6 +34,26 @@ let hoverPoint = null, litIndex = null, focusedScreen = null, cancelZoom = null;
 let lastMonitorTap = null, zoomTransition = false;
 let view = 'carousel', monitorTapTimer = null;
 const crtContent = document.querySelector('#crt-content');
+const aboutStory = document.querySelector('#about-story');
+const contactPanel = document.querySelector('#contact-panel');
+// Reading gestures belong to the HTML story; double activation on the frame
+// retains the one-level return gesture without interrupting text selection.
+let framePress = null;
+crtContent.addEventListener('pointerdown', event => {
+  framePress = !aboutStory.contains(event.target) && !contactPanel.contains(event.target) && event.isPrimary && event.button === 0
+    ? { x: event.clientX, y: event.clientY } : null;
+});
+crtContent.addEventListener('pointerup', event => {
+  const press = framePress;
+  framePress = null;
+  if (!press || view !== 'crt' || zoomTransition || aboutStory.contains(event.target) || contactPanel.contains(event.target)
+    || Math.hypot(event.clientX - press.x, event.clientY - press.y) > 7) return;
+  const tap = { time: event.timeStamp, x: event.clientX, y: event.clientY, type: event.pointerType };
+  if (lastMonitorTap && tap.type === lastMonitorTap.type && tap.time - lastMonitorTap.time < 400
+    && Math.hypot(tap.x - lastMonitorTap.x, tap.y - lastMonitorTap.y) < 28) backOneLevel();
+  else lastMonitorTap = tap;
+});
+crtContent.addEventListener('pointercancel', () => { framePress = null; clearMonitorTap(); });
 
 function clearMonitorTap() {
   clearTimeout(monitorTapTimer);
@@ -70,6 +91,8 @@ function changeZoomView(next) {
   view = next;
   zoomTransition = true;
   crtContent.hidden = true;
+  if (aboutStory.contains(document.activeElement)) stage.focus({ preventScroll: true });
+  if (contactPanel.contains(document.activeElement)) stage.focus({ preventScroll: true });
   stage.parentElement.classList.toggle('crt-open', view === 'crt');
   camera.aspect = stage.clientWidth / stage.clientHeight;
   renderer.setSize(stage.clientWidth, stage.clientHeight);
@@ -88,9 +111,28 @@ function changeZoomView(next) {
     camera.zoom = 1;
     camera.setViewOffset(stage.clientWidth, stage.clientHeight, 0, pose.offsetY, stage.clientWidth, stage.clientHeight);
     if (view === 'crt') {
+      const isAbout = cabinets[active].id === 'about-us';
+      const isContact = cabinets[active].id === 'contact-us';
+      crtContent.classList.toggle('about-view', isAbout);
+      crtContent.classList.toggle('contact-view', isContact);
+      document.querySelector('#crt-title').hidden = isAbout || isContact;
+      document.querySelector('#crt-placeholder').hidden = isAbout || isContact;
+      document.querySelector('#contact-frame').hidden = !isContact;
+      contactPanel.hidden = !isContact;
+      document.querySelector('#about-frame').hidden = !isAbout;
+      aboutStory.hidden = !isAbout;
       document.querySelector('#crt-title').textContent = cabinets[active].name.toUpperCase();
       crtContent.setAttribute('aria-label', `${cabinets[active].name} interface`);
       crtContent.hidden = false;
+      if (isAbout) {
+        aboutStory.scrollTop = 0;
+        aboutStory.focus({ preventScroll: true });
+        announcement.textContent = 'About Us. Scroll inside the monitor to read our story.';
+      }
+      if (isContact) {
+        contactPanel.focus({ preventScroll: true });
+        announcement.textContent = 'Contact Us. Name, Email, and Message are required.';
+      }
     }
     invalidate();
   } });
@@ -185,6 +227,14 @@ document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && focusedScreen) { event.preventDefault(); backOneLevel(); }
 });
 function showScreenMessage(screen) {
+  if (cabinets[active].id === 'contact-us') {
+    showContactTeaser(screen);
+    return;
+  }
+  if (cabinets[active].id === 'about-us') {
+    showAboutTeaser(screen);
+    return;
+  }
   const canvas = document.createElement('canvas');
   canvas.width = 1024; canvas.height = 768;
   const context = canvas.getContext('2d');
@@ -196,6 +246,64 @@ function showScreenMessage(screen) {
   context.font = '44px Arial'; context.fillText('Stay tuned!', 512, 458);
   screen.setCanvas(canvas);
   announcement.textContent = `${cabinets[active].name}. Coming soon. Stay tuned!`;
+}
+async function showContactTeaser(screen) {
+  const frame = document.querySelector('#contact-frame');
+  try {
+    await frame.decode();
+    if (focusedScreen !== screen) return;
+    const canvas = document.createElement('canvas');
+    canvas.width = frame.naturalWidth; canvas.height = frame.naturalHeight;
+    const context = canvas.getContext('2d');
+    context.drawImage(frame, 0, 0);
+    context.textAlign = 'center'; context.fillStyle = '#39FF6A';
+    context.shadowColor = '#39ff6a30'; context.shadowBlur = 3;
+    const font = getComputedStyle(contactPanel).fontFamily;
+    const line = (text, y, size) => {
+      context.font = `${size}px ${font}`;
+      while (context.measureText(text).width > canvas.width * 0.86) context.font = `${--size}px ${font}`;
+      context.fillText(text, canvas.width / 2, y);
+    };
+    line('WANT TO GET IN TOUCH?', 325, 68);
+    line('Comments? Concerns? Complaints...', 475, 60);
+    line('Custom game or software requests?', 550, 60);
+    line('Hit me up!', 625, 64);
+    line('CLICK THE SCREEN TO CONTINUE', 790, 64);
+    screen.setCanvas(canvas);
+    if (view === 'cabinet') announcement.textContent = 'WANT TO GET IN TOUCH? Comments? Concerns? Complaints... Custom game or software requests? Hit me up! CLICK THE SCREEN TO CONTINUE';
+    invalidate();
+  } catch (error) { console.error('Unable to load the Contact Us teaser frame', error); }
+}
+async function showAboutTeaser(screen) {
+  const frame = document.querySelector('#about-frame');
+  try {
+    await frame.decode();
+    if (focusedScreen !== screen) return;
+    const canvas = document.createElement('canvas');
+    canvas.width = frame.naturalWidth; canvas.height = frame.naturalHeight;
+    const context = canvas.getContext('2d');
+    context.drawImage(frame, 0, 0);
+    context.textAlign = 'center';
+    context.fillStyle = '#39FF6A';
+    context.shadowColor = '#39ff6a30'; context.shadowBlur = 3;
+    const font = getComputedStyle(aboutStory).fontFamily;
+    const center = canvas.width / 2;
+    const line = (text, y, size) => {
+      context.font = `${size}px ${font}`;
+      while (context.measureText(text).width > canvas.width * 0.86) context.font = `${--size}px ${font}`;
+      context.fillText(text, center, y);
+    };
+    line('A BRIEF, MOSTLY TRUE HISTORY OF', 325, 64);
+    line('LUCID CONFUSION CREATIONS', 403, 64);
+    line('Computers. Video games. Europe. Shamans.', 535, 60);
+    line('Twitch. Questionable decisions. Software.', 605, 60);
+    line('CLICK THE SCREEN TO READ', 775, 66);
+    screen.setCanvas(canvas);
+    if (view === 'cabinet') announcement.textContent = 'A BRIEF, MOSTLY TRUE HISTORY OF LUCID CONFUSION CREATIONS. Computers. Video games. Europe. Shamans. Twitch. Questionable decisions. Software. CLICK THE SCREEN TO READ';
+    invalidate();
+  } catch (error) {
+    console.error('Unable to load the About Us teaser frame', error);
+  }
 }
 function updateSelection() { active = wrap(Math.round(-angle / step)); }
 function announceSelection() { stage.setAttribute('aria-label', `${cabinets[active].name} selected. Drag to rotate, use arrow keys to choose, and Enter to open.`); }

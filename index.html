@@ -7,6 +7,7 @@
   <meta name="description" content="Step inside the Lucid Confusion Creations arcade.">
   <title>Lucid Confusion Creations</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="contact.css">
   <link rel="icon" type="image/png" href="favicon.png">
   <script type="importmap">{"imports":{"three":"./assets/vendor/three/three.module.min.js"}}</script>
   <script type="module" src="arcade.js"></script>
@@ -17,7 +18,57 @@
     <div id="arcade" tabindex="0" role="region" aria-roledescription="carousel" aria-label="Nine arcade cabinets. Drag to rotate, use arrow keys to choose, and Enter to open."></div>
     <section id="crt-content" aria-label="Cabinet interface" hidden>
       <h2 id="crt-title"></h2>
-      <p><strong>Coming soon.</strong><br>Stay tuned!</p>
+      <p id="crt-placeholder"><strong>Coming soon.</strong><br>Stay tuned!</p>
+      <img id="about-frame" src="assets/arcade/art/Cyberpunk%20About%20Us%20Monitor%20Frame.png" alt="" aria-hidden="true" draggable="false" hidden>
+      <article id="about-story" tabindex="0" aria-labelledby="about-heading" hidden>
+        <h2 id="about-heading" class="visually-hidden">About Us — Lucid Confusion Creations</h2>
+        <p>Long before there was Lucid Confusion Creations, there was a young Gebby Confusion: computer nerd, video-game obsessive, amateur philosopher, and compulsive investigator of anything with screws in it.</p>
+        <p>He spent much of his adolescence staring at screens, playing games, taking electronics apart, figuring out how they worked, and putting them back together perfectly—usually improved.</p>
+        <p>Sometime in the mid-to-late 1990s, Gebby assembled what could generously be called a Frankencomputer: miscellaneous RAM, a 386 processor, and a hard drive he had requested for his birthday that was hilariously too large and too fast for the rest of the machine. He hauled the contraption to his buddy’s dad’s garage, where they attempted to install Windows 95.</p>
+        <p class="about-emphasis">It took 24 hours.</p>
+        <p>But it worked. Once it finally booted, it was glorious. Windows 3.1 had officially been defeated.</p>
+        <p>His formative years also included plenty of meditation, entheogens, and occasional consultation with shamans. Exactly how much any of this contributed to his eventual career in software development remains scientifically inconclusive.</p>
+        <p>Eventually, adulthood arrived and delivered what adulthood so often does:</p>
+        <p class="about-emphasis">A sales job.</p>
+        <p>It paid the bills. It taught valuable lessons. It also began slowly devouring his soul.</p>
+        <p class="about-emphasis">So he quit.</p>
+        <p>What followed was roughly a decade of backpacking around Europe, collecting stories, meeting strange people, wandering into places he probably was not supposed to be, and maintaining only the loosest possible relationship with conventional adulthood. Eventually, even wandering around Europe got boring.</p>
+        <p>So Gebby returned home and demonstrated tremendous financial restraint by spending essentially every penny he had building a Twitch streaming setup.</p>
+        <p>Against all reasonable expectations, people actually watched.</p>
+        <p>More than 2,000 followers later, somewhere amid the games, chaos, conversations, questionable decisions, and increasingly elaborate nonsense, he picked up a new name:</p>
+        <p class="about-emphasis">Lucid.</p>
+        <p>Then came the inevitable plot twist.</p>
+        <p>After a colorful streaming career featuring creativity, community, poor impulse control, and what official documentation might describe as numerous serious Terms of Service violations, Lucid’s Twitch adventure came to an abrupt conclusion.</p>
+        <p>There was nowhere left to go but forward. And so, from the smoldering wreckage of one questionable life decision came another:</p>
+        <p class="about-emphasis">Lucid Confusion Creations was born.</p>
+        <p>Today, Lucid spends his days building the things he always wanted to exist: retro handheld games, retro arcade games, modern video games, strange interactive experiments, and—occasionally—software that is actually useful.</p>
+        <p>His flagship product, OmniStash, is a consumables intelligence engine designed to help people keep track of what they have, monitor expiration dates, understand what they are using, know when they are going to need more, and build shopping lists along the way. It’s pretty cool. Worth checking out.</p>
+        <p>And that is only the beginning. There are more games coming. More software. More experiments. More ridiculous ideas being transformed into things that probably have no business actually existing.</p>
+        <p class="about-foosball">Can you believe nobody has made a commercially available one-player foosball table yet?</p>
+        <p>Which, around here, is generally considered a very good reason to build one.</p>
+        <p class="about-signature">Lucid Confusion Creations</p>
+        <p class="about-slogan">Because Software Does Not Need to Be Boring.</p>
+      </article>
+      <img id="contact-frame" src="assets/arcade/art/Futuristic%20Contact%20Us%20Interface.png" alt="" aria-hidden="true" draggable="false" hidden>
+      <section id="contact-panel" tabindex="-1" aria-labelledby="contact-heading" hidden>
+        <h2 id="contact-heading" class="visually-hidden">Contact Us</h2>
+        <form id="contact-form" action="https://api.web3forms.com/submit" method="post">
+          <input type="hidden" name="access_key" value="4ccf8fb4-c007-4690-aa85-470e86b88df0">
+          <input type="hidden" name="from_name" value="Lucid Confusion Creations">
+          <input type="checkbox" name="botcheck" id="contact-botcheck" tabindex="-1" aria-hidden="true" style="display:none">
+          <fieldset id="contact-fields">
+            <div class="contact-pair">
+              <label for="contact-name">Name <span aria-hidden="true">*</span><input id="contact-name" name="name" autocomplete="name" maxlength="150" required></label>
+              <label for="contact-email">Email <span aria-hidden="true">*</span><input id="contact-email" name="email" type="email" autocomplete="email" maxlength="254" required></label>
+            </div>
+            <label for="contact-subject">Subject<input id="contact-subject" name="subject" maxlength="200"></label>
+            <label for="contact-message">Message <span aria-hidden="true">*</span><textarea id="contact-message" name="message" rows="4" maxlength="10000" required></textarea></label>
+            <button id="contact-send" type="submit">SEND MESSAGE</button>
+          </fieldset>
+        </form>
+        <div id="contact-failure" role="alert" hidden><strong>TRANSMISSION FAILED.</strong><p>Please try again.</p></div>
+        <div id="contact-success" role="status" tabindex="-1" hidden><strong>MESSAGE TRANSMITTED.</strong><p>Thanks for reaching out.<br>I’ll get back to you soon.</p><button id="contact-another" type="button">SEND ANOTHER MESSAGE</button></div>
+      </section>
     </section>
     <div class="loading" id="loading" role="status">Opening the arcade… <span id="load-count">0 / 9</span></div>
     <img class="construction" src="assets/arcade/art/under%20construction.%20this%20one..png" alt="Website under construction" draggable="false">
