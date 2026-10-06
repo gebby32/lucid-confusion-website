@@ -1,16 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucid Confusion Creations</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="favicon.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#130b22">
+  <meta name="description" content="Step inside the Lucid Confusion Creations arcade.">
+  <title>Lucid Confusion Creations</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <script type="importmap">{"imports":{"three":"./assets/vendor/three/three.module.min.js"}}</script>
+  <script type="module" src="arcade.js"></script>
 </head>
 <body>
-    <footer class="site-footer" aria-label="Legal">
-        <a href="/privacy">Privacy Policy</a>
-        <a href="/terms">Terms of Use</a>
-    </footer>
+  <main class="arcade-room" aria-label="Lucid Confusion Creations arcade">
+    <h1 class="brand"><img src="assets/arcade/art/This%20Banner.png" alt="Lucid Confusion Creations" fetchpriority="high"></h1>
+    <div id="arcade" tabindex="0" role="region" aria-roledescription="carousel" aria-label="Nine arcade cabinets. Drag to rotate, use arrow keys to choose, and Enter to open."></div>
+    <section id="crt-content" aria-label="Cabinet interface" hidden>
+      <h2 id="crt-title"></h2>
+      <p><strong>Coming soon.</strong><br>Stay tuned!</p>
+    </section>
+    <div class="loading" id="loading" role="status">Opening the arcade… <span id="load-count">0 / 9</span></div>
+    <img class="construction" src="assets/arcade/art/under%20construction.%20this%20one..png" alt="Website under construction" draggable="false">
+    <img class="construction construction-left" src="assets/arcade/art/Friendly%20Sloth%20Website%20Construction%20Sign-1.png" alt="Website under construction" draggable="false">
+    <p id="announcement" class="announcement" role="status" aria-live="polite"></p>
+    <button id="screen-return" class="screen-return" type="button" hidden>Back to arcade</button>
+    <noscript><p class="no-script">Enable JavaScript to explore the 3D arcade. Our <a href="privacy/">Privacy Policy</a> and <a href="terms/">Terms of Use</a> are still available.</p></noscript>
+  </main>
+  <footer class="site-footer" aria-label="Legal"><a href="privacy/">Privacy Policy</a><a href="terms/">Terms of Use</a></footer>
 </body>
 </html>
