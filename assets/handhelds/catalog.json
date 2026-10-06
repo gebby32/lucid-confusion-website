@@ -1,0 +1,162 @@
+[
+  {
+    "id": "bungee-pug",
+    "title": "Bungee-Pug",
+    "image": "./assets/handhelds/bungee-pug/thumbnail.webp",
+    "width": 480,
+    "height": 360,
+    "url": "./assets/handhelds/bungee-pug/index.html"
+  },
+  {
+    "id": "chrome-possum",
+    "title": "Chrome Possum",
+    "image": "./assets/handhelds/chrome-possum/thumbnail.webp",
+    "width": 275,
+    "height": 360,
+    "url": "./assets/handhelds/chrome-possum/index.html"
+  },
+  {
+    "id": "colonel-pool-noodle",
+    "title": "Colonel Pool Noodle",
+    "image": "./assets/handhelds/colonel-pool-noodle/thumbnail.webp",
+    "width": 480,
+    "height": 206,
+    "url": "./assets/handhelds/colonel-pool-noodle/index.html"
+  },
+  {
+    "id": "dont-get-caught",
+    "title": "Don't Get Caught",
+    "image": "./assets/handhelds/dont-get-caught/thumbnail.webp",
+    "width": 480,
+    "height": 240,
+    "url": "./assets/handhelds/dont-get-caught/index.html"
+  },
+  {
+    "id": "fructose",
+    "title": "FRUCTOSE",
+    "image": "./assets/handhelds/fructose/thumbnail.webp",
+    "width": 480,
+    "height": 240,
+    "url": "./assets/handhelds/fructose/index.html"
+  },
+  {
+    "id": "gravy-knuckles",
+    "title": "Gravy Knuckles",
+    "image": "./assets/handhelds/gravy-knuckles/thumbnail.webp",
+    "width": 480,
+    "height": 360,
+    "url": "./assets/handhelds/gravy-knuckles/index.html"
+  },
+  {
+    "id": "gutter-comet",
+    "title": "Gutter Comet",
+    "image": "./assets/handhelds/gutter-comet/thumbnail.webp",
+    "width": 480,
+    "height": 360,
+    "url": "./assets/handhelds/gutter-comet/index.html"
+  },
+  {
+    "id": "lint-trap",
+    "title": "Lint-Trap",
+    "image": "./assets/handhelds/lint-trap/thumbnail.webp",
+    "width": 480,
+    "height": 360,
+    "url": "./assets/handhelds/lint-trap/index.html"
+  },
+  {
+    "id": "macrame",
+    "title": "Macramé",
+    "image": "./assets/handhelds/macrame/thumbnail.webp",
+    "width": 480,
+    "height": 320,
+    "url": "./assets/handhelds/macrame/index.html"
+  },
+  {
+    "id": "night-pickle",
+    "title": "Night Pickle",
+    "image": "./assets/handhelds/night-pickle/thumbnail.webp",
+    "width": 480,
+    "height": 360,
+    "url": "./assets/handhelds/night-pickle/index.html"
+  },
+  {
+    "id": "sewer-halo",
+    "title": "Sewer Halo",
+    "image": "./assets/handhelds/sewer-halo/thumbnail.webp",
+    "width": 270,
+    "height": 360,
+    "url": "./assets/handhelds/sewer-halo/index.html"
+  },
+  {
+    "id": "slothman",
+    "title": "SlothMan",
+    "image": "./assets/handhelds/slothman/thumbnail.webp",
+    "width": 480,
+    "height": 360,
+    "url": "./assets/handhelds/slothman/index.html"
+  },
+  {
+    "id": "static-weasel",
+    "title": "Static Weasel",
+    "image": "./assets/handhelds/static-weasel/thumbnail.webp",
+    "width": 288,
+    "height": 360,
+    "url": "./assets/handhelds/static-weasel/index.html"
+  },
+  {
+    "id": "super-sloth-man-2",
+    "title": "Super Sloth Man 2",
+    "image": "./assets/handhelds/super-sloth-man-2/thumbnail.webp",
+    "width": 480,
+    "height": 360,
+    "url": "./assets/handhelds/super-sloth-man-2/index.html"
+  },
+  {
+    "id": "super-speed-sloth",
+    "title": "Steve - The Super Speed Sloth",
+    "image": "./assets/handhelds/super-speed-sloth/thumbnail.webp",
+    "width": 480,
+    "height": 360,
+    "url": "./assets/handhelds/super-speed-sloth/index.html"
+  },
+  {
+    "id": "tectonic-terry",
+    "title": "Tectonic Terry",
+    "image": "./assets/handhelds/tectonic-terry/thumbnail.webp",
+    "width": 480,
+    "height": 275,
+    "url": "./assets/handhelds/tectonic-terry/index.html"
+  },
+  {
+    "id": "the-caulker",
+    "title": "The Caulker",
+    "image": "./assets/handhelds/the-caulker/thumbnail.webp",
+    "width": 480,
+    "height": 360,
+    "url": "./assets/handhelds/the-caulker/index.html"
+  },
+  {
+    "id": "the-circus",
+    "title": "Pink Rampage",
+    "image": "./assets/handhelds/the-circus/thumbnail.webp",
+    "width": 480,
+    "height": 360,
+    "url": "./assets/handhelds/the-circus/index.html"
+  },
+  {
+    "id": "the-moss-hammer",
+    "title": "Moss Hammer",
+    "image": "./assets/handhelds/the-moss-hammer/thumbnail.webp",
+    "width": 270,
+    "height": 360,
+    "url": "./assets/handhelds/the-moss-hammer/index.html"
+  },
+  {
+    "id": "the-nudibranch",
+    "title": "The Nudibranch",
+    "image": "./assets/handhelds/the-nudibranch/thumbnail.webp",
+    "width": 480,
+    "height": 360,
+    "url": "./assets/handhelds/the-nudibranch/index.html"
+  }
+]

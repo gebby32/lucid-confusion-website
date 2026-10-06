@@ -8,6 +8,7 @@
   <title>Lucid Confusion Creations</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="contact.css">
+  <link rel="stylesheet" href="handheld.css">
   <link rel="icon" type="image/png" href="favicon.png">
   <script type="importmap">{"imports":{"three":"./assets/vendor/three/three.module.min.js"}}</script>
   <script type="module" src="arcade.js"></script>
@@ -69,6 +70,11 @@
         <div id="contact-failure" role="alert" hidden><strong>TRANSMISSION FAILED.</strong><p>Please try again.</p></div>
         <div id="contact-success" role="status" tabindex="-1" hidden><strong>MESSAGE TRANSMITTED.</strong><p>Thanks for reaching out.<br>I’ll get back to you soon.</p><button id="contact-another" type="button">SEND ANOTHER MESSAGE</button></div>
       </section>
+      <img id="handheld-frame" alt="" aria-hidden="true" draggable="false" hidden>
+      <section id="handheld-panel" aria-label="Retro Handheld Arcade games" hidden>
+        <div id="handheld-grid" tabindex="-1" aria-label="Choose a handheld game"></div>
+        <div id="handheld-status" role="status" hidden></div>
+      </section>
     </section>
     <div class="loading" id="loading" role="status">Opening the arcade… <span id="load-count">0 / 9</span></div>
     <img class="construction" src="assets/arcade/art/under%20construction.%20this%20one..png" alt="Website under construction" draggable="false">
@@ -78,5 +84,9 @@
     <noscript><p class="no-script">Enable JavaScript to explore the 3D arcade. Our <a href="privacy/">Privacy Policy</a> and <a href="terms/">Terms of Use</a> are still available.</p></noscript>
   </main>
   <footer class="site-footer" aria-label="Legal"><a href="privacy/">Privacy Policy</a><a href="terms/">Terms of Use</a></footer>
+  <section id="handheld-player" aria-label="Handheld game" hidden>
+    <div class="handheld-toolbar"><button id="handheld-back" type="button">Back to Arcade</button><span id="handheld-fullscreen-status" role="status"></span></div>
+    <div id="handheld-game-viewport"></div>
+  </section>
 </body>
 </html>

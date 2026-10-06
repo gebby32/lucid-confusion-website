@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from './assets/vendor/three/loaders/GLTFLoader.js';
 import { CabinetScreen, zoomToScreen } from './assets/arcade/screen-controller.js';
 import './contact.js';
+import { handheldTeaser, showHandhelds, hideHandhelds, backToHandhelds, isHandheldPlaying } from './handheld.js';
 
 // Set href to a real destination when each section is ready. No invented routes.
 const cabinets = [
@@ -36,17 +37,18 @@ let view = 'carousel', monitorTapTimer = null;
 const crtContent = document.querySelector('#crt-content');
 const aboutStory = document.querySelector('#about-story');
 const contactPanel = document.querySelector('#contact-panel');
+const handheldPanel = document.querySelector('#handheld-panel');
 // Reading gestures belong to the HTML story; double activation on the frame
 // retains the one-level return gesture without interrupting text selection.
 let framePress = null;
 crtContent.addEventListener('pointerdown', event => {
-  framePress = !aboutStory.contains(event.target) && !contactPanel.contains(event.target) && event.isPrimary && event.button === 0
+  framePress = !aboutStory.contains(event.target) && !contactPanel.contains(event.target) && !handheldPanel.contains(event.target) && event.isPrimary && event.button === 0
     ? { x: event.clientX, y: event.clientY } : null;
 });
 crtContent.addEventListener('pointerup', event => {
   const press = framePress;
   framePress = null;
-  if (!press || view !== 'crt' || zoomTransition || aboutStory.contains(event.target) || contactPanel.contains(event.target)
+  if (!press || view !== 'crt' || zoomTransition || aboutStory.contains(event.target) || contactPanel.contains(event.target) || handheldPanel.contains(event.target)
     || Math.hypot(event.clientX - press.x, event.clientY - press.y) > 7) return;
   const tap = { time: event.timeStamp, x: event.clientX, y: event.clientY, type: event.pointerType };
   if (lastMonitorTap && tap.type === lastMonitorTap.type && tap.time - lastMonitorTap.time < 400
@@ -93,6 +95,8 @@ function changeZoomView(next) {
   crtContent.hidden = true;
   if (aboutStory.contains(document.activeElement)) stage.focus({ preventScroll: true });
   if (contactPanel.contains(document.activeElement)) stage.focus({ preventScroll: true });
+  if (handheldPanel.contains(document.activeElement)) stage.focus({ preventScroll: true });
+  if (next !== 'crt') hideHandhelds();
   stage.parentElement.classList.toggle('crt-open', view === 'crt');
   camera.aspect = stage.clientWidth / stage.clientHeight;
   renderer.setSize(stage.clientWidth, stage.clientHeight);
@@ -113,10 +117,14 @@ function changeZoomView(next) {
     if (view === 'crt') {
       const isAbout = cabinets[active].id === 'about-us';
       const isContact = cabinets[active].id === 'contact-us';
+      const isHandheld = cabinets[active].id === 'retro-handheld';
       crtContent.classList.toggle('about-view', isAbout);
       crtContent.classList.toggle('contact-view', isContact);
-      document.querySelector('#crt-title').hidden = isAbout || isContact;
-      document.querySelector('#crt-placeholder').hidden = isAbout || isContact;
+      crtContent.classList.toggle('handheld-view', isHandheld);
+      document.querySelector('#handheld-frame').hidden = !isHandheld;
+      handheldPanel.hidden = !isHandheld;
+      document.querySelector('#crt-title').hidden = isAbout || isContact || isHandheld;
+      document.querySelector('#crt-placeholder').hidden = isAbout || isContact || isHandheld;
       document.querySelector('#contact-frame').hidden = !isContact;
       contactPanel.hidden = !isContact;
       document.querySelector('#about-frame').hidden = !isAbout;
@@ -124,6 +132,10 @@ function changeZoomView(next) {
       document.querySelector('#crt-title').textContent = cabinets[active].name.toUpperCase();
       crtContent.setAttribute('aria-label', `${cabinets[active].name} interface`);
       crtContent.hidden = false;
+      if (isHandheld) {
+        showHandhelds();
+        announcement.textContent = 'Retro Handheld Arcade. Choose a game.';
+      }
       if (isAbout) {
         aboutStory.scrollTop = 0;
         aboutStory.focus({ preventScroll: true });
@@ -140,6 +152,7 @@ function changeZoomView(next) {
 
 function backOneLevel() {
   clearMonitorTap();
+  if (view === 'crt' && cabinets[active].id === 'retro-handheld' && backToHandhelds()) return;
   if (view === 'crt') changeZoomView('cabinet');
   else closeScreen();
 }
@@ -204,6 +217,7 @@ function updateScreenEffects(now) {
 }
 function closeScreen() {
   if (!focusedScreen) return;
+  hideHandhelds();
   cancelZoom?.();
   cancelZoom = null;
   focusedScreen.setIdle();
@@ -224,9 +238,18 @@ function closeScreen() {
 }
 returnButton.addEventListener('click', backOneLevel);
 document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && focusedScreen) { event.preventDefault(); backOneLevel(); }
+  if (event.key === 'Escape' && focusedScreen && !isHandheldPlaying()) { event.preventDefault(); backOneLevel(); }
 });
 function showScreenMessage(screen) {
+  if (cabinets[active].id === 'retro-handheld') {
+    handheldTeaser().then(canvas => {
+      if (focusedScreen !== screen) return;
+      screen.setCanvas(canvas);
+      if (view === 'cabinet') announcement.textContent = 'RETRO GAMES. CLICK TO VIEW.';
+      invalidate();
+    }).catch(error => console.error('Unable to load the handheld arcade frame', error));
+    return;
+  }
   if (cabinets[active].id === 'contact-us') {
     showContactTeaser(screen);
     return;

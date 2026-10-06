@@ -1,2 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+# Preserve the original self-contained handheld game files byte-for-byte.
+assets/handhelds/**/index.html -text
