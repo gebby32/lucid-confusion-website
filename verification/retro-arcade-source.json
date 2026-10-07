@@ -1,0 +1,712 @@
+[
+  {
+    "source": "Futuristic Retro Arcade Frame.png",
+    "file": "art/frame.png",
+    "sha256": "0b7877e9f298b35ed7ba50233b1823a2f46ca50088298e23cb30d28f4b0ba004"
+  },
+  {
+    "source": "Neon Back to Arcade Button.png",
+    "file": "art/back.png",
+    "sha256": "bcc046f7ab32c10f06aee1ee9b51032eba515ad04e8f65c3715501f1c1648dc2"
+  },
+  {
+    "source": "Sloth Invaders/index.html",
+    "file": "games/sloth-invaders/index.html",
+    "sha256": "bdbf810c1c20585755411706cec9d4f675f16fcbef0be61faab31bc842303981"
+  },
+  {
+    "source": "Sloth Invaders/css/style.css",
+    "file": "games/sloth-invaders/css/style.css",
+    "sha256": "33b523db99aaf9d7efbb432b837e912cdcf9d1e96b9f083fdb1cc677de9a65e6"
+  },
+  {
+    "source": "Sloth Invaders/plumbing/core.js",
+    "file": "games/sloth-invaders/plumbing/core.js",
+    "sha256": "50ebdc1f1ca8f0cb02f45148c3c792ada83d40bd916c3dab8c94ffe67b72a95c"
+  },
+  {
+    "source": "Sloth Invaders/plumbing/storage.js",
+    "file": "games/sloth-invaders/plumbing/storage.js",
+    "sha256": "382e048b8280db1efb934a817dfa83236d2fb09be83e7619234ca680b4af83fa"
+  },
+  {
+    "source": "Sloth Invaders/plumbing/monitor.js",
+    "file": "games/sloth-invaders/plumbing/monitor.js",
+    "sha256": "3bd0f3e9124562fe3fb0d42d302e7fde194d06b0c03a2fbeac01f53cd734cb7c"
+  },
+  {
+    "source": "Sloth Invaders/plumbing/input.js",
+    "file": "games/sloth-invaders/plumbing/input.js",
+    "sha256": "9ab9785e45e1bb6aae8368bbb04b3e4fa8549850a42ad684b043217455d29a82"
+  },
+  {
+    "source": "Sloth Invaders/plumbing/gamepad.js",
+    "file": "games/sloth-invaders/plumbing/gamepad.js",
+    "sha256": "782ef006706fffa3b2c34f293c027b66c7215b9c5de12605f5dd82a2e2445e19"
+  },
+  {
+    "source": "Sloth Invaders/plumbing/lcd.js",
+    "file": "games/sloth-invaders/plumbing/lcd.js",
+    "sha256": "14cdf7e99a47516ecb194aaf761ec6eacac2b9c3935f89dc14aaff3489b5e431"
+  },
+  {
+    "source": "Sloth Invaders/plumbing/audio.js",
+    "file": "games/sloth-invaders/plumbing/audio.js",
+    "sha256": "f3f5318006fd45ed7b56bdab5d211f489d25b93b75b37ddae5e6f810a7decb31"
+  },
+  {
+    "source": "Sloth Invaders/plumbing/effects.js",
+    "file": "games/sloth-invaders/plumbing/effects.js",
+    "sha256": "d44e56c3db9298ff3ce87b0fe408b06e51cf9d540a46900e770a92ac2065d380"
+  },
+  {
+    "source": "Sloth Invaders/plumbing/combat.js",
+    "file": "games/sloth-invaders/plumbing/combat.js",
+    "sha256": "fb5412c4bf754fc7f1b2d9c4270954a5acd61e1c61eab5ca1673b65adca58a4b"
+  },
+  {
+    "source": "Sloth Invaders/js/game-config.js",
+    "file": "games/sloth-invaders/js/game-config.js",
+    "sha256": "184480bca16493d6f8bc733f5991cdc62706c43b8c0d39d4ee09e340ad91834c"
+  },
+  {
+    "source": "Sloth Invaders/js/font.js",
+    "file": "games/sloth-invaders/js/font.js",
+    "sha256": "ee83f82fe304efcf711eb14e62c432f4ffcfa011b6022dae2bd8eca56b6b99ea"
+  },
+  {
+    "source": "Sloth Invaders/js/gfx.js",
+    "file": "games/sloth-invaders/js/gfx.js",
+    "sha256": "acd156f8e2a6aa75b90395a434a60c6fbbe5d8fb256f36cf0b814417ca8b8f02"
+  },
+  {
+    "source": "Sloth Invaders/js/sprites.js",
+    "file": "games/sloth-invaders/js/sprites.js",
+    "sha256": "d3b65371c6f7d5886d18ea9a86c4b3d99ed56f6548762ce80778c91de6fc3df5"
+  },
+  {
+    "source": "Sloth Invaders/js/game-audio.js",
+    "file": "games/sloth-invaders/js/game-audio.js",
+    "sha256": "2c20d1074d7d5c1bcda9f10d326374e5fe29c848f9a95aa3e9870044e5e0e063"
+  },
+  {
+    "source": "Sloth Invaders/js/waves.js",
+    "file": "games/sloth-invaders/js/waves.js",
+    "sha256": "c36b3a12d8efd0866605b0f61eb278f18b189d211e3c88c16ccfe76710f28ebc"
+  },
+  {
+    "source": "Sloth Invaders/js/backdrop.js",
+    "file": "games/sloth-invaders/js/backdrop.js",
+    "sha256": "03cceb3ec2bb23639fb97a3073f59b0dfe7a3a001869ee4b3bc54ea63461b293"
+  },
+  {
+    "source": "Sloth Invaders/js/barriers.js",
+    "file": "games/sloth-invaders/js/barriers.js",
+    "sha256": "0cc5a39974fd8c41f335be631f8b40dc64874f47f24ab46a67997775454060e8"
+  },
+  {
+    "source": "Sloth Invaders/js/bullets.js",
+    "file": "games/sloth-invaders/js/bullets.js",
+    "sha256": "97d7b7b7957193e0eff512a557fac24809d582f242737e8d4a77c9d6ed87ce84"
+  },
+  {
+    "source": "Sloth Invaders/js/formation.js",
+    "file": "games/sloth-invaders/js/formation.js",
+    "sha256": "30bdf0df057a067fe25ba93ee9d7c07e28fc959477c103cdf28365c44572ff8a"
+  },
+  {
+    "source": "Sloth Invaders/js/slothership.js",
+    "file": "games/sloth-invaders/js/slothership.js",
+    "sha256": "faf4bd6c54b69c4ed79171ce2ef726ea766d7234b88c03352e17cdc6a634bbbe"
+  },
+  {
+    "source": "Sloth Invaders/js/boss.js",
+    "file": "games/sloth-invaders/js/boss.js",
+    "sha256": "ab5d7fd6bf351a1374ed76e0f158ccc1165243e9133c19aabb39396472121e6a"
+  },
+  {
+    "source": "Sloth Invaders/js/player.js",
+    "file": "games/sloth-invaders/js/player.js",
+    "sha256": "b0a5b08740a4fca0c12fac5d3f15f4e1d5dd304efc551aea545a44907d461b88"
+  },
+  {
+    "source": "Sloth Invaders/js/demo.js",
+    "file": "games/sloth-invaders/js/demo.js",
+    "sha256": "b46ef05f2ee26069dc86ca68e2bedfd6a76463888cc1002359aaa76664c24584"
+  },
+  {
+    "source": "Sloth Invaders/js/game.js",
+    "file": "games/sloth-invaders/js/game.js",
+    "sha256": "86ffade7f0ac47d337ca2e442c83f0bd5c2820dc1717430a444770821f2362f2"
+  },
+  {
+    "source": "Sloth Invaders/js/screens.js",
+    "file": "games/sloth-invaders/js/screens.js",
+    "sha256": "b4849c744388efabefc719baaa6abff2eaf6a89a381d83062a7acd623538dcae"
+  },
+  {
+    "source": "Sloth Invaders/js/main.js",
+    "file": "games/sloth-invaders/js/main.js",
+    "sha256": "201e0144ceeec1c79f50f4c01e62730baa009120f357b338be34fd6e54ecf3ac"
+  },
+  {
+    "source": "Sloth Invaders/assets/title.png",
+    "file": "games/sloth-invaders/assets/title.png",
+    "sha256": "f434abd230f1fab0d05f27de838c05550da2e5a2959b02ad6797ae75d8ecbe29"
+  },
+  {
+    "source": "Sloth Run/index.html",
+    "file": "games/sloth-run/index.html",
+    "sha256": "8136a50e2debc1d638b9b4375cee0f0e9e8ab70396114587ea7a351b516b83b4"
+  },
+  {
+    "source": "Sloth Run/css/style.css",
+    "file": "games/sloth-run/css/style.css",
+    "sha256": "33b523db99aaf9d7efbb432b837e912cdcf9d1e96b9f083fdb1cc677de9a65e6"
+  },
+  {
+    "source": "Sloth Run/plumbing/core.js",
+    "file": "games/sloth-run/plumbing/core.js",
+    "sha256": "50ebdc1f1ca8f0cb02f45148c3c792ada83d40bd916c3dab8c94ffe67b72a95c"
+  },
+  {
+    "source": "Sloth Run/plumbing/storage.js",
+    "file": "games/sloth-run/plumbing/storage.js",
+    "sha256": "382e048b8280db1efb934a817dfa83236d2fb09be83e7619234ca680b4af83fa"
+  },
+  {
+    "source": "Sloth Run/plumbing/monitor.js",
+    "file": "games/sloth-run/plumbing/monitor.js",
+    "sha256": "3bd0f3e9124562fe3fb0d42d302e7fde194d06b0c03a2fbeac01f53cd734cb7c"
+  },
+  {
+    "source": "Sloth Run/plumbing/input.js",
+    "file": "games/sloth-run/plumbing/input.js",
+    "sha256": "9ab9785e45e1bb6aae8368bbb04b3e4fa8549850a42ad684b043217455d29a82"
+  },
+  {
+    "source": "Sloth Run/plumbing/gamepad.js",
+    "file": "games/sloth-run/plumbing/gamepad.js",
+    "sha256": "ec8a5574fbb44217844b53714fb779e78cdea55cffc5dd32140da51ae2932639"
+  },
+  {
+    "source": "Sloth Run/plumbing/lcd.js",
+    "file": "games/sloth-run/plumbing/lcd.js",
+    "sha256": "dde3e5b42c64e852104ccbf83f18c71cc8ec121a28bf3a91551b84b187300fce"
+  },
+  {
+    "source": "Sloth Run/plumbing/audio.js",
+    "file": "games/sloth-run/plumbing/audio.js",
+    "sha256": "f3f5318006fd45ed7b56bdab5d211f489d25b93b75b37ddae5e6f810a7decb31"
+  },
+  {
+    "source": "Sloth Run/plumbing/effects.js",
+    "file": "games/sloth-run/plumbing/effects.js",
+    "sha256": "d44e56c3db9298ff3ce87b0fe408b06e51cf9d540a46900e770a92ac2065d380"
+  },
+  {
+    "source": "Sloth Run/js/game-config.js",
+    "file": "games/sloth-run/js/game-config.js",
+    "sha256": "508f59a5cec628122b3e39e6a11ac1ab9126db9c7176e0acfe13c354667c20f5"
+  },
+  {
+    "source": "Sloth Run/js/font.js",
+    "file": "games/sloth-run/js/font.js",
+    "sha256": "f8b888735e58f391c44c2517951f6a40ce45e343cee5ecf31c8f613f9bc2e262"
+  },
+  {
+    "source": "Sloth Run/js/gfx.js",
+    "file": "games/sloth-run/js/gfx.js",
+    "sha256": "6f4f59c74df9184ceb3221ea13e1c20a14de139b58292477f1fab14d675873df"
+  },
+  {
+    "source": "Sloth Run/js/pixel.js",
+    "file": "games/sloth-run/js/pixel.js",
+    "sha256": "41aeebca5294455ac6013e1e11ed8babe7b55a8616dd0572b2c1fb4562a9424d"
+  },
+  {
+    "source": "Sloth Run/js/art-cars.js",
+    "file": "games/sloth-run/js/art-cars.js",
+    "sha256": "bbda28ac323d65cf706a3dbfa73e94b6fcba9d81443c5ed9dfebb1245e0c0855"
+  },
+  {
+    "source": "Sloth Run/js/art-scenery.js",
+    "file": "games/sloth-run/js/art-scenery.js",
+    "sha256": "7d9d894b3c1db200558bc905669be21ca3d1d3724d770e798a19cc6ac89035f1"
+  },
+  {
+    "source": "Sloth Run/js/themes.js",
+    "file": "games/sloth-run/js/themes.js",
+    "sha256": "8e1a7e22c10e6b4020e66340cd927d30a41d2c5321eee6f2fc91c3b8bdf8457d"
+  },
+  {
+    "source": "Sloth Run/js/track.js",
+    "file": "games/sloth-run/js/track.js",
+    "sha256": "211701cf3693905f44a88847768a4c2593923a03bdaac2d2360135660ab9b18e"
+  },
+  {
+    "source": "Sloth Run/js/render.js",
+    "file": "games/sloth-run/js/render.js",
+    "sha256": "2a4a7d4d43f276d9b3b8b03577294a0d0fd4861dbaeed6e5064bea13c4908814"
+  },
+  {
+    "source": "Sloth Run/js/art-bg.js",
+    "file": "games/sloth-run/js/art-bg.js",
+    "sha256": "f04de8df7b59217311bfc0c757b603c53f584d467041fd12bc568b88c58e1b71"
+  },
+  {
+    "source": "Sloth Run/js/game-audio.js",
+    "file": "games/sloth-run/js/game-audio.js",
+    "sha256": "ec4388e052387df5e46288f76eea011fdb689cf680d6dfce123d794894cbc552"
+  },
+  {
+    "source": "Sloth Run/js/race.js",
+    "file": "games/sloth-run/js/race.js",
+    "sha256": "545b29cfcd6b95f51b7c27bd8a8bc6b8b202b4ce9817d253a64c31e4bff0ccec"
+  },
+  {
+    "source": "Sloth Run/js/screens.js",
+    "file": "games/sloth-run/js/screens.js",
+    "sha256": "237abf7039e92f2c19edbd82ea981b82eb92883a29d9e05b80b5b3c63b5d9698"
+  },
+  {
+    "source": "Sloth Run/js/main.js",
+    "file": "games/sloth-run/js/main.js",
+    "sha256": "db346c5bf4d2bb7cf1b58734e609f7324270fbd45404c72c3fac339197e958a9"
+  },
+  {
+    "source": "Sloth Run/assets/title.png",
+    "file": "games/sloth-run/assets/title.png",
+    "sha256": "02b6cc3cdbc3b343594f2aad4d4d96b1c8b16524b3363c7ccb7d9598a538c3f6"
+  },
+  {
+    "source": "Slothger/index.html",
+    "file": "games/slothger/index.html",
+    "sha256": "12f833ac7cbbc5e4e823f608a8738bd0ea3947d9745cba05e7478564a26b36cc"
+  },
+  {
+    "source": "Slothger/css/style.css",
+    "file": "games/slothger/css/style.css",
+    "sha256": "33b523db99aaf9d7efbb432b837e912cdcf9d1e96b9f083fdb1cc677de9a65e6"
+  },
+  {
+    "source": "Slothger/plumbing/core.js",
+    "file": "games/slothger/plumbing/core.js",
+    "sha256": "50ebdc1f1ca8f0cb02f45148c3c792ada83d40bd916c3dab8c94ffe67b72a95c"
+  },
+  {
+    "source": "Slothger/plumbing/storage.js",
+    "file": "games/slothger/plumbing/storage.js",
+    "sha256": "382e048b8280db1efb934a817dfa83236d2fb09be83e7619234ca680b4af83fa"
+  },
+  {
+    "source": "Slothger/plumbing/monitor.js",
+    "file": "games/slothger/plumbing/monitor.js",
+    "sha256": "3bd0f3e9124562fe3fb0d42d302e7fde194d06b0c03a2fbeac01f53cd734cb7c"
+  },
+  {
+    "source": "Slothger/plumbing/input.js",
+    "file": "games/slothger/plumbing/input.js",
+    "sha256": "9ab9785e45e1bb6aae8368bbb04b3e4fa8549850a42ad684b043217455d29a82"
+  },
+  {
+    "source": "Slothger/plumbing/gamepad.js",
+    "file": "games/slothger/plumbing/gamepad.js",
+    "sha256": "ec8a5574fbb44217844b53714fb779e78cdea55cffc5dd32140da51ae2932639"
+  },
+  {
+    "source": "Slothger/plumbing/lcd.js",
+    "file": "games/slothger/plumbing/lcd.js",
+    "sha256": "14cdf7e99a47516ecb194aaf761ec6eacac2b9c3935f89dc14aaff3489b5e431"
+  },
+  {
+    "source": "Slothger/plumbing/audio.js",
+    "file": "games/slothger/plumbing/audio.js",
+    "sha256": "f3f5318006fd45ed7b56bdab5d211f489d25b93b75b37ddae5e6f810a7decb31"
+  },
+  {
+    "source": "Slothger/plumbing/effects.js",
+    "file": "games/slothger/plumbing/effects.js",
+    "sha256": "d44e56c3db9298ff3ce87b0fe408b06e51cf9d540a46900e770a92ac2065d380"
+  },
+  {
+    "source": "Slothger/plumbing/combat.js",
+    "file": "games/slothger/plumbing/combat.js",
+    "sha256": "fb5412c4bf754fc7f1b2d9c4270954a5acd61e1c61eab5ca1673b65adca58a4b"
+  },
+  {
+    "source": "Slothger/js/game-config.js",
+    "file": "games/slothger/js/game-config.js",
+    "sha256": "c0722d4b8f265df84ae95deb8afb06533ddeccd615caff0470bf62915799eb8a"
+  },
+  {
+    "source": "Slothger/js/font.js",
+    "file": "games/slothger/js/font.js",
+    "sha256": "ee83f82fe304efcf711eb14e62c432f4ffcfa011b6022dae2bd8eca56b6b99ea"
+  },
+  {
+    "source": "Slothger/js/gfx.js",
+    "file": "games/slothger/js/gfx.js",
+    "sha256": "550a50e873b648b902676f231b0305f9dbcc6f14200fafc55a5894640f414eb1"
+  },
+  {
+    "source": "Slothger/js/sprites.js",
+    "file": "games/slothger/js/sprites.js",
+    "sha256": "8ebf5e0b83e201ff3b69907a89e0cb1300ffecdb5a17a2cf0f66ae9c52323c58"
+  },
+  {
+    "source": "Slothger/js/sloth.js",
+    "file": "games/slothger/js/sloth.js",
+    "sha256": "e12f42363df9c66e280762ba2cb9b75b63fa8a35213e515edd794d222bd9a4be"
+  },
+  {
+    "source": "Slothger/js/game-audio.js",
+    "file": "games/slothger/js/game-audio.js",
+    "sha256": "5359d38b7ad89d4484d8ce37724574160da0cad2411783fdfb79fb4ad23ff30f"
+  },
+  {
+    "source": "Slothger/js/stages.js",
+    "file": "games/slothger/js/stages.js",
+    "sha256": "615ea004908ff60e0770d4d794fee5c8f2966b3f71c96715b66c3882e46249cc"
+  },
+  {
+    "source": "Slothger/js/lanes.js",
+    "file": "games/slothger/js/lanes.js",
+    "sha256": "e01eb31d79d105e34b073269d17dab5857d0a6e3a76501380ca0b2cbe7a8cd7b"
+  },
+  {
+    "source": "Slothger/js/world.js",
+    "file": "games/slothger/js/world.js",
+    "sha256": "d010170d4bb0f90ca63137f7cb133a825b06aa0ec32aba1ae06a38f6aae5b6eb"
+  },
+  {
+    "source": "Slothger/js/player.js",
+    "file": "games/slothger/js/player.js",
+    "sha256": "29278d62f0cd9dd9f76b2b0885d605fc93b6be94be50b575ba6c5f9689d41fb2"
+  },
+  {
+    "source": "Slothger/js/game.js",
+    "file": "games/slothger/js/game.js",
+    "sha256": "d3e1f35e76afa7810f2e15d7c517814afc171c13429ef31f17118ba6b3e0c582"
+  },
+  {
+    "source": "Slothger/js/screens.js",
+    "file": "games/slothger/js/screens.js",
+    "sha256": "7bceeeaca7c0ff58d790f253612ebc8ebce806082e4b5528d032142712000012"
+  },
+  {
+    "source": "Slothger/js/main.js",
+    "file": "games/slothger/js/main.js",
+    "sha256": "991df67695ce19efac93a2dedcab9614d7127ab9e8a6bd90919170d0e67b4133"
+  },
+  {
+    "source": "Slothger/assets/sloth/up.png",
+    "file": "games/slothger/assets/sloth/up.png",
+    "sha256": "060f083a5337129cadb655c2b5f5a6dcca3ab00c3d48f9ed58332164cc0b1621"
+  },
+  {
+    "source": "Slothger/assets/sloth/down.png",
+    "file": "games/slothger/assets/sloth/down.png",
+    "sha256": "ac635e06442dea6c9a57f0cedcad76ec35f3b97668a076c78a0a1f2935bd799b"
+  },
+  {
+    "source": "Slothger/assets/sloth/left.png",
+    "file": "games/slothger/assets/sloth/left.png",
+    "sha256": "88369ef87e00c4ab166c175704d7ccbf6de75287c5f4c04a6dfa6251ee3c449c"
+  },
+  {
+    "source": "Slothger/assets/sloth/right.png",
+    "file": "games/slothger/assets/sloth/right.png",
+    "sha256": "9d0ed9056cab705156241385a37a45b0096e052ba01d034ea2abe4a238c4765f"
+  },
+  {
+    "source": "Slothger/assets/title.png",
+    "file": "games/slothger/assets/title.png",
+    "sha256": "85f8f31e15b9d3316c9ade0e9490f21bf7f57065a46d717be4ac361516ccfa6b"
+  },
+  {
+    "source": "Slubble Slobble/index.html",
+    "file": "games/slubble-slobble/index.html",
+    "sha256": "826d178b9d6f222d6b70c391434d88e9ff29f88cee61a993474182bc7615882b"
+  },
+  {
+    "source": "Slubble Slobble/css/style.css",
+    "file": "games/slubble-slobble/css/style.css",
+    "sha256": "33b523db99aaf9d7efbb432b837e912cdcf9d1e96b9f083fdb1cc677de9a65e6"
+  },
+  {
+    "source": "Slubble Slobble/plumbing/core.js",
+    "file": "games/slubble-slobble/plumbing/core.js",
+    "sha256": "50ebdc1f1ca8f0cb02f45148c3c792ada83d40bd916c3dab8c94ffe67b72a95c"
+  },
+  {
+    "source": "Slubble Slobble/plumbing/storage.js",
+    "file": "games/slubble-slobble/plumbing/storage.js",
+    "sha256": "382e048b8280db1efb934a817dfa83236d2fb09be83e7619234ca680b4af83fa"
+  },
+  {
+    "source": "Slubble Slobble/plumbing/monitor.js",
+    "file": "games/slubble-slobble/plumbing/monitor.js",
+    "sha256": "3bd0f3e9124562fe3fb0d42d302e7fde194d06b0c03a2fbeac01f53cd734cb7c"
+  },
+  {
+    "source": "Slubble Slobble/plumbing/input.js",
+    "file": "games/slubble-slobble/plumbing/input.js",
+    "sha256": "9ab9785e45e1bb6aae8368bbb04b3e4fa8549850a42ad684b043217455d29a82"
+  },
+  {
+    "source": "Slubble Slobble/plumbing/gamepad.js",
+    "file": "games/slubble-slobble/plumbing/gamepad.js",
+    "sha256": "ec8a5574fbb44217844b53714fb779e78cdea55cffc5dd32140da51ae2932639"
+  },
+  {
+    "source": "Slubble Slobble/plumbing/lcd.js",
+    "file": "games/slubble-slobble/plumbing/lcd.js",
+    "sha256": "14cdf7e99a47516ecb194aaf761ec6eacac2b9c3935f89dc14aaff3489b5e431"
+  },
+  {
+    "source": "Slubble Slobble/plumbing/audio.js",
+    "file": "games/slubble-slobble/plumbing/audio.js",
+    "sha256": "f3f5318006fd45ed7b56bdab5d211f489d25b93b75b37ddae5e6f810a7decb31"
+  },
+  {
+    "source": "Slubble Slobble/plumbing/effects.js",
+    "file": "games/slubble-slobble/plumbing/effects.js",
+    "sha256": "d44e56c3db9298ff3ce87b0fe408b06e51cf9d540a46900e770a92ac2065d380"
+  },
+  {
+    "source": "Slubble Slobble/plumbing/combat.js",
+    "file": "games/slubble-slobble/plumbing/combat.js",
+    "sha256": "fb5412c4bf754fc7f1b2d9c4270954a5acd61e1c61eab5ca1673b65adca58a4b"
+  },
+  {
+    "source": "Slubble Slobble/js/game-config.js",
+    "file": "games/slubble-slobble/js/game-config.js",
+    "sha256": "aa64a4b51a158356b96377bad198c3b28bc77f046c3b76dcf1a131db3ca1410c"
+  },
+  {
+    "source": "Slubble Slobble/js/font.js",
+    "file": "games/slubble-slobble/js/font.js",
+    "sha256": "ee83f82fe304efcf711eb14e62c432f4ffcfa011b6022dae2bd8eca56b6b99ea"
+  },
+  {
+    "source": "Slubble Slobble/js/gfx.js",
+    "file": "games/slubble-slobble/js/gfx.js",
+    "sha256": "217957dfda8e42024029cb23956be31d42398784c00a411aa2cf977bc3dd1952"
+  },
+  {
+    "source": "Slubble Slobble/js/sprites.js",
+    "file": "games/slubble-slobble/js/sprites.js",
+    "sha256": "d2e33da32eb7ab8f0323d82b65f6d0bcfc0f889f3df001303d6a83158891519d"
+  },
+  {
+    "source": "Slubble Slobble/js/sloths.js",
+    "file": "games/slubble-slobble/js/sloths.js",
+    "sha256": "e0ddd1765175b7fb5e200b82f67b88ce2d6c080b07aa63932be626199258573a"
+  },
+  {
+    "source": "Slubble Slobble/js/game-audio.js",
+    "file": "games/slubble-slobble/js/game-audio.js",
+    "sha256": "587f443a2b6eead24f7ab10b906b4a8413200cfb1c9eb4edc667687fc8b91612"
+  },
+  {
+    "source": "Slubble Slobble/js/levels.js",
+    "file": "games/slubble-slobble/js/levels.js",
+    "sha256": "671ce48ebbb4d7ff852b04ef2a62d28c2ae2acce5b2287ca66790ec51df072ba"
+  },
+  {
+    "source": "Slubble Slobble/js/world.js",
+    "file": "games/slubble-slobble/js/world.js",
+    "sha256": "e38b140821bc547d1db8ed846ef20a2ec7c8f3edfd5f5403e982dbe91318e79e"
+  },
+  {
+    "source": "Slubble Slobble/js/items.js",
+    "file": "games/slubble-slobble/js/items.js",
+    "sha256": "b546ab064b403f3cb4012cf6ab0199525defff3412999e2779df1d62fea952ca"
+  },
+  {
+    "source": "Slubble Slobble/js/bubbles.js",
+    "file": "games/slubble-slobble/js/bubbles.js",
+    "sha256": "08bb49e63b9ab804b2921ade07a5f1e2b953093396a744a884c49c211d848161"
+  },
+  {
+    "source": "Slubble Slobble/js/enemies.js",
+    "file": "games/slubble-slobble/js/enemies.js",
+    "sha256": "6b16cd015011c7c370e2229448b95d68b3717a2df54b2bd184b8355cece87ec7"
+  },
+  {
+    "source": "Slubble Slobble/js/bosses.js",
+    "file": "games/slubble-slobble/js/bosses.js",
+    "sha256": "37ee090b28c17f8b4a092ade44e9ca422cf73bbb39596efd815d7a4addef0a88"
+  },
+  {
+    "source": "Slubble Slobble/js/player.js",
+    "file": "games/slubble-slobble/js/player.js",
+    "sha256": "738b0839aa992476742113fbe532d0ad9f96be06ff5bd757ec7af307012161e3"
+  },
+  {
+    "source": "Slubble Slobble/js/game.js",
+    "file": "games/slubble-slobble/js/game.js",
+    "sha256": "37a4b7105677592166b8d0254573c3408270e31f527bb814be0849d5beb99734"
+  },
+  {
+    "source": "Slubble Slobble/js/screens.js",
+    "file": "games/slubble-slobble/js/screens.js",
+    "sha256": "41ed6d9bb6c035dc950b6ff043431da73e0eed163fef7e354423cddf1916ef01"
+  },
+  {
+    "source": "Slubble Slobble/js/main.js",
+    "file": "games/slubble-slobble/js/main.js",
+    "sha256": "f6ce0592a4c73e49262f53931e9ccb440fe7f33c59c1a7d4dcc58e11504f299d"
+  },
+  {
+    "source": "Slubble Slobble/assets/sloths/slub-right.png",
+    "file": "games/slubble-slobble/assets/sloths/slub-right.png",
+    "sha256": "9b29e760d1a9dcfaabb3b3ffe19800237b6dfa781d321745999723d5b184ec88"
+  },
+  {
+    "source": "Slubble Slobble/assets/sloths/slub-left.png",
+    "file": "games/slubble-slobble/assets/sloths/slub-left.png",
+    "sha256": "8d23f4cafe56116fdbb8f09680505d75cf1e3efbf77e0ec0028f7da1d87e1e5e"
+  },
+  {
+    "source": "Slubble Slobble/assets/sloths/slob-right.png",
+    "file": "games/slubble-slobble/assets/sloths/slob-right.png",
+    "sha256": "f2adb7f4c3bfbfc15df2725c7f875796cb39143b8bd514b3b6495a06b1a69466"
+  },
+  {
+    "source": "Slubble Slobble/assets/sloths/slob-left.png",
+    "file": "games/slubble-slobble/assets/sloths/slob-left.png",
+    "sha256": "0a105b23e06c1071c60fd9ec1fc94d17fb011712a0a6abf3dcf3b0656ca81b64"
+  },
+  {
+    "source": "Slubble Slobble/assets/title.png",
+    "file": "games/slubble-slobble/assets/title.png",
+    "sha256": "1188d6b388db97608a1f0ba977e12c4db1162ed9e4623cd444a75dc54a674e7e"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/index.html",
+    "file": "games/sofa-king-barrel-blitz/index.html",
+    "sha256": "ade6d50039bab45e86dab0c3d91a317f5249b9d358e94f0db5832c35caa74ed9"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/css/style.css",
+    "file": "games/sofa-king-barrel-blitz/css/style.css",
+    "sha256": "33b523db99aaf9d7efbb432b837e912cdcf9d1e96b9f083fdb1cc677de9a65e6"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/plumbing/core.js",
+    "file": "games/sofa-king-barrel-blitz/plumbing/core.js",
+    "sha256": "50ebdc1f1ca8f0cb02f45148c3c792ada83d40bd916c3dab8c94ffe67b72a95c"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/plumbing/storage.js",
+    "file": "games/sofa-king-barrel-blitz/plumbing/storage.js",
+    "sha256": "382e048b8280db1efb934a817dfa83236d2fb09be83e7619234ca680b4af83fa"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/plumbing/monitor.js",
+    "file": "games/sofa-king-barrel-blitz/plumbing/monitor.js",
+    "sha256": "3bd0f3e9124562fe3fb0d42d302e7fde194d06b0c03a2fbeac01f53cd734cb7c"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/plumbing/input.js",
+    "file": "games/sofa-king-barrel-blitz/plumbing/input.js",
+    "sha256": "9ab9785e45e1bb6aae8368bbb04b3e4fa8549850a42ad684b043217455d29a82"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/plumbing/gamepad.js",
+    "file": "games/sofa-king-barrel-blitz/plumbing/gamepad.js",
+    "sha256": "782ef006706fffa3b2c34f293c027b66c7215b9c5de12605f5dd82a2e2445e19"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/plumbing/lcd.js",
+    "file": "games/sofa-king-barrel-blitz/plumbing/lcd.js",
+    "sha256": "14cdf7e99a47516ecb194aaf761ec6eacac2b9c3935f89dc14aaff3489b5e431"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/plumbing/audio.js",
+    "file": "games/sofa-king-barrel-blitz/plumbing/audio.js",
+    "sha256": "f3f5318006fd45ed7b56bdab5d211f489d25b93b75b37ddae5e6f810a7decb31"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/plumbing/effects.js",
+    "file": "games/sofa-king-barrel-blitz/plumbing/effects.js",
+    "sha256": "d44e56c3db9298ff3ce87b0fe408b06e51cf9d540a46900e770a92ac2065d380"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/plumbing/combat.js",
+    "file": "games/sofa-king-barrel-blitz/plumbing/combat.js",
+    "sha256": "fb5412c4bf754fc7f1b2d9c4270954a5acd61e1c61eab5ca1673b65adca58a4b"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/js/game-config.js",
+    "file": "games/sofa-king-barrel-blitz/js/game-config.js",
+    "sha256": "369b2a43249d0e51cd119a9c5b88f14fdbc07908d0d190bea5bc8e0a3dc63d50"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/js/font.js",
+    "file": "games/sofa-king-barrel-blitz/js/font.js",
+    "sha256": "ee83f82fe304efcf711eb14e62c432f4ffcfa011b6022dae2bd8eca56b6b99ea"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/js/gfx.js",
+    "file": "games/sofa-king-barrel-blitz/js/gfx.js",
+    "sha256": "d8555973112ffdf86933fa0405fa61fb496251e4c23140b5d8bf0edb55b3eade"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/js/sprites.js",
+    "file": "games/sofa-king-barrel-blitz/js/sprites.js",
+    "sha256": "1bbbc22fc64467d48f72f183fa2235734afd12e8e9bd360de8ac37c35507247b"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/js/game-audio.js",
+    "file": "games/sofa-king-barrel-blitz/js/game-audio.js",
+    "sha256": "a74473dbaa5eb8833852b27e660ab10d26ef56d9989a5bb87b11307182bf345e"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/js/stages.js",
+    "file": "games/sofa-king-barrel-blitz/js/stages.js",
+    "sha256": "877b06169106eb91239213ff446c190cd8a41cd4ca8298f09b7961f12ad2fa58"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/js/world.js",
+    "file": "games/sofa-king-barrel-blitz/js/world.js",
+    "sha256": "2c34102de69abd8d1c9a98ecf3d6fdfbf29764ed240c8966f2319d6a14076c58"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/js/hero.js",
+    "file": "games/sofa-king-barrel-blitz/js/hero.js",
+    "sha256": "c0b33433e131da32e25e1d65a6e78d890626b963035c0c149eee8b08809cb910"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/js/hazards.js",
+    "file": "games/sofa-king-barrel-blitz/js/hazards.js",
+    "sha256": "5f8fbd17f1d5064bdc0f34d80a9a572181fac6249601f5d296ea801e17ec9eca"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/js/king.js",
+    "file": "games/sofa-king-barrel-blitz/js/king.js",
+    "sha256": "af6a8d7231a30f8416bff24d21d1ae321bedcd5af9336e5bb056f1271eea7eaa"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/js/game.js",
+    "file": "games/sofa-king-barrel-blitz/js/game.js",
+    "sha256": "f06a1351e01d291835372549c73b05f669e547e0d0bbe0c55aa8cd16bdd92509"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/js/screens.js",
+    "file": "games/sofa-king-barrel-blitz/js/screens.js",
+    "sha256": "643ef4e2caca457fcab797272ec1c160e6bef3c4453f718d3386dca52a602de6"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/js/main.js",
+    "file": "games/sofa-king-barrel-blitz/js/main.js",
+    "sha256": "9c36c0fc58f80dba4ca0b6fd2fc75d2024e9a03846af23a08a59e09096a42bdb"
+  },
+  {
+    "source": "Sofa King Barrel Blitz/assets/title.png",
+    "file": "games/sofa-king-barrel-blitz/assets/title.png",
+    "sha256": "67ebd7926b592906998cb7a6c98a3eea68f0bb9872d489d99ccd761020477492"
+  }
+]

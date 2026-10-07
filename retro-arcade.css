@@ -1,0 +1,21 @@
+#crt-content.retro-view { width: min(96vw, 112svh); background: transparent; border-radius: 0; pointer-events: auto; }
+.arcade-room:has(#crt-content.retro-view:not([hidden])) .screen-return { top: calc(50svh + min(36vw, 42svh) + 8px); bottom: auto; }
+#retro-frame { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+#retro-panel { position: absolute; inset: 14% 5.5%; overflow: hidden; color: #39ff6a; font-family: VT323, "Share Tech Mono", "IBM Plex Mono", monospace; text-shadow: 0 0 3px #39ff6a30; }
+#retro-grid { height: 100%; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; touch-action: pan-y pinch-zoom; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-content: start; gap: clamp(12px, 2vw, 24px); padding: 12px; scrollbar-width: thin; scrollbar-color: #39ff6a66 #071b1b; }
+#retro-grid > * { min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; color: inherit; text-decoration: none; font-size: clamp(15px, 1.7vw, 23px); line-height: 1.25; }
+#retro-grid img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: contain; }
+#retro-status { position: absolute; inset: 0; display: grid; place-content: center; }
+#retro-status[hidden], #retro-player[hidden] { display: none; }
+#retro-player { position: fixed; inset: 0; z-index: 100; width: 100%; height: 100dvh; display: flex; flex-direction: column; background: #000; }
+#retro-player:fullscreen { width: 100%; height: 100%; }
+.retro-toolbar { position: relative; z-index: 2; flex: none; display: flex; align-items: center; gap: 12px; padding: max(2px, env(safe-area-inset-top)) max(6px, env(safe-area-inset-right)) 2px max(6px, env(safe-area-inset-left)); background: #000; }
+#retro-back { display: block; flex: none; width: 216px; max-width: 65vw; padding: 0; border: 0; background: #000; cursor: pointer; }
+#retro-back img { display: block; width: 100%; height: auto; }
+#retro-back:focus-visible { outline: 2px solid #39ff6a; outline-offset: -2px; }
+#retro-fullscreen-status { color: #39ff6a; font: 12px/1.4 monospace; }
+#retro-game-viewport { flex: 1; min-height: 0; width: 100%; }
+#retro-game-viewport iframe { display: block; width: 100%; height: 100%; border: 0; background: #000; }
+body.retro-playing { overflow: hidden; }
+body.retro-playing .arcade-room, body.retro-playing .site-footer { visibility: hidden; }
+@media (max-width: 600px) { #retro-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 10px; padding: 8px; } }

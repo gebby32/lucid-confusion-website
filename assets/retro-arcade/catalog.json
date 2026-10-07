@@ -1,0 +1,50 @@
+[
+  {
+    "id": "sloth-invaders",
+    "title": "Sloth Invaders",
+    "image": "./assets/retro-arcade/art/sloth-invaders.webp",
+    "width": 640,
+    "height": 360,
+    "url": "./assets/retro-arcade/games/sloth-invaders/index.html"
+  },
+  {
+    "id": "sloth-run",
+    "title": "Sloth Run",
+    "image": "./assets/retro-arcade/art/sloth-run.webp",
+    "width": 640,
+    "height": 480,
+    "url": "./assets/retro-arcade/games/sloth-run/index.html"
+  },
+  {
+    "id": "slothger",
+    "title": "Slothger",
+    "image": "./assets/retro-arcade/art/slothger.webp",
+    "width": 640,
+    "height": 480,
+    "url": "./assets/retro-arcade/games/slothger/index.html"
+  },
+  {
+    "id": "slubble-slobble",
+    "title": "Slubble Slobble",
+    "image": "./assets/retro-arcade/art/slubble-slobble.webp",
+    "width": 640,
+    "height": 480,
+    "url": "./assets/retro-arcade/games/slubble-slobble/index.html"
+  },
+  {
+    "id": "sofa-king-barrel-blitz",
+    "title": "Sofa King Barrel Blitz",
+    "image": "./assets/retro-arcade/art/sofa-king-barrel-blitz.webp",
+    "width": 640,
+    "height": 480,
+    "url": "./assets/retro-arcade/games/sofa-king-barrel-blitz/index.html"
+  },
+  {
+    "id": "grand-theft-sloth",
+    "title": "Grand Theft Sloth",
+    "image": "./assets/retro-arcade/art/grand-theft-sloth.webp",
+    "width": 640,
+    "height": 480,
+    "url": null
+  }
+]
