@@ -4,6 +4,7 @@ import { CabinetScreen, zoomToScreen } from './assets/arcade/screen-controller.j
 import './contact.js';
 import { handheldTeaser, showHandhelds, hideHandhelds, backToHandhelds, isHandheldPlaying } from './handheld.js';
 import { retroTeaser, showRetroArcade, hideRetroArcade, isRetroPlaying } from './retro-arcade.js';
+import { linksTeaser, showLinks } from './links.js';
 
 // Set href to a real destination when each section is ready. No invented routes.
 const cabinets = [
@@ -40,17 +41,19 @@ const aboutStory = document.querySelector('#about-story');
 const contactPanel = document.querySelector('#contact-panel');
 const handheldPanel = document.querySelector('#handheld-panel');
 const retroPanel = document.querySelector('#retro-panel');
+const linksPanel = document.querySelector('#links-panel');
+document.querySelector('#links-return').addEventListener('click', () => backOneLevel());
 // Reading gestures belong to the HTML story; double activation on the frame
 // retains the one-level return gesture without interrupting text selection.
 let framePress = null;
 crtContent.addEventListener('pointerdown', event => {
-  framePress = !aboutStory.contains(event.target) && !contactPanel.contains(event.target) && !handheldPanel.contains(event.target) && !retroPanel.contains(event.target) && event.isPrimary && event.button === 0
+  framePress = !linksPanel.contains(event.target) && !aboutStory.contains(event.target) && !contactPanel.contains(event.target) && !handheldPanel.contains(event.target) && !retroPanel.contains(event.target) && event.isPrimary && event.button === 0
     ? { x: event.clientX, y: event.clientY } : null;
 });
 crtContent.addEventListener('pointerup', event => {
   const press = framePress;
   framePress = null;
-  if (!press || view !== 'crt' || zoomTransition || aboutStory.contains(event.target) || contactPanel.contains(event.target) || handheldPanel.contains(event.target) || retroPanel.contains(event.target)
+  if (!press || view !== 'crt' || zoomTransition || linksPanel.contains(event.target) || aboutStory.contains(event.target) || contactPanel.contains(event.target) || handheldPanel.contains(event.target) || retroPanel.contains(event.target)
     || Math.hypot(event.clientX - press.x, event.clientY - press.y) > 7) return;
   const tap = { time: event.timeStamp, x: event.clientX, y: event.clientY, type: event.pointerType };
   if (lastMonitorTap && tap.type === lastMonitorTap.type && tap.time - lastMonitorTap.time < 400
@@ -93,10 +96,12 @@ function changeZoomView(next) {
   cancelZoom?.();
   clearMonitorTap();
   view = next;
+  document.body.classList.toggle('links-open', next === 'crt' && cabinets[active].id === 'the-links');
   zoomTransition = true;
   crtContent.hidden = true;
   returnButton.hidden = true;
   if (aboutStory.contains(document.activeElement)) stage.focus({ preventScroll: true });
+  if (linksPanel.contains(document.activeElement)) stage.focus({ preventScroll: true });
   if (contactPanel.contains(document.activeElement)) stage.focus({ preventScroll: true });
   if (handheldPanel.contains(document.activeElement)) stage.focus({ preventScroll: true });
   if (next !== 'crt') hideHandhelds();
@@ -127,15 +132,18 @@ function changeZoomView(next) {
       const isContact = cabinets[active].id === 'contact-us';
       const isHandheld = cabinets[active].id === 'retro-handheld';
       const isRetro = cabinets[active].id === 'retro-arcade';
-      returnButton.classList.toggle('game-return', isHandheld || isRetro);
+      const isLinks = cabinets[active].id === 'the-links';
+      returnButton.classList.toggle('game-return', isHandheld || isRetro || isAbout);
       returnButton.replaceChildren();
-      if (isHandheld || isRetro) {
+      if (isHandheld || isRetro || isAbout) {
         const image = document.createElement('img');
         image.src = './assets/arcade/art/back-to-cabinet-transparent.png';
         image.alt = 'Back to Cabinet'; image.width = 216; image.height = 72; image.draggable = false;
         returnButton.append(image);
       } else returnButton.textContent = 'Back to Cabinet';
-      returnButton.hidden = false;
+      returnButton.hidden = isLinks;
+      crtContent.classList.toggle('links-view', isLinks);
+      linksPanel.hidden = !isLinks;
       crtContent.classList.toggle('about-view', isAbout);
       crtContent.classList.toggle('contact-view', isContact);
       crtContent.classList.toggle('handheld-view', isHandheld);
@@ -144,8 +152,8 @@ function changeZoomView(next) {
       crtContent.classList.toggle('retro-view', isRetro);
       document.querySelector('#retro-frame').hidden = !isRetro;
       retroPanel.hidden = !isRetro;
-      document.querySelector('#crt-title').hidden = isAbout || isContact || isHandheld || isRetro;
-      document.querySelector('#crt-placeholder').hidden = isAbout || isContact || isHandheld || isRetro;
+      document.querySelector('#crt-title').hidden = isAbout || isContact || isHandheld || isRetro || isLinks;
+      document.querySelector('#crt-placeholder').hidden = isAbout || isContact || isHandheld || isRetro || isLinks;
       document.querySelector('#contact-frame').hidden = !isContact;
       contactPanel.hidden = !isContact;
       document.querySelector('#about-frame').hidden = !isAbout;
@@ -153,6 +161,7 @@ function changeZoomView(next) {
       document.querySelector('#crt-title').textContent = cabinets[active].name.toUpperCase();
       crtContent.setAttribute('aria-label', `${cabinets[active].name} interface`);
       crtContent.hidden = false;
+      if (isLinks) { showLinks(); announcement.textContent = 'The Links. Explore the signs.'; }
       if (isRetro) { showRetroArcade(); announcement.textContent = 'Retro Arcade. Choose a game.'; }
       if (isHandheld) {
         showHandhelds();
@@ -238,6 +247,7 @@ function updateScreenEffects(now) {
   return [...screens.values()].some(screen => screen.mode === 'noise');
 }
 function closeScreen() {
+  document.body.classList.remove('links-open');
   if (!focusedScreen) return;
   hideHandhelds();
   hideRetroArcade();
@@ -264,6 +274,11 @@ document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && focusedScreen && !isHandheldPlaying() && !isRetroPlaying()) { event.preventDefault(); backOneLevel(); }
 });
 function showScreenMessage(screen) {
+  if (cabinets[active].id === 'the-links') {
+    screen.setCanvas(linksTeaser());
+    announcement.textContent = 'Important Links to Important Things <click to continue>';
+    return;
+  }
   if (cabinets[active].id === 'retro-arcade') {
     retroTeaser(canvas => {
       if (focusedScreen !== screen || view !== 'cabinet') return false;

@@ -1,0 +1,27 @@
+#crt-content.links-view { position: fixed; inset: 0; transform: none; width: 100%; height: 100dvh; aspect-ratio: auto; border-radius: 0; overflow-y: auto; background: #050708; pointer-events: auto; display: block; overscroll-behavior: contain; }
+#crt-content.links-view[hidden], #links-panel[hidden], #links-panel [hidden] { display: none; }
+#links-panel { height: 100%; padding: 80px 0 0; display: grid; place-items: center; color: #39ff6a; font-family: VT323, "Share Tech Mono", "IBM Plex Mono", monospace; }
+.links-monitor { position: relative; width: min(100vw, calc(133.333dvh - 106.667px)); aspect-ratio: 4 / 3; background: #000; }
+.links-picture { position: absolute; width: 74%; aspect-ratio: 4 / 3; left: 13%; top: 12%; }
+.links-art { display: block; width: 100%; height: 100%; object-fit: contain; }
+#links-frame { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; }
+.links-hotspot { position: absolute; display: block; margin: 0; padding: 0; border: 0; background: transparent; border-radius: 5px; cursor: pointer; color: transparent; text-decoration: none; transition: background .12s, box-shadow .12s; touch-action: manipulation; }
+.links-hotspot:hover, .links-hotspot:active { background: #91ffbe22; box-shadow: 0 0 12px #39ff6a99, inset 0 0 9px #39ff6a55; }
+.links-hotspot:focus-visible { outline: 3px solid #90ffb4; outline-offset: 2px; background: #39ff6a33; box-shadow: 0 0 12px #39ff6a; }
+.links-hotspot span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; color: #39ff6a; }
+.links-google { left: 4%; top: 4%; width: 17%; height: 29%; transform: rotate(9deg); }
+.links-apple { left: 80%; top: 5%; width: 16%; height: 29%; transform: rotate(-9deg); }
+.links-youtube { left: 19%; top: 44%; width: 63%; height: 13%; }
+.links-website { left: 28%; top: 60%; width: 44%; height: 9%; }
+.links-instagram { left: 17%; top: 71%; width: 31%; height: 9%; }
+.links-reddit { left: 52%; top: 71%; width: 31%; height: 9%; }
+.links-x { left: 7%; top: 84%; width: 37%; height: 10%; }
+.links-twitch { left: 56%; top: 84%; width: 37%; height: 10%; }
+#links-beach { border: 0; padding: 0; background: transparent; cursor: pointer; }
+#links-beach:focus-visible { outline: 3px solid #39ff6a; outline-offset: -3px; }
+#links-return { margin: 0; }
+#links-return img { display: block; width: 100%; height: auto; }
+#links-apple-notice { position: absolute; right: 1%; top: 34%; z-index: 2; padding: 6px 8px; border: 1px solid #39ff6a; border-radius: 4px; color: #baffcc; background: #120c20f2; box-shadow: 0 0 8px #ad45ff99; font-size: clamp(12px, 1.4vw, 18px); pointer-events: none; }
+body.links-open .site-footer { visibility: hidden; }
+body.links-open { overflow: hidden; }
+@media(prefers-reduced-motion:reduce) { .links-hotspot { transition: none; } }

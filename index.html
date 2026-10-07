@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="contact.css">
   <link rel="stylesheet" href="handheld.css">
   <link rel="stylesheet" href="retro-arcade.css">
+  <link rel="stylesheet" href="links.css">
   <link rel="icon" type="image/png" href="favicon.png">
   <script type="importmap">{"imports":{"three":"./assets/vendor/three/three.module.min.js"}}</script>
   <script type="module" src="arcade.js"></script>
@@ -21,6 +22,29 @@
     <section id="crt-content" aria-label="Cabinet interface" hidden>
       <h2 id="crt-title"></h2>
       <p id="crt-placeholder"><strong>Coming soon.</strong><br>Stay tuned!</p>
+      <section id="links-panel" aria-label="The Links" hidden>
+        <div class="links-monitor">
+          <div id="links-battle" class="links-picture">
+            <img class="links-art" data-src="assets/links/battle.png" width="1448" height="1086" alt="A sloth commander leads an epic battle beneath glowing social and app-store signs." draggable="false">
+            <a class="links-hotspot links-google" href="https://play.google.com/store/apps/details?id=app.lucidconfusion.omnistash" target="_blank" rel="noopener noreferrer" aria-label="Google Play — OmniStash (opens in a new tab)"><span>Google Play — OmniStash</span></a>
+            <button class="links-hotspot links-apple" type="button" aria-label="Apple App Store — Coming Soon..."><span>Apple App Store — Coming Soon...</span></button>
+            <div id="links-apple-notice" role="status" hidden>Coming Soon...</div>
+            <a class="links-hotspot links-youtube" href="https://youtube.com/@Lucid_Confusion" target="_blank" rel="noopener noreferrer" aria-label="YouTube — Lucid Confusion (opens in a new tab)"><span>YouTube — youtube.com/@Lucid_Confusion</span></a>
+            <button class="links-hotspot links-website" type="button" data-beach aria-label="LucidConfusion.GG — take a beach break"><span>Website — lucidconfusion.gg</span></button>
+            <a class="links-hotspot links-instagram" href="https://instagram.com/not_Lucid_Confusion" target="_blank" rel="noopener noreferrer" aria-label="Instagram — not_Lucid_Confusion (opens in a new tab)"><span>Instagram — instagram.com/not_Lucid_Confusion</span></a>
+            <a class="links-hotspot links-reddit" href="https://reddit.com/r/LucidConfusion" target="_blank" rel="noopener noreferrer" aria-label="Reddit — r/LucidConfusion (opens in a new tab)"><span>Reddit — reddit.com/r/LucidConfusion</span></a>
+            <a class="links-hotspot links-x" href="https://x.com/Lucid_Confusion" target="_blank" rel="noopener noreferrer" aria-label="X — Lucid_Confusion (opens in a new tab)"><span>X — x.com/Lucid_Confusion</span></a>
+            <a class="links-hotspot links-twitch" href="https://twitch.tv/not_Lucid_Confusion" target="_blank" rel="noopener noreferrer" aria-label="Twitch — not_Lucid_Confusion (opens in a new tab)"><span>Twitch — twitch.tv/not_Lucid_Confusion</span></a>
+          </div>
+          <button id="links-beach" class="links-picture" type="button" aria-label="Return to the main Links page" hidden>
+            <img class="links-art" data-src="assets/links/beach.png" width="1448" height="1086" alt="A smug sloth relaxes on a tropical beach and jokes that you are already on this website—go back and enjoy the games." draggable="false">
+          </button>
+          <img id="links-frame" data-src="assets/links/frame.png" width="1448" height="1086" alt="" aria-hidden="true" draggable="false">
+        </div>
+        <button id="links-return" class="game-return" type="button" aria-label="Back to Cabinet"><img data-src="assets/links/back.png" width="216" height="72" alt="Back to Cabinet" draggable="false"></button>
+
+        <div id="links-status" class="visually-hidden" role="status" aria-live="polite"></div>
+      </section>
       <img id="about-frame" src="assets/arcade/art/Cyberpunk%20About%20Us%20Monitor%20Frame.png" alt="" aria-hidden="true" draggable="false" hidden>
       <article id="about-story" tabindex="0" aria-labelledby="about-heading" hidden>
         <h2 id="about-heading" class="visually-hidden">About Us — Lucid Confusion Creations</h2>
