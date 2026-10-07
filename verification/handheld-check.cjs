@@ -76,7 +76,7 @@ const snapshot = async (page, name) => { if (output) await page.screenshot({ pat
         assert.equal(await page.evaluate(() => arcadeDebug.state.active), 1);
         assert.equal(await page.evaluate(() => arcadeDebug.state.view), 'crt');
         await snapshot(page, `handheld-${game.id}-${label}`);
-        assert.equal(await page.locator('#handheld-back').textContent(), 'Back to Arcade');
+        assert.equal(await page.locator('#handheld-back').getAttribute('aria-label'), 'Back to Cabinet');
         await page.locator('#handheld-back').click();
         assert.equal(await page.locator('iframe').count(), 0);
         assert(await page.locator('#handheld-grid').isVisible());

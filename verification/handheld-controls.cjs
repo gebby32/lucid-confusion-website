@@ -46,7 +46,8 @@ const url = process.env.PREVIEW_URL || 'http://127.0.0.1:61863/';
       }
       await doubleClickStays();
       const style = await page.locator('#handheld-back').evaluate(e => ({ font: getComputedStyle(e).fontSize, width: e.offsetWidth, height: e.offsetHeight }));
-      assert.equal(style.font, '24px'); assert(style.width < 290 && style.height >= 44 && style.height < 60);
+      assert.equal(style.width, 216); assert.equal(style.height, 72);
+      assert.equal(await page.locator('#handheld-back img').getAttribute('src'), './assets/arcade/art/back-to-cabinet.png');
       const toolbar = await page.locator('.handheld-toolbar').boundingBox(), iframe = await page.locator('iframe').boundingBox();
       assert(toolbar.y + toolbar.height <= iframe.y + 1);
       // HTML inputs and editable regions inside the iframe retain Backspace.

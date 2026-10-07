@@ -142,6 +142,8 @@ export async function showHandhelds() {
         event.preventDefault();
         if (selected) return;
         selected = game; selectedLink = link;
+        const backImage = gameBack.querySelector('img');
+        if (!backImage.hasAttribute('src')) backImage.src = './assets/arcade/art/back-to-cabinet.png';
         const iframe = document.createElement('iframe');
         iframe.title = game.title; iframe.allow = 'autoplay; fullscreen; gamepad';
         iframe.src = game.url;

@@ -10,9 +10,7 @@
 #retro-player { position: fixed; inset: 0; z-index: 100; width: 100%; height: 100dvh; display: flex; flex-direction: column; background: #000; }
 #retro-player:fullscreen { width: 100%; height: 100%; }
 .retro-toolbar { position: relative; z-index: 2; flex: none; display: flex; align-items: center; gap: 12px; padding: max(2px, env(safe-area-inset-top)) max(6px, env(safe-area-inset-right)) 2px max(6px, env(safe-area-inset-left)); background: #000; }
-#retro-back { display: block; flex: none; width: 216px; max-width: 65vw; padding: 0; border: 0; background: #000; cursor: pointer; }
-#retro-back img { display: block; width: 100%; height: auto; }
-#retro-back:focus-visible { outline: 2px solid #39ff6a; outline-offset: -2px; }
+.retro-toolbar::before { content: ""; flex: none; width: min(216px, 65vw); aspect-ratio: 3 / 1; }
 #retro-fullscreen-status { color: #39ff6a; font: 12px/1.4 monospace; }
 #retro-game-viewport { flex: 1; min-height: 0; width: 100%; }
 #retro-game-viewport iframe { display: block; width: 100%; height: 100%; border: 0; background: #000; }
