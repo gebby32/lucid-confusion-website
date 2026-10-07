@@ -95,6 +95,7 @@ function changeZoomView(next) {
   view = next;
   zoomTransition = true;
   crtContent.hidden = true;
+  returnButton.hidden = true;
   if (aboutStory.contains(document.activeElement)) stage.focus({ preventScroll: true });
   if (contactPanel.contains(document.activeElement)) stage.focus({ preventScroll: true });
   if (handheldPanel.contains(document.activeElement)) stage.focus({ preventScroll: true });
@@ -126,6 +127,15 @@ function changeZoomView(next) {
       const isContact = cabinets[active].id === 'contact-us';
       const isHandheld = cabinets[active].id === 'retro-handheld';
       const isRetro = cabinets[active].id === 'retro-arcade';
+      returnButton.classList.toggle('game-return', isHandheld || isRetro);
+      returnButton.replaceChildren();
+      if (isHandheld || isRetro) {
+        const image = document.createElement('img');
+        image.src = './assets/arcade/art/back-to-cabinet-transparent.png';
+        image.alt = 'Back to Cabinet'; image.width = 216; image.height = 72; image.draggable = false;
+        returnButton.append(image);
+      } else returnButton.textContent = 'Back to Cabinet';
+      returnButton.hidden = false;
       crtContent.classList.toggle('about-view', isAbout);
       crtContent.classList.toggle('contact-view', isContact);
       crtContent.classList.toggle('handheld-view', isHandheld);
@@ -384,7 +394,7 @@ function openCabinet() {
   camera.aspect = stage.clientWidth / stage.clientHeight;
   renderer.setSize(stage.clientWidth, stage.clientHeight);
   const pose = zoomPose(screen);
-  returnButton.hidden = false;
+  returnButton.hidden = true;
   const fromZoom = camera.zoom, fromOffset = camera.view?.offsetY || 0;
   const direction = camera.getWorldDirection(new THREE.Vector3());
   const controls = { enabled: true, target: camera.position.clone().addScaledVector(direction, 5), update() {
@@ -452,13 +462,14 @@ function render(now) {
 function hitCabinet(event) {
   const index = pickCabinet({ x: event.clientX, y: event.clientY });
   if (focusedScreen) {
-    if (zoomTransition || index !== active || !focusedScreen.hit(raycaster)) { clearMonitorTap(); return; }
+    if (zoomTransition || index !== active || (view !== 'cabinet' && !focusedScreen.hit(raycaster))) { clearMonitorTap(); return; }
+    const monitorHit = focusedScreen.hit(raycaster);
     const tap = { time: event.timeStamp, x: event.clientX, y: event.clientY, type: event.pointerType };
     if (lastMonitorTap && tap.type === lastMonitorTap.type && tap.time - lastMonitorTap.time < 400 && Math.hypot(tap.x - lastMonitorTap.x, tap.y - lastMonitorTap.y) < 28) backOneLevel();
     else {
       clearMonitorTap();
       lastMonitorTap = tap;
-      if (view === 'cabinet') monitorTapTimer = setTimeout(() => {
+      if (view === 'cabinet' && monitorHit) monitorTapTimer = setTimeout(() => {
         clearMonitorTap();
         if (view === 'cabinet' && !zoomTransition) changeZoomView('crt');
       }, 400);

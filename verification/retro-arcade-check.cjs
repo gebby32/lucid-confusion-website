@@ -86,7 +86,7 @@ for (const item of JSON.parse(fs.readFileSync('verification/retro-arcade-source.
     console.log(size.width+': '+item.title+' lazy launch, native scaling/input, fullscreen, return/unload passed');
    }
    await page.locator('#screen-return').click();await page.waitForFunction(()=>arcadeDebug.state.view==='cabinet'&&!arcadeDebug.state.zoomTransition);
-   await page.locator('#screen-return').click();await page.waitForFunction(()=>arcadeDebug.state.view==='carousel');
+   await page.keyboard.press('Escape');await page.waitForFunction(()=>arcadeDebug.state.view==='carousel');
    assert.deepEqual(errors,[]);await context.close();
   }
  } finally {await browser.close()}

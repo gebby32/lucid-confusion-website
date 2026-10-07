@@ -114,7 +114,6 @@ export async function handheldTeaser() {
 }
 
 export async function showHandhelds() {
-  back.textContent = 'Back to Cabinet';
   if (shown) {
     if (selected) gameViewport.querySelector('iframe')?.contentWindow?.focus();
     return;
@@ -143,7 +142,7 @@ export async function showHandhelds() {
         if (selected) return;
         selected = game; selectedLink = link;
         const backImage = gameBack.querySelector('img');
-        if (!backImage.hasAttribute('src')) backImage.src = './assets/arcade/art/back-to-cabinet.png';
+        if (!backImage.hasAttribute('src')) backImage.src = './assets/arcade/art/back-to-arcade-transparent.png';
         const iframe = document.createElement('iframe');
         iframe.title = game.title; iframe.allow = 'autoplay; fullscreen; gamepad';
         iframe.src = game.url;
@@ -178,7 +177,7 @@ export function backToHandhelds() {
       if (document.fullscreenElement) await document.exitFullscreen();
       // Unload only after fullscreen has exited, then restore the same grid.
       stopGame();
-      grid.hidden = false; back.textContent = 'Back to Cabinet';
+      grid.hidden = false;
       selectedLink?.focus({ preventScroll: true });
     } catch {
       fullscreenStatus.textContent = 'Could not exit fullscreen. Please try Back to Arcade again.';

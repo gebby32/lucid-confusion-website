@@ -90,7 +90,7 @@ export async function showRetroArcade() {
           if (event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
           event.preventDefault(); if (selected) return;
           selected = game; selectedLink = item; fullscreenStatus.textContent = '';
-          if (!backImage.hasAttribute('src')) backImage.src = './assets/arcade/art/back-to-cabinet.png';
+          if (!backImage.hasAttribute('src')) backImage.src = './assets/arcade/art/back-to-arcade-transparent.png';
           const iframe = document.createElement('iframe');
           iframe.title = game.title; iframe.allow = 'autoplay; fullscreen; gamepad'; iframe.src = game.url;
           iframe.addEventListener('load', () => {

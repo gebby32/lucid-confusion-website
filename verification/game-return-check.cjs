@@ -6,17 +6,40 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict');
   await page.goto((process.env.PREVIEW_URL||'http://127.0.0.1:8771/')+'?debug=1');await page.waitForFunction(()=>window.arcadeDebug);await page.emulateMedia({reducedMotion:'reduce'});
   await page.locator('#arcade').focus();if(kind==='handheld')await page.keyboard.press('ArrowLeft');await page.keyboard.press('Enter');await page.waitForFunction(()=>arcadeDebug.state.view==='cabinet'&&!arcadeDebug.state.zoomTransition);await page.keyboard.press('Enter');await page.waitForSelector('#'+kind+'-grid a');assert.equal(loads.length,0);
   for(const fullscreen of [false,true]){
+   const selectionBack=page.locator('#screen-return');
+   assert.equal(await selectionBack.locator('img').getAttribute('src'),'./assets/arcade/art/back-to-cabinet-transparent.png');
+   const selectionRect=await selectionBack.boundingBox();assert(selectionRect.x<=8&&selectionRect.y<=4);
+   assert.equal(await selectionBack.evaluate(e=>getComputedStyle(e).backgroundColor),'rgba(0, 0, 0, 0)');
    const link=page.locator('#'+kind+'-grid a').first();if(mobile)await link.tap();else await link.click();
    const iframe=page.locator('#'+kind+'-player iframe');await iframe.waitFor();const game=await(await iframe.elementHandle()).contentFrame();await game.waitForLoadState('load');
-   const button=page.locator('#'+kind+'-back'),image=button.locator('img');await image.evaluate(i=>i.decode());assert((await image.getAttribute('src')).endsWith('/assets/arcade/art/back-to-cabinet.png'));assert.equal(await button.getAttribute('aria-label'),'Back to Cabinet');
+   const button=page.locator('#'+kind+'-back'),image=button.locator('img');await image.evaluate(i=>i.decode());assert((await image.getAttribute('src')).endsWith('/assets/arcade/art/back-to-arcade-transparent.png'));assert.equal(await button.getAttribute('aria-label'),'Back to Arcade');
    assert.equal(await button.evaluate(e=>getComputedStyle(e).position),'fixed');const rect=await button.boundingBox();assert(rect.x<=8&&rect.y<=4&&rect.width===216&&rect.height===72);assert(!(await page.locator('#screen-return').isVisible()));
    assert(await button.evaluate(e=>{const r=e.getBoundingClientRect();return e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))}));
    const gameRect=await iframe.boundingBox();assert(Math.abs(gameRect.y-(kind==='handheld'?52.4:76))<1,'Existing game viewport retained');
+   assert.equal(await button.evaluate(e=>getComputedStyle(e).backgroundColor),'rgba(0, 0, 0, 0)');
+   assert.equal(await page.locator('.'+kind+'-toolbar').evaluate(e=>getComputedStyle(e).backgroundColor),'rgba(0, 0, 0, 0)');
+   await game.evaluate(()=>{window.receivedDouble=0;window.addEventListener('dblclick',()=>window.receivedDouble++)});
+   await game.locator('body').dblclick({position:{x:10,y:100}});assert.equal(await game.evaluate(()=>window.receivedDouble),1);assert.equal(await page.locator('iframe').count(),1);
    await game.evaluate(()=>window.focus());await page.keyboard.press('f');await page.waitForFunction(k=>document.fullscreenElement?.id===k+'-player',kind);assert(await button.isVisible());await page.keyboard.press('f');await page.waitForFunction(()=>!document.fullscreenElement);
    if(fullscreen){await page.keyboard.press('f');await page.waitForFunction(()=>document.fullscreenElement)}
    await page.evaluate(k=>{window.removedInFullscreen=null;new MutationObserver(records=>{if(records.some(r=>[...r.removedNodes].some(n=>n.nodeName==='IFRAME')))window.removedInFullscreen=!!document.fullscreenElement}).observe(document.querySelector('#'+k+'-game-viewport'),{childList:true})},kind);
    if(process.env.VERIFICATION_OUTPUT)await page.screenshot({path:process.env.VERIFICATION_OUTPUT+'/return-'+kind+'-'+mobile+'-'+fullscreen+'.png'});
    if(mobile)await button.tap();else await button.click();await page.waitForFunction(()=>document.querySelectorAll('iframe').length===0);assert(game.isDetached());assert.equal(await page.evaluate(()=>document.fullscreenElement),null);assert.equal(await page.evaluate(()=>window.removedInFullscreen),false);assert(await page.locator('#'+kind+'-grid').isVisible());
+  }
+  await page.locator('#screen-return').click();await page.waitForFunction(()=>arcadeDebug.state.view==='cabinet'&&!arcadeDebug.state.zoomTransition);assert(!(await page.locator('#screen-return').isVisible()));
+  async function cabinetPoint(){return page.evaluate(async()=>{
+   const THREE=await import('./assets/vendor/three/three.module.min.js'),d=arcadeDebug,r=document.querySelector('#arcade').getBoundingClientRect(),ray=new THREE.Raycaster();
+   for(const y of [.7,.8,.6,.9,.4,.3])for(const x of [.5,.45,.55,.4,.6]){
+    ray.setFromCamera(new THREE.Vector2(x*2-1,1-y*2),d.camera);const hit=ray.intersectObjects(d.models,true).find(h=>!h.object.userData.groundShadow);let obj=hit?.object;while(obj&&obj.userData.cabinetIndex===undefined)obj=obj.parent;
+    if(obj?.userData.cabinetIndex===d.state.active&&!d.screens.get(d.state.active).hit(ray))return{x:r.x+r.width*x,y:r.y+r.height*y};
+   }throw Error('No cabinet body hit');
+  })}
+  async function doubleReturn(){const p=await cabinetPoint();if(mobile){await page.touchscreen.tap(p.x,p.y);await page.waitForTimeout(80);await page.touchscreen.tap(p.x,p.y)}else await page.mouse.dblclick(p.x,p.y,{delay:80});await page.waitForFunction(()=>arcadeDebug.state.view==='carousel');await page.waitForTimeout(450);assert.equal(await page.evaluate(()=>arcadeDebug.state.view),'carousel')}
+  await doubleReturn();
+  // Every cabinet supports body double-return; single body clicks do not zoom.
+  for(let i=0;i<9;i++){
+   await page.locator('#arcade').focus();await page.keyboard.press('ArrowRight');await page.keyboard.press('Enter');await page.waitForFunction(()=>arcadeDebug.state.view==='cabinet'&&!arcadeDebug.state.zoomTransition);assert(!(await page.locator('#screen-return').isVisible()));
+   const p=await cabinetPoint();if(mobile)await page.touchscreen.tap(p.x,p.y);else await page.mouse.click(p.x,p.y);await page.waitForTimeout(450);assert.equal(await page.evaluate(()=>arcadeDebug.state.view),'cabinet');await doubleReturn();
   }
   assert.equal(loads.length,2);assert.deepEqual(errors,[]);console.log(`${kind} ${mobile?'mobile':'desktop'}: shared image, fixed upper-left, hidden bottom control, unchanged game bounds, F toggle, normal/fullscreen return and unload passed`);await page.close();
  }

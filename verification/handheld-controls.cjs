@@ -37,7 +37,7 @@ const url = process.env.PREVIEW_URL || 'http://127.0.0.1:61863/';
       let game = await open();
       async function doubleClickStays() {
         await game.evaluate(() => { window.__doubleClicks = []; window.__doubleClickArrivals = []; window.addEventListener('dblclick', e => window.__doubleClickArrivals.push(e.defaultPrevented), true); window.addEventListener('dblclick', e => window.__doubleClicks.push(e.defaultPrevented)); });
-        await game.locator('body').dblclick({ position: { x: 15, y: 15 } });
+        await game.locator('body').dblclick({ position: { x: 15, y: 100 } });
         assert.equal(await page.locator('iframe').count(), 1);
         assert.deepEqual(await game.evaluate(() => window.__doubleClickArrivals), [false]);
         // The original game may prevent browser selection/zoom itself. It must
@@ -47,7 +47,7 @@ const url = process.env.PREVIEW_URL || 'http://127.0.0.1:61863/';
       await doubleClickStays();
       const style = await page.locator('#handheld-back').evaluate(e => ({ font: getComputedStyle(e).fontSize, width: e.offsetWidth, height: e.offsetHeight }));
       assert.equal(style.width, 216); assert.equal(style.height, 72);
-      assert.equal(await page.locator('#handheld-back img').getAttribute('src'), './assets/arcade/art/back-to-cabinet.png');
+      assert.equal(await page.locator('#handheld-back img').getAttribute('src'), './assets/arcade/art/back-to-arcade-transparent.png');
       const toolbar = await page.locator('.handheld-toolbar').boundingBox(), iframe = await page.locator('iframe').boundingBox();
       assert(toolbar.y + toolbar.height <= iframe.y + 1);
       // HTML inputs and editable regions inside the iframe retain Backspace.
