@@ -17,7 +17,7 @@ for (const item of JSON.parse(fs.readFileSync('verification/retro-arcade-source.
    const context = await browser.newContext({viewport:size,isMobile:mobile,hasTouch:mobile});
    const page = await context.newPage(), requests=[], errors=[];
    page.on('request',r=>requests.push(r.url()));
-   page.on('pageerror',e=>errors.push(e.message));
+   page.on('pageerror',e=>{if(!errors.includes(e.stack))console.error(e.stack);errors.push(e.stack)});
    page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
    page.on('response',r=>{if(r.status()>=400)errors.push(r.status()+' '+r.url())});
    await page.goto(url+'?debug=1');
@@ -37,7 +37,7 @@ for (const item of JSON.parse(fs.readFileSync('verification/retro-arcade-source.
    const monitor = await page.evaluate(()=>{const v=arcadeDebug.screens.get(2).focusPose().target.project(arcadeDebug.camera),r=document.querySelector('#arcade').getBoundingClientRect();return{x:r.x+(v.x+1)*r.width/2,y:r.y+(1-v.y)*r.height/2}});
    if(mobile)await page.touchscreen.tap(monitor.x,monitor.y);else await page.mouse.click(monitor.x,monitor.y);
    await page.waitForSelector('#retro-grid a');
-   assert.equal(await page.locator('#retro-grid a').count(),5);
+   assert.equal(await page.locator('#retro-grid a').count(),catalog.filter(g=>g.url).length);
    assert.equal(await page.locator('#retro-grid > div').innerText(),'COMING SOON...');
    assert(!requests.some(u=>u.includes('/retro-arcade/games/')));
    await page.locator('#retro-grid > div').click();
@@ -59,17 +59,19 @@ for (const item of JSON.parse(fs.readFileSync('verification/retro-arcade-source.
     assert(Math.min(fit.vw/fit.w,fit.vh/fit.h)<=1.26);
     assert(Math.abs((fit.vw-fit.w)/2-fit.x)<=1&&Math.abs((fit.vh-fit.h)/2-fit.y)<=1);
     await game.evaluate(()=>window.focus());
-    const playState=item.id==='sloth-run'?'race':'game';
+    const playState=item.id==='sloth-run'?'race':['the-sloth-king','grand-theft-sloth'].includes(item.id)?'play':'game';
     for(let attempt=0;attempt<8;attempt++) {
      if(await game.evaluate(state=>LP.States.current===state,playState))break;
-     await page.keyboard.press('Enter');await page.waitForTimeout(750);
+     const skipIntro=item.id==='grand-theft-sloth'&&await game.evaluate(()=>LP.States.current==='intro');
+     await page.keyboard.press(skipIntro?'Escape':'Enter');await page.waitForTimeout(750);
     }
     assert.equal(await game.evaluate(()=>LP.States.current),playState,'Native menu starts gameplay: '+item.title);
     await game.evaluate(()=>{window.testKeys=[];window.addEventListener('keydown',e=>window.testKeys.push(e.key));window.focus()});
     for(const key of ['Escape','Backspace']) {await page.keyboard.press(key);assert.equal(await page.locator('iframe').count(),1);assert((await game.evaluate(()=>window.testKeys)).includes(key));}
     // Original input mapping still receives a held directional key.
     await page.keyboard.down('ArrowRight');assert(await game.evaluate(()=>LP.Input.downKeys.has('ArrowRight')));await page.keyboard.up('ArrowRight');
-    const key=item.id==='slubble-slobble'?'F2':'f';
+    const key=['slubble-slobble','grand-theft-sloth'].includes(item.id)?'F2':'f';
+    if(item.id==='grand-theft-sloth') {await page.keyboard.down('f');assert(await game.evaluate(()=>LP.Input.held('enter')));assert.equal(await page.evaluate(()=>document.fullscreenElement),null);await page.keyboard.up('f');}
     if(item.id==='slubble-slobble') {await page.keyboard.down('f');assert(await game.evaluate(()=>LP.Input.held('p2fire')));assert.equal(await page.evaluate(()=>document.fullscreenElement),null);await page.keyboard.up('f');}
     await page.keyboard.press(key);await page.waitForFunction(()=>document.fullscreenElement?.id==='retro-player');
     assert(await page.locator('#retro-back').isVisible());
@@ -88,5 +90,5 @@ for (const item of JSON.parse(fs.readFileSync('verification/retro-arcade-source.
    assert.deepEqual(errors,[]);await context.close();
   }
  } finally {await browser.close()}
- console.log('Source hashes, five games, Coming Soon, desktop/phone/tablet checks passed.');
+ console.log('Source hashes, all playable games, Coming Soon, desktop/phone/tablet checks passed.');
 })().catch(e=>{console.error(e);process.exit(1)});

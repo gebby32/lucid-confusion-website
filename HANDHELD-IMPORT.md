@@ -1,5 +1,7 @@
 # Retro Handheld import
 
+October 7 additions: Sloth Kart Racing (portable title: Super Sloth Kart Racing 2.0), Star Sloth 69, and The Legend of Emcee. These are normal entries in the existing grid. Their portable builds are copied unchanged, and thumbnails match their embedded handheld artwork. Source/published hashes are recorded in `verification/arcade-additions-source.json`. The approved Backspace exceptions preserve their native select/undo actions; F fullscreen and button return remain available.
+
 Portable HTML files are copied byte-for-byte. Thumbnails use the exact console image embedded in each build, reduced without cropping. Pink Rampage retains its original Three.js CDN imports; those load only when that game opens.
 
 | Source folder | Game title | Published file (under assets/handhelds) | Portable SHA-256 |

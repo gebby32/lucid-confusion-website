@@ -45,8 +45,8 @@ async function toggleFullscreen() {
 }
 function fullscreenKey(event) {
   if (!selected || event.repeat || event.ctrlKey || event.metaKey || event.altKey || event.key.toLowerCase() !== 'f') return;
-  // Approved exception: F is player-two fire/confirm in Slubble Slobble.
-  if (selected.id === 'slubble-slobble' || event.target.isContentEditable || event.target.closest?.('input, textarea, select')) return;
+  // Approved exceptions: native F gameplay; these games retain F2 fullscreen.
+  if (['slubble-slobble', 'grand-theft-sloth'].includes(selected.id) || event.target.isContentEditable || event.target.closest?.('input, textarea, select')) return;
   const game = viewport.querySelector('iframe')?.contentWindow;
   if (game?.LP?.States?.current === 'entry') return;
   event.preventDefault(); event.stopImmediatePropagation();

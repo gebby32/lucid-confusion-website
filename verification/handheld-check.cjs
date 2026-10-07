@@ -18,7 +18,7 @@ const snapshot = async (page, name) => { if (output) await page.screenshot({ pat
       page.on('request', request => { if (!request.url().startsWith('data:')) requests.push(request.url()); });
       page.on('response', response => { if (response.status() >= 400) errors.push(`${response.status()} ${response.url()}`); });
       page.on('requestfailed', request => errors.push(`${request.failure().errorText} ${request.url()}`));
-      await page.goto('http://127.0.0.1:8771/?debug=1');
+      await page.goto((process.env.PREVIEW_URL || 'http://127.0.0.1:8771/')+'?debug=1');
       await page.waitForFunction(() => window.arcadeDebug);
       await page.emulateMedia({ reducedMotion: 'reduce' });
       assert.equal(requests.filter(url => url.includes('/assets/handhelds/')).length, 0);
@@ -37,7 +37,7 @@ const snapshot = async (page, name) => { if (output) await page.screenshot({ pat
         return { x: r.x + (v.x + 1) * r.width / 2, y: r.y + (1 - v.y) * r.height / 2 };
       });
       if (mobile) await page.touchscreen.tap(point.x, point.y); else await page.mouse.click(point.x, point.y);
-      await page.waitForFunction(() => arcadeDebug.state.view === 'crt' && !arcadeDebug.state.zoomTransition && document.querySelectorAll('#handheld-grid a').length === 20);
+      await page.waitForFunction(count => arcadeDebug.state.view === 'crt' && !arcadeDebug.state.zoomTransition && document.querySelectorAll('#handheld-grid a').length === count, catalog.length);
       assert.deepEqual(await page.locator('#handheld-grid a span').allTextContents(), catalog.map(game => game.title));
       assert.equal(await page.locator('iframe').count(), 0);
       assert(!requests.some(url => /\/assets\/handhelds\/[^/]+\/index.html/.test(url)));
@@ -60,7 +60,7 @@ const snapshot = async (page, name) => { if (output) await page.screenshot({ pat
         await gameFrame.waitForLoadState('load');
         await gameFrame.waitForFunction(() => [...document.images].every(image => image.complete && image.naturalWidth > 0) && document.querySelector('canvas'));
         if (game.id === 'the-circus') await gameFrame.waitForFunction(() => window.THREE && document.querySelector('#lp-3d'), { timeout: 30000 });
-        assert.equal(await gameFrame.title(), game.title);
+        assert.equal(await gameFrame.title(), fs.readFileSync(game.url.slice(2),'utf8').match(/<title>(.*?)<\/title>/s)[1]);
         assert(!(await page.locator('#handheld-frame').isVisible()));
         assert(!(await page.locator('#arcade').isVisible()));
         const playerBounds = await page.locator('#handheld-player').boundingBox();

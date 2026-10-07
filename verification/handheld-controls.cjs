@@ -25,7 +25,7 @@ const url = process.env.PREVIEW_URL || 'http://127.0.0.1:61863/';
         const game = await (await iframe.elementHandle()).contentFrame();
         await game.waitForLoadState('load');
         assert.equal(requests.length, prior + 1);
-        assert.equal(await game.title(), catalog[index].title);
+        assert.equal(await game.title(), fs.readFileSync(catalog[index].url.slice(2),'utf8').match(/<title>(.*?)<\/title>/s)[1]);
         return game;
       }
       async function returned() {
@@ -89,7 +89,7 @@ const url = process.env.PREVIEW_URL || 'http://127.0.0.1:61863/';
           assert.equal(await page.locator('iframe').count(), 1);
           await game.evaluate(() => window.focus());
           await page.keyboard.press('Backspace');
-          if (['sewer-halo', 'the-nudibranch'].includes(catalog[i].id)) {
+          if (['sewer-halo', 'the-nudibranch', 'sloth-kart-racing', 'star-sloth-69', 'the-legend-of-emcee'].includes(catalog[i].id)) {
             assert.equal(await page.locator('iframe').count(), 1);
             await page.locator('#handheld-back').click();
           }

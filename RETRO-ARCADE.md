@@ -1,10 +1,10 @@
 # Retro Arcade
 
-The Retro Arcade cabinet presents an animated terminal prompt first. Opening its CRT fetches the six-entry catalog and title-screen thumbnails. Five entries launch a single same-origin iframe; Grand Theft Sloth is a noninteractive Coming Soon entry. Returning removes the iframe and restores the grid.
+The Retro Arcade cabinet presents an animated terminal prompt first. Opening its CRT fetches the eight-entry catalog and title-screen thumbnails. Seven entries launch a single same-origin iframe; Sleavis and Slutthead Do America is a noninteractive Coming Soon entry. Returning removes the iframe and restores the grid.
 
-The source games and their required Lucid Plumbing files are copied without changes under `assets/retro-arcade/games/`. The original border and Back image are also copied unchanged. Only grid thumbnails are resized. `verification/retro-arcade-source.json` records source paths and SHA-256 hashes. The importer is `tools/import-retro-arcade.cjs` (requires Sharp).
+The source games and their required Lucid Plumbing files are copied under `assets/retro-arcade/games/`. The original border and Back image are unchanged; grid thumbnails are resized. The sole approved game repair renames a local numeric variable in Grand Theft Sloth's radar so it no longer shadows the text drawing helper. Original source folders remain untouched. `verification/retro-arcade-source.json` records the initial import; `verification/arcade-additions-source.json` records original and published hashes for the additions. The incremental importer is `tools/import-arcade-additions.cjs` (requires Sharp).
 
-F toggles fullscreen for four games. Slubble Slobble retains F for player-two fire/confirm and F2 for fullscreen, as approved. The host delegates the games' existing Plumbing fullscreen helper to the player container to keep Back accessible. Escape and Backspace are not intercepted. Native game scaling, controls, graphics, audio, and timing remain intact. Touch gameplay is limited to the controls supplied by each original game; no new game controls are added.
+F toggles fullscreen except in Slubble Slobble and Grand Theft Sloth, which retain their native F gameplay actions and F2 fullscreen, as approved. The host delegates the games' existing Plumbing fullscreen helper to the player container to keep Back accessible. Escape and Backspace are not intercepted. Native game scaling, controls, graphics, audio, and timing remain intact. Touch gameplay is limited to the controls supplied by each original game; no new game controls are added.
 
 ## Verification
 

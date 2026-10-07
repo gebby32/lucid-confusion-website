@@ -45,6 +45,22 @@
     "image": "./assets/retro-arcade/art/grand-theft-sloth.webp",
     "width": 640,
     "height": 480,
+    "url": "./assets/retro-arcade/games/grand-theft-sloth/index.html"
+  },
+  {
+    "id": "the-sloth-king",
+    "title": "The Sloth King",
+    "image": "./assets/retro-arcade/art/the-sloth-king.webp",
+    "width": 640,
+    "height": 480,
+    "url": "./assets/retro-arcade/games/the-sloth-king/index.html"
+  },
+  {
+    "id": "sleavis-and-slutthead-do-america",
+    "title": "Sleavis and Slutthead Do America",
+    "image": "./assets/retro-arcade/art/sleavis-and-slutthead-do-america.webp",
+    "width": 640,
+    "height": 480,
     "url": null
   }
 ]

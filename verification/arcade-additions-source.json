@@ -1,0 +1,398 @@
+[
+  {
+    "source": "C:\\Retro Handhelds\\Fake Game Boy Hits\\Sloth Kart Racing\\Sloth-Kart-Racing\\Sloth-Kart-Racing-portable.html",
+    "file": "assets/handhelds/sloth-kart-racing/index.html",
+    "sourceSha256": "73c91cae6748ec8264b9a32198d77e448fac02308d4cd9bc16a6c13e5511cb40",
+    "sha256": "73c91cae6748ec8264b9a32198d77e448fac02308d4cd9bc16a6c13e5511cb40"
+  },
+  {
+    "source": "C:\\Retro Handhelds\\Fake Game Boy Hits\\Star Sloth 69\\game\\StarSloth69-portable.html",
+    "file": "assets/handhelds/star-sloth-69/index.html",
+    "sourceSha256": "81b190b905f5113b8678c94a30c720ab94e44e93d213757e72aedcdecec0a297",
+    "sha256": "81b190b905f5113b8678c94a30c720ab94e44e93d213757e72aedcdecec0a297"
+  },
+  {
+    "source": "C:\\Retro Handhelds\\Fake Game Boy Hits\\The Legend of EmCee\\game\\THE-LEGEND-OF-EMCEE-portable.html",
+    "file": "assets/handhelds/the-legend-of-emcee/index.html",
+    "sourceSha256": "6aa00a15c1c7b3de913a77e2b6cd417833a3f9b04bb8b9ba1aea29b96579fcc7",
+    "sha256": "6aa00a15c1c7b3de913a77e2b6cd417833a3f9b04bb8b9ba1aea29b96579fcc7"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\index.html",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/index.html",
+    "sourceSha256": "ff58df386e1677d7c357ad8aa1feee71384ea0ace653db85cb7207eef47c3463",
+    "sha256": "ff58df386e1677d7c357ad8aa1feee71384ea0ace653db85cb7207eef47c3463"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\css\\style.css",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/css/style.css",
+    "sourceSha256": "33b523db99aaf9d7efbb432b837e912cdcf9d1e96b9f083fdb1cc677de9a65e6",
+    "sha256": "33b523db99aaf9d7efbb432b837e912cdcf9d1e96b9f083fdb1cc677de9a65e6"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\plumbing\\core.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/plumbing/core.js",
+    "sourceSha256": "50ebdc1f1ca8f0cb02f45148c3c792ada83d40bd916c3dab8c94ffe67b72a95c",
+    "sha256": "50ebdc1f1ca8f0cb02f45148c3c792ada83d40bd916c3dab8c94ffe67b72a95c"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\plumbing\\storage.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/plumbing/storage.js",
+    "sourceSha256": "382e048b8280db1efb934a817dfa83236d2fb09be83e7619234ca680b4af83fa",
+    "sha256": "382e048b8280db1efb934a817dfa83236d2fb09be83e7619234ca680b4af83fa"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\plumbing\\monitor.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/plumbing/monitor.js",
+    "sourceSha256": "3bd0f3e9124562fe3fb0d42d302e7fde194d06b0c03a2fbeac01f53cd734cb7c",
+    "sha256": "3bd0f3e9124562fe3fb0d42d302e7fde194d06b0c03a2fbeac01f53cd734cb7c"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\plumbing\\input.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/plumbing/input.js",
+    "sourceSha256": "9ab9785e45e1bb6aae8368bbb04b3e4fa8549850a42ad684b043217455d29a82",
+    "sha256": "9ab9785e45e1bb6aae8368bbb04b3e4fa8549850a42ad684b043217455d29a82"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\plumbing\\gamepad.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/plumbing/gamepad.js",
+    "sourceSha256": "ec8a5574fbb44217844b53714fb779e78cdea55cffc5dd32140da51ae2932639",
+    "sha256": "ec8a5574fbb44217844b53714fb779e78cdea55cffc5dd32140da51ae2932639"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\plumbing\\lcd.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/plumbing/lcd.js",
+    "sourceSha256": "dde3e5b42c64e852104ccbf83f18c71cc8ec121a28bf3a91551b84b187300fce",
+    "sha256": "dde3e5b42c64e852104ccbf83f18c71cc8ec121a28bf3a91551b84b187300fce"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\plumbing\\audio.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/plumbing/audio.js",
+    "sourceSha256": "f3f5318006fd45ed7b56bdab5d211f489d25b93b75b37ddae5e6f810a7decb31",
+    "sha256": "f3f5318006fd45ed7b56bdab5d211f489d25b93b75b37ddae5e6f810a7decb31"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\plumbing\\effects.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/plumbing/effects.js",
+    "sourceSha256": "d44e56c3db9298ff3ce87b0fe408b06e51cf9d540a46900e770a92ac2065d380",
+    "sha256": "d44e56c3db9298ff3ce87b0fe408b06e51cf9d540a46900e770a92ac2065d380"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\js\\game-config.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/js/game-config.js",
+    "sourceSha256": "8a4b4c31f358335eec56f3749259ca6bf0ca34b1b75e6dfc5b173b2d01719e15",
+    "sha256": "8a4b4c31f358335eec56f3749259ca6bf0ca34b1b75e6dfc5b173b2d01719e15"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\js\\gfx.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/js/gfx.js",
+    "sourceSha256": "ea0ea6ef4fb93082e66421e9bf4206720d8085bdf1d3859027652fe71b016e1c",
+    "sha256": "ea0ea6ef4fb93082e66421e9bf4206720d8085bdf1d3859027652fe71b016e1c"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\js\\font.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/js/font.js",
+    "sourceSha256": "b10cadb84a094d713305056b049b7498a45c7e537397df1d04e7570685f67bd2",
+    "sha256": "b10cadb84a094d713305056b049b7498a45c7e537397df1d04e7570685f67bd2"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\js\\city.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/js/city.js",
+    "sourceSha256": "7dd5f1d9e20f2ccf7a3ed985d1bf0afb02097a2fc87f30894b8625b4d5ad53ef",
+    "sha256": "7dd5f1d9e20f2ccf7a3ed985d1bf0afb02097a2fc87f30894b8625b4d5ad53ef"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\js\\lights.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/js/lights.js",
+    "sourceSha256": "8160f98fad8d54772eb5ae7f2400cd77cf70ec314a9aae14d723f5cc0c19f354",
+    "sha256": "8160f98fad8d54772eb5ae7f2400cd77cf70ec314a9aae14d723f5cc0c19f354"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\js\\fx.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/js/fx.js",
+    "sourceSha256": "a06e7556284fe97976f71713a79701d6b7c6449960e35c52d3ed2220179b1c75",
+    "sha256": "a06e7556284fe97976f71713a79701d6b7c6449960e35c52d3ed2220179b1c75"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\js\\art.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/js/art.js",
+    "sourceSha256": "d5779d5241f83f6a0118cf636f814f90047795ed4da861c422d6218451d6fedd",
+    "sha256": "d5779d5241f83f6a0118cf636f814f90047795ed4da861c422d6218451d6fedd"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\js\\vehicles.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/js/vehicles.js",
+    "sourceSha256": "b4c6be17bccad67523479fa6670f572441196a833834ede158d55a647fb26261",
+    "sha256": "b4c6be17bccad67523479fa6670f572441196a833834ede158d55a647fb26261"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\js\\peds.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/js/peds.js",
+    "sourceSha256": "b71c5f59263a23658859edd8de2666579da30e8fc2a102229187ea3d152fe50c",
+    "sha256": "b71c5f59263a23658859edd8de2666579da30e8fc2a102229187ea3d152fe50c"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\js\\weapons.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/js/weapons.js",
+    "sourceSha256": "80f1c303ccd58ddc5518ad8b30d14b3680a8dfeb9f6fea173981ec9fd819a4a3",
+    "sha256": "80f1c303ccd58ddc5518ad8b30d14b3680a8dfeb9f6fea173981ec9fd819a4a3"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\js\\police.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/js/police.js",
+    "sourceSha256": "ead4506e4a0576da188043133dc5891d1116d583b22caa8e29c7aa2193c2d58f",
+    "sha256": "ead4506e4a0576da188043133dc5891d1116d583b22caa8e29c7aa2193c2d58f"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\js\\controls.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/js/controls.js",
+    "sourceSha256": "585b8ab7662cbc58bfaa863825b702c56f5b7465a2675ab32c2a82ff9146e2d5",
+    "sha256": "585b8ab7662cbc58bfaa863825b702c56f5b7465a2675ab32c2a82ff9146e2d5"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\js\\player.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/js/player.js",
+    "sourceSha256": "478cd179944607c0a57dbdbc7bee48aca209c74261e8baf36e75804ca6ce0815",
+    "sha256": "478cd179944607c0a57dbdbc7bee48aca209c74261e8baf36e75804ca6ce0815"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\js\\world.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/js/world.js",
+    "sourceSha256": "4f96e974b2b568eba1da47d7ca13d2313090ff696e164289106e38bf17502e4f",
+    "sha256": "4f96e974b2b568eba1da47d7ca13d2313090ff696e164289106e38bf17502e4f"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\js\\hud.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/js/hud.js",
+    "sourceSha256": "8de9ff56c5f9bc52c133538ec8dc55c825175fa4b483db1c2523da205b672f89",
+    "sha256": "1ce8228764492beda00e7f0fd1d539a90e4db726c6ae59a01dbed90f3728e0a0"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\js\\missions.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/js/missions.js",
+    "sourceSha256": "60501650b4ea571591ac4b467dc90dd5d0c11d69f0a9ca433e766bb53c89cfd2",
+    "sha256": "60501650b4ea571591ac4b467dc90dd5d0c11d69f0a9ca433e766bb53c89cfd2"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\js\\game-audio.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/js/game-audio.js",
+    "sourceSha256": "6ab519c47efd4b3b1012237bca37f3ea5127fc3fa3295e03d4ab65fe962d2af0",
+    "sha256": "6ab519c47efd4b3b1012237bca37f3ea5127fc3fa3295e03d4ab65fe962d2af0"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\js\\screens.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/js/screens.js",
+    "sourceSha256": "f21d119de2143f3772a75743481cfbaccf6c430215f4888775d7e644754e254e",
+    "sha256": "f21d119de2143f3772a75743481cfbaccf6c430215f4888775d7e644754e254e"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\js\\main.js",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/js/main.js",
+    "sourceSha256": "240a1b83e5eda6d1438cbff436e9c2aafdf2d6ebc397d2f4ba45b8d13e28a429",
+    "sha256": "240a1b83e5eda6d1438cbff436e9c2aafdf2d6ebc397d2f4ba45b8d13e28a429"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Grand Theft Sloth\\assets\\title.png",
+    "file": "assets/retro-arcade/games/grand-theft-sloth/assets/title.png",
+    "sourceSha256": "5aa9d4346dc6a87c55167328c0b4f38de20ca577f347fadf5d00f822732018d2",
+    "sha256": "5aa9d4346dc6a87c55167328c0b4f38de20ca577f347fadf5d00f822732018d2"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\index.html",
+    "file": "assets/retro-arcade/games/the-sloth-king/index.html",
+    "sourceSha256": "785ef4823bcfa8813b5dd3ac4e69b8029b2a5760ba7e75117337fde7ecdfc6b0",
+    "sha256": "785ef4823bcfa8813b5dd3ac4e69b8029b2a5760ba7e75117337fde7ecdfc6b0"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\css\\style.css",
+    "file": "assets/retro-arcade/games/the-sloth-king/css/style.css",
+    "sourceSha256": "33b523db99aaf9d7efbb432b837e912cdcf9d1e96b9f083fdb1cc677de9a65e6",
+    "sha256": "33b523db99aaf9d7efbb432b837e912cdcf9d1e96b9f083fdb1cc677de9a65e6"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\plumbing\\core.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/plumbing/core.js",
+    "sourceSha256": "50ebdc1f1ca8f0cb02f45148c3c792ada83d40bd916c3dab8c94ffe67b72a95c",
+    "sha256": "50ebdc1f1ca8f0cb02f45148c3c792ada83d40bd916c3dab8c94ffe67b72a95c"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\plumbing\\storage.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/plumbing/storage.js",
+    "sourceSha256": "382e048b8280db1efb934a817dfa83236d2fb09be83e7619234ca680b4af83fa",
+    "sha256": "382e048b8280db1efb934a817dfa83236d2fb09be83e7619234ca680b4af83fa"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\plumbing\\monitor.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/plumbing/monitor.js",
+    "sourceSha256": "3bd0f3e9124562fe3fb0d42d302e7fde194d06b0c03a2fbeac01f53cd734cb7c",
+    "sha256": "3bd0f3e9124562fe3fb0d42d302e7fde194d06b0c03a2fbeac01f53cd734cb7c"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\plumbing\\input.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/plumbing/input.js",
+    "sourceSha256": "9ab9785e45e1bb6aae8368bbb04b3e4fa8549850a42ad684b043217455d29a82",
+    "sha256": "9ab9785e45e1bb6aae8368bbb04b3e4fa8549850a42ad684b043217455d29a82"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\plumbing\\gamepad.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/plumbing/gamepad.js",
+    "sourceSha256": "ec8a5574fbb44217844b53714fb779e78cdea55cffc5dd32140da51ae2932639",
+    "sha256": "ec8a5574fbb44217844b53714fb779e78cdea55cffc5dd32140da51ae2932639"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\plumbing\\lcd.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/plumbing/lcd.js",
+    "sourceSha256": "dde3e5b42c64e852104ccbf83f18c71cc8ec121a28bf3a91551b84b187300fce",
+    "sha256": "dde3e5b42c64e852104ccbf83f18c71cc8ec121a28bf3a91551b84b187300fce"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\plumbing\\audio.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/plumbing/audio.js",
+    "sourceSha256": "f3f5318006fd45ed7b56bdab5d211f489d25b93b75b37ddae5e6f810a7decb31",
+    "sha256": "f3f5318006fd45ed7b56bdab5d211f489d25b93b75b37ddae5e6f810a7decb31"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\plumbing\\effects.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/plumbing/effects.js",
+    "sourceSha256": "d44e56c3db9298ff3ce87b0fe408b06e51cf9d540a46900e770a92ac2065d380",
+    "sha256": "d44e56c3db9298ff3ce87b0fe408b06e51cf9d540a46900e770a92ac2065d380"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\game-config.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/game-config.js",
+    "sourceSha256": "6bf514d612bd81e37b5929225c1888b2ec603b4fabac030b540680cbf40c2255",
+    "sha256": "6bf514d612bd81e37b5929225c1888b2ec603b4fabac030b540680cbf40c2255"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\font.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/font.js",
+    "sourceSha256": "8570b9960b47f636a861ec93859a48e8abd3a9d525199266eb669f9525e7ca06",
+    "sha256": "8570b9960b47f636a861ec93859a48e8abd3a9d525199266eb669f9525e7ca06"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\gfx.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/gfx.js",
+    "sourceSha256": "0e3b41d3fe79bbdc0b1c854fe47b6c8cec15775fe3ec8cd957fb094d859c4af7",
+    "sha256": "0e3b41d3fe79bbdc0b1c854fe47b6c8cec15775fe3ec8cd957fb094d859c4af7"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\pixel.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/pixel.js",
+    "sourceSha256": "41aeebca5294455ac6013e1e11ed8babe7b55a8616dd0572b2c1fb4562a9424d",
+    "sha256": "41aeebca5294455ac6013e1e11ed8babe7b55a8616dd0572b2c1fb4562a9424d"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\art-kit.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/art-kit.js",
+    "sourceSha256": "cb0e981b5cd733579f91fd4c2b3d37fd07f936cd9748c7edbc44be7dcfa3d28e",
+    "sha256": "cb0e981b5cd733579f91fd4c2b3d37fd07f936cd9748c7edbc44be7dcfa3d28e"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\art-sloth.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/art-sloth.js",
+    "sourceSha256": "ca7c9205671d083f79f6c89f3512e9c7ec2a9a913eba67af23dbd3b15bebdacf",
+    "sha256": "ca7c9205671d083f79f6c89f3512e9c7ec2a9a913eba67af23dbd3b15bebdacf"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\art-chars.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/art-chars.js",
+    "sourceSha256": "00473bcf4479c2a540db1ff7492efbff5ee082598da725c4d6504dee7df19667",
+    "sha256": "00473bcf4479c2a540db1ff7492efbff5ee082598da725c4d6504dee7df19667"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\themes.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/themes.js",
+    "sourceSha256": "f311b0e0f4c23e2f3289f8b20757c0e089dc58c7bde838bb22054304e4c16120",
+    "sha256": "f311b0e0f4c23e2f3289f8b20757c0e089dc58c7bde838bb22054304e4c16120"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\props.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/props.js",
+    "sourceSha256": "9080fa06f9339e649668755f4414a778d12f6f111e76ef5d334d2e9cd1ecb773",
+    "sha256": "9080fa06f9339e649668755f4414a778d12f6f111e76ef5d334d2e9cd1ecb773"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\levels.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/levels.js",
+    "sourceSha256": "754bc7bd802be8bcbbd3a199ef450b79ec2eac363baf498f265d7fa2b6143230",
+    "sha256": "754bc7bd802be8bcbbd3a199ef450b79ec2eac363baf498f265d7fa2b6143230"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\game-audio.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/game-audio.js",
+    "sourceSha256": "6b141c47fd6fb488d276d4d04bf197c0bda85bbc0aadef9e9b17bd0bfc1b93a0",
+    "sha256": "6b141c47fd6fb488d276d4d04bf197c0bda85bbc0aadef9e9b17bd0bfc1b93a0"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\world.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/world.js",
+    "sourceSha256": "1d6ddef4ff1cf9c5f36b61f417228f4e5300cd87a40102bfce3cdb569546d646",
+    "sha256": "1d6ddef4ff1cf9c5f36b61f417228f4e5300cd87a40102bfce3cdb569546d646"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\player.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/player.js",
+    "sourceSha256": "8413e88ba264cc3c381ea82aa831ce9d60d6a1f13303b51eca289c57ef94aa33",
+    "sha256": "8413e88ba264cc3c381ea82aa831ce9d60d6a1f13303b51eca289c57ef94aa33"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\entities.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/entities.js",
+    "sourceSha256": "8f7164105bf0c1f9517a2ba49bc3ad3434b73aaa8bded02140135af99d653da9",
+    "sha256": "8f7164105bf0c1f9517a2ba49bc3ad3434b73aaa8bded02140135af99d653da9"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\hud.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/hud.js",
+    "sourceSha256": "45bcc821fd6ae49d3e5235dbd0b5e6dea99d30ee04c7ab07baf4d0c0ac7c01cc",
+    "sha256": "45bcc821fd6ae49d3e5235dbd0b5e6dea99d30ee04c7ab07baf4d0c0ac7c01cc"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\bosses.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/bosses.js",
+    "sourceSha256": "4f29d4dcd10d7574687b66415a56cb40e9d78c3d612aa0d8c871b5e0a8822bb7",
+    "sha256": "4f29d4dcd10d7574687b66415a56cb40e9d78c3d612aa0d8c871b5e0a8822bb7"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\setpieces.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/setpieces.js",
+    "sourceSha256": "2936e174c8d42dcdf9eada12f16a9ba5b0a8c257fc91f11d9a24f301f3dff098",
+    "sha256": "2936e174c8d42dcdf9eada12f16a9ba5b0a8c257fc91f11d9a24f301f3dff098"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\game.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/game.js",
+    "sourceSha256": "f7377b670af004363b1c9bff29d8fe36f345ade67dec4819da6fa01c212b8738",
+    "sha256": "f7377b670af004363b1c9bff29d8fe36f345ade67dec4819da6fa01c212b8738"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\scenes.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/scenes.js",
+    "sourceSha256": "acc0841b8be86f9a537c2b04eb032be2c01628d589a35d62dbdca8156c28b633",
+    "sha256": "acc0841b8be86f9a537c2b04eb032be2c01628d589a35d62dbdca8156c28b633"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\screens.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/screens.js",
+    "sourceSha256": "4d6ea1757e5b8f530e14f70ea457a62ab357f0ceb28760491f27615db6dcfcde",
+    "sha256": "4d6ea1757e5b8f530e14f70ea457a62ab357f0ceb28760491f27615db6dcfcde"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\bonus.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/bonus.js",
+    "sourceSha256": "91bcb256ae1ee8775781e31fc4b84d653bb491b505ceb3f5813749e7ee69928e",
+    "sha256": "91bcb256ae1ee8775781e31fc4b84d653bb491b505ceb3f5813749e7ee69928e"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\js\\main.js",
+    "file": "assets/retro-arcade/games/the-sloth-king/js/main.js",
+    "sourceSha256": "9e6d5d59327dc81362f745a86e0b1fb8b312dd56fef25b7831ff34d6354d3244",
+    "sha256": "9e6d5d59327dc81362f745a86e0b1fb8b312dd56fef25b7831ff34d6354d3244"
+  },
+  {
+    "source": "C:\\Retro Arcade\\The Sloth King\\assets\\title.png",
+    "file": "assets/retro-arcade/games/the-sloth-king/assets/title.png",
+    "sourceSha256": "4ff0210b073884912f072f9e8f774e15ccd7689de475c462e1bcba18c7f5cb25",
+    "sha256": "4ff0210b073884912f072f9e8f774e15ccd7689de475c462e1bcba18c7f5cb25"
+  }
+]

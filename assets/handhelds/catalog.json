@@ -158,5 +158,29 @@
     "width": 480,
     "height": 360,
     "url": "./assets/handhelds/the-nudibranch/index.html"
+  },
+  {
+    "id": "sloth-kart-racing",
+    "title": "Sloth Kart Racing",
+    "image": "./assets/handhelds/sloth-kart-racing/thumbnail.webp",
+    "width": 288,
+    "height": 360,
+    "url": "./assets/handhelds/sloth-kart-racing/index.html"
+  },
+  {
+    "id": "star-sloth-69",
+    "title": "Star Sloth 69",
+    "image": "./assets/handhelds/star-sloth-69/thumbnail.webp",
+    "width": 288,
+    "height": 360,
+    "url": "./assets/handhelds/star-sloth-69/index.html"
+  },
+  {
+    "id": "the-legend-of-emcee",
+    "title": "The Legend of Emcee",
+    "image": "./assets/handhelds/the-legend-of-emcee/thumbnail.webp",
+    "width": 305,
+    "height": 360,
+    "url": "./assets/handhelds/the-legend-of-emcee/index.html"
   }
 ]
