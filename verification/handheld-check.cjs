@@ -86,7 +86,7 @@ const snapshot = async (page, name) => { if (output) await page.screenshot({ pat
       await page.locator('#screen-return').click();
       await page.waitForFunction(() => arcadeDebug.state.view === 'cabinet' && !arcadeDebug.state.zoomTransition);
       assert.equal(await page.locator('#handheld-grid a').count(), 0);
-      await page.locator('#screen-return').click();
+      await page.keyboard.press('Escape');
       await page.waitForFunction(() => arcadeDebug.state.view === 'carousel');
       assert.deepEqual(errors, []);
       console.log(`${label}: lazy loading, all games, contained layout, and Back navigation passed without browser errors`);
