@@ -194,39 +194,46 @@ function backOneLevel() {
 
 function zoomPose(screen) {
   const cabinet = new THREE.Box3().setFromObject(screen.root);
-  const display = new THREE.Box3().setFromObject(screen.display);
   const pose = screen.focusPose(1);
-  // Keep the zoom view level rather than inheriting the CRT's upward tilt.
   const normal = pose.position.clone().sub(pose.target);
   normal.y = 0;
   normal.normalize();
-  // View from monitor height so the rear machines sit lower against the floor.
+  // Frame the entire cabinet from a lower, almost-level viewpoint. This keeps
+  // the rear machines' feet close to the floor rather than lifting their bases.
+  cabinet.getCenter(pose.target);
   const framing = new THREE.PerspectiveCamera(camera.fov, camera.aspect, 0.01, 100);
-  const corners = [];
-  for (const x of [cabinet.min.x, cabinet.max.x]) for (const y of [display.min.y, cabinet.max.y]) for (const z of [cabinet.min.z, cabinet.max.z]) corners.push(new THREE.Vector3(x, y, z));
-  let distance = 0.5;
-  // Fit the monitor AND the full cabinet top, including its rear corners.
-  for (let i = 0; i < 100; i++) {
-    framing.position.copy(pose.target).addScaledVector(normal, distance);
-    framing.lookAt(pose.target); framing.updateMatrixWorld();
-    if (corners.every(point => { const p = point.clone().project(framing); return p.z > -1 && p.z < 1 && Math.abs(p.x) <= 0.92 && Math.abs(p.y) <= 0.9; })) break;
-    distance *= 1.05;
-  }
-  // A small pullback keeps the existing top alignment with more breathing room.
-  framing.position.copy(pose.target).addScaledVector(normal, distance * 1.06);
-  framing.lookAt(pose.target); framing.updateMatrixWorld();
-  pose.position.copy(framing.position);
-  let top = -Infinity;
-  screen.root.traverse(object => {
-    const positions = object.geometry?.attributes.position;
-    if (!positions) return;
-    const point = new THREE.Vector3();
-    for (let i = 0; i < positions.count; i++) {
-      point.fromBufferAttribute(positions, i).applyMatrix4(object.matrixWorld).project(framing);
-      top = Math.max(top, point.y);
-    }
+  const cornersOf = box => {
+    const points = [];
+    for (const x of [box.min.x, box.max.x]) for (const y of [box.min.y, box.max.y]) for (const z of [box.min.z, box.max.z]) points.push(new THREE.Vector3(x, y, z));
+    return points;
+  };
+  const corners = cornersOf(cabinet);
+  const neighbors = [-1, 1].flatMap(offset => {
+    const neighbor = screens.get(wrap(active + offset));
+    return neighbor ? cornersOf(new THREE.Box3().setFromObject(neighbor.root)) : [];
   });
-  pose.offsetY = (0.94 - top) * stage.clientHeight / 2;
+  const visibleHeight = Math.min(stage.clientHeight, window.innerHeight);
+  const top = 1 - 2 * visibleHeight * 0.05 / stage.clientHeight;
+  const bottom = 1 - 2 * (visibleHeight - Math.max(48, visibleHeight * 0.05)) / stage.clientHeight;
+  // Wide screens can show both neighboring cabinets in full. Portrait keeps
+  // the center readable, with the neighbors framing it at the edges.
+  const neighborLimit = Math.max(0.92, 1.3 / camera.aspect);
+  let distance = 0.5;
+  let upper, lower;
+  for (let i = 0; i < 160; i++) {
+    framing.position.copy(pose.target).addScaledVector(normal, distance);
+    framing.position.y = cabinet.min.y + (cabinet.max.y - cabinet.min.y) * 0.40;
+    framing.lookAt(pose.target); framing.updateMatrixWorld();
+    const projected = corners.map(point => point.clone().project(framing));
+    upper = Math.max(...projected.map(point => point.y));
+    lower = Math.min(...projected.map(point => point.y));
+    if (upper - lower <= top - bottom
+      && projected.every(point => point.z > -1 && point.z < 1 && Math.abs(point.x) <= 0.86)
+      && neighbors.every(point => Math.abs(point.clone().project(framing).x) <= neighborLimit)) break;
+    distance *= 1.025;
+  }
+  pose.position.copy(framing.position);
+  pose.offsetY = (top + bottom - upper - lower) * stage.clientHeight / 4;
   return pose;
 }
 
