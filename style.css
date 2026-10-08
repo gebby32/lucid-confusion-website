@@ -39,15 +39,6 @@ body { background: #10091a; color: #f7efff; font-family: Arial, sans-serif; }
 .site-footer a { pointer-events: auto; }
 .site-footer a, .no-script a { color: #eee0f4; text-shadow: 0 1px 4px #000; }
 .no-script { position: absolute; top: 40%; padding: 20px; background: #160e26; }
-/* Short screens retain the scrollable room, but focus uses a viewport-sized
-   backdrop so its visible floor stays underneath the fully fitted cabinets. */
-@media (max-height: 659px) {
-  .arcade-room::before { content: ''; position: absolute; inset: 0 0 auto; height: 100svh; background: inherit; z-index: -1; opacity: 0; pointer-events: none; transition: opacity .7s ease; }
-  .arcade-room.screen-open:not(.crt-open)::before { opacity: 1; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .arcade-room::before { transition: none; }
-}
 @media (max-width: 600px) {
   .arcade-room { height: max(660px, 100svh); }
   .brand { width: 70.38vw; top: 5%; }

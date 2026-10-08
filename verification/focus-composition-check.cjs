@@ -29,18 +29,15 @@ const output = process.env.VERIFICATION_OUTPUT;
           };
           return { center: project(d.state.active), sides: [project(d.state.active - 1), project(d.state.active + 1)] };
         });
-        assert(bounds.center.left >= 12 && bounds.center.right <= viewport.width - 12, 'Center fits horizontally');
-        assert(bounds.center.top >= viewport.height * .04 && bounds.center.bottom <= viewport.height - 46, 'Entire center fits actual viewport with footer clearance');
-        if (viewport.width / viewport.height >= 1.5 && viewport.height >= 600) {
-          for (const side of bounds.sides) assert(side.left >= viewport.width * .035 && side.right <= viewport.width * .965, 'Desktop neighbors have outer breathing room');
-        }
+        assert(bounds.center.left >= 6 && bounds.center.right <= viewport.width - 6, 'Center fits horizontally');
+        assert(bounds.center.top >= 11 && bounds.center.bottom <= viewport.height - 35, 'Entire center fits actual viewport with footer clearance');
         for (const model of [bounds.center, ...bounds.sides]) assert(Math.abs(model.ground) < .00001, 'Cabinets remain on their ground plane');
         if (output && i === 8) await page.screenshot({ path: `${output}/composition-handheld-${viewport.width}.png` });
         await page.keyboard.press('Escape'); await page.waitForFunction(() => arcadeDebug.state.view === 'carousel' && document.documentElement.dataset.routing === 'ready');
         await page.locator('#arcade').focus(); await page.keyboard.press('ArrowRight');
       }
       assert.deepEqual(errors, []);
-      console.log(`${viewport.width}x${viewport.height}: all nine cabinets fit, desktop neighbors have clearance, ground plane preserved, navigation passed`);
+      console.log(`${viewport.width}x${viewport.height}: all nine front cabinets fit, ground plane preserved, navigation passed`);
       await page.close();
     }
   } finally { await browser.close(); }

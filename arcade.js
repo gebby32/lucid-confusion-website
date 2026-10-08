@@ -122,16 +122,19 @@ function changeZoomView(next, restoring = false) {
   returnButton.textContent = view === 'crt' ? 'Back to Cabinet' : 'Back to arcade';
   const pose = view === 'crt' ? fullCRTPose(focusedScreen) : zoomPose(focusedScreen);
   const fromZoom = camera.zoom, fromOffset = camera.view?.offsetY || 0;
+  const fromQuaternion = camera.quaternion.clone();
   const duration = reducedMotion.matches ? 1 : 650, started = performance.now();
   const controls = { enabled: true, target: camera.position.clone().addScaledVector(camera.getWorldDirection(new THREE.Vector3()), 1), update() {
     const t = Math.min(1, (performance.now() - started) / duration), ease = t * t * (3 - 2 * t);
-    camera.zoom = THREE.MathUtils.lerp(fromZoom, 1, ease);
+    camera.zoom = THREE.MathUtils.lerp(fromZoom, pose.zoom ?? 1, ease);
     camera.setViewOffset(stage.clientWidth, stage.clientHeight, 0, THREE.MathUtils.lerp(fromOffset, pose.offsetY, ease), stage.clientWidth, stage.clientHeight);
-    camera.lookAt(this.target); camera.updateMatrixWorld(); invalidate();
+    if (pose.quaternion) camera.quaternion.slerpQuaternions(fromQuaternion, pose.quaternion, ease);
+    else camera.lookAt(this.target);
+    camera.updateMatrixWorld(); invalidate();
   } };
   cancelZoom = zoomToScreen({ screen: { focusPose: () => pose }, camera, controls, duration, onComplete() {
     zoomTransition = false;
-    camera.zoom = 1;
+    camera.zoom = pose.zoom ?? 1;
     camera.setViewOffset(stage.clientWidth, stage.clientHeight, 0, pose.offsetY, stage.clientWidth, stage.clientHeight);
     if (view === 'crt') {
       const isAbout = cabinets[active].id === 'about-us';
@@ -193,48 +196,34 @@ function backOneLevel() {
 }
 
 function zoomPose(screen) {
-  const cabinet = new THREE.Box3().setFromObject(screen.root);
-  const pose = screen.focusPose(1);
-  const normal = pose.position.clone().sub(pose.target);
-  normal.y = 0;
-  normal.normalize();
-  // Frame the entire cabinet from a lower, almost-level viewpoint. This keeps
-  // the rear machines' feet close to the floor rather than lifting their bases.
-  cabinet.getCenter(pose.target);
-  const framing = new THREE.PerspectiveCamera(camera.fov, camera.aspect, 0.01, 100);
-  const cornersOf = box => {
-    const points = [];
-    for (const x of [box.min.x, box.max.x]) for (const y of [box.min.y, box.max.y]) for (const z of [box.min.z, box.max.z]) points.push(new THREE.Vector3(x, y, z));
-    return points;
-  };
-  const corners = cornersOf(cabinet);
-  const neighbors = [-1, 1].flatMap(offset => {
-    const neighbor = screens.get(wrap(active + offset));
-    return neighbor ? cornersOf(new THREE.Box3().setFromObject(neighbor.root)) : [];
+  // Optical zoom only: every cabinet keeps the same perspective and transform.
+  const framing = camera.clone();
+  setCarouselCamera(framing, stage.clientWidth, stage.clientHeight);
+  framing.clearViewOffset();
+  framing.updateMatrixWorld();
+  let left = Infinity, right = -Infinity, top = -Infinity, bottom = Infinity;
+  screen.root.updateMatrixWorld(true);
+  screen.root.traverse(object => {
+    const positions = object.geometry?.attributes.position;
+    if (!positions) return;
+    const point = new THREE.Vector3();
+    for (let i = 0; i < positions.count; i++) {
+      point.fromBufferAttribute(positions, i).applyMatrix4(object.matrixWorld).project(framing);
+      left = Math.min(left, point.x); right = Math.max(right, point.x);
+      top = Math.max(top, point.y); bottom = Math.min(bottom, point.y);
+    }
   });
-  const visibleHeight = Math.min(stage.clientHeight, window.innerHeight);
-  const top = 1 - 2 * visibleHeight * 0.05 / stage.clientHeight;
-  const bottom = 1 - 2 * (visibleHeight - Math.max(48, visibleHeight * 0.05)) / stage.clientHeight;
-  // Wide screens can show both neighboring cabinets in full. Portrait keeps
-  // the center readable, with the neighbors framing it at the edges.
-  const neighborLimit = Math.max(0.92, 1.3 / camera.aspect);
-  let distance = 0.5;
-  let upper, lower;
-  for (let i = 0; i < 160; i++) {
-    framing.position.copy(pose.target).addScaledVector(normal, distance);
-    framing.position.y = cabinet.min.y + (cabinet.max.y - cabinet.min.y) * 0.40;
-    framing.lookAt(pose.target); framing.updateMatrixWorld();
-    const projected = corners.map(point => point.clone().project(framing));
-    upper = Math.max(...projected.map(point => point.y));
-    lower = Math.min(...projected.map(point => point.y));
-    if (upper - lower <= top - bottom
-      && projected.every(point => point.z > -1 && point.z < 1 && Math.abs(point.x) <= 0.86)
-      && neighbors.every(point => Math.abs(point.clone().project(framing).x) <= neighborLimit)) break;
-    distance *= 1.025;
-  }
-  pose.position.copy(framing.position);
-  pose.offsetY = (top + bottom - upper - lower) * stage.clientHeight / 4;
-  return pose;
+  const height = stage.clientHeight, visibleHeight = Math.min(height, window.innerHeight);
+  const upper = 1 - 2 * 12 / height;
+  const lower = 1 - 2 * (visibleHeight - 36) / height;
+  const scale = Math.min((upper - lower) / (top - bottom), 0.96 / Math.max(Math.abs(left), Math.abs(right)));
+  return {
+    position: framing.position.clone(),
+    quaternion: framing.quaternion.clone(),
+    target: framing.position.clone().add(framing.getWorldDirection(new THREE.Vector3())),
+    zoom: framing.zoom * scale,
+    offsetY: (upper + lower - scale * (top + bottom)) * height / 4,
+  };
 }
 
 function pickCabinet(point) {
@@ -429,12 +418,12 @@ function openCabinet(restoring = false) {
   returnButton.hidden = true;
   const fromZoom = camera.zoom, fromOffset = camera.view?.offsetY || 0;
   const destination = camera.clone();
-  destination.position.copy(pose.position); destination.lookAt(pose.target);
+  destination.quaternion.copy(pose.quaternion);
   const direction = camera.getWorldDirection(new THREE.Vector3());
   const controls = { enabled: true, target: camera.position.clone().addScaledVector(direction, 5), update() {
     const t = Math.min(1, (performance.now() - started) / duration);
     const ease = t * t * (3 - 2 * t);
-    camera.zoom = THREE.MathUtils.lerp(fromZoom, 1, ease);
+    camera.zoom = THREE.MathUtils.lerp(fromZoom, pose.zoom, ease);
     camera.setViewOffset(stage.clientWidth, stage.clientHeight, 0, THREE.MathUtils.lerp(fromOffset, pose.offsetY, ease), stage.clientWidth, stage.clientHeight);
     camera.quaternion.slerpQuaternions(fromQuaternion, destination.quaternion, ease);
     camera.updateMatrixWorld(); invalidate();
@@ -442,7 +431,7 @@ function openCabinet(restoring = false) {
   const duration = reducedMotion.matches ? 1 : 700, started = performance.now();
   cancelZoom = zoomToScreen({ screen: { focusPose: () => pose }, camera, controls, duration, onComplete() {
     zoomTransition = false;
-    camera.zoom = 1;
+    camera.zoom = pose.zoom ?? 1;
     camera.setViewOffset(stage.clientWidth, stage.clientHeight, 0, pose.offsetY, stage.clientWidth, stage.clientHeight);
     if (cabinets[active].href) location.assign(cabinets[active].href);
     else showScreenMessage(screen);
@@ -565,7 +554,10 @@ function resize() {
   if (focusedScreen) {
     if (!zoomTransition) {
       const pose = view === 'crt' ? fullCRTPose(focusedScreen) : zoomPose(focusedScreen);
-      camera.position.copy(pose.position); camera.lookAt(pose.target);
+      camera.position.copy(pose.position);
+      if (pose.quaternion) camera.quaternion.copy(pose.quaternion);
+      else camera.lookAt(pose.target);
+      camera.zoom = pose.zoom ?? 1;
       camera.setViewOffset(width, height, 0, pose.offsetY, width, height);
     }
     camera.updateProjectionMatrix();
@@ -573,6 +565,13 @@ function resize() {
     invalidate();
     return;
   }
+  setCarouselCamera(camera, width, height);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, width < 700 ? 1.5 : 1.75));
+  renderer.setSize(width, height);
+  invalidate();
+}
+
+function setCarouselCamera(camera, width, height) {
   // Dolly in for roughly 3x the previous projected cabinet size, retaining the ring spacing.
   const previousHeight = stage.parentElement.clientHeight * (width <= 600 ? 0.45 : 0.59);
   const previousAspect = width / previousHeight;
@@ -598,7 +597,7 @@ function resize() {
   };
   const original = frontBounds();
   camera.position.y = 0.6 + distance * 0.12;
-  camera.lookAt(0, 0.2, 0);
+  camera.lookAt(0, camera.position.y, 0);
   camera.updateMatrixWorld();
   camera.zoom = original.height / frontBounds().height * 0.9;
   camera.updateProjectionMatrix();
@@ -607,9 +606,6 @@ function resize() {
   camera.aspect = width / height;
   camera.setViewOffset(width, height, 0, offsetY, width, height);
   camera.updateProjectionMatrix();
-  renderer.setPixelRatio(Math.min(devicePixelRatio, width < 700 ? 1.5 : 1.75));
-  renderer.setSize(width, height);
-  invalidate();
 }
 
 async function initialize() {
