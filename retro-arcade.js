@@ -87,7 +87,7 @@ export async function showRetroArcade() {
       const label = document.createElement('span'); label.textContent = game.url ? game.title : 'COMING SOON...';
       item.append(image, label);
       if (game.url) {
-        item.href = gamePath('retro-arcade', game.title);
+        item.href = gamePath('retro-arcade', game.title) + '/';
         item.dataset.game = game.id;
         item.addEventListener('click', event => {
           if (event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;

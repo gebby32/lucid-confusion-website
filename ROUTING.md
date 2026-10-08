@@ -8,11 +8,11 @@ write history; carousel rotation and animation frames do not.
 Routes:
 
 - `/`: main arcade
-- `/<cabinet>`: focused cabinet (all nine cabinets)
-- `/<cabinet>/view`: existing content/placeholder screen for non-game cabinets
-- `/retro-handheld/games` and `/retro-arcade/games`: game selection
-- `/<game-cabinet>/games/<display-name-slug>`: a published game
-- `/links/view`: Links battle screen; `/links/beach`: beach gag
+- `/<cabinet>/`: focused cabinet (all nine cabinets)
+- `/<cabinet>/view/`: existing content/placeholder screen for non-game cabinets
+- `/retro-handheld/games/` and `/retro-arcade/games/`: game selection
+- `/<game-cabinet>/games/<display-name-slug>/`: a published game
+- `/links/view/`: Links battle screen; `/links/beach/`: beach gag
 
 The Links intro already lives on the focused cabinet screen at `/links`; it
 does not need an extra route. Slugs use lowercase words, hyphens and normalized
@@ -32,8 +32,10 @@ definitions. It reads both game catalogs and generates `routes.js` plus small
 `index.html` entry documents for each route. Commit those generated files.
 Each entry uses `route-bootstrap.js` to load the single shared homepage shell
 in place, preserving its deep URL. The shell's root `<base>` resolves existing
-relative resources. GitHub Pages may add a trailing slash when serving a
-directory; startup normalizes it without another history entry. There is no
+relative resources. Public URLs use a trailing slash to match GitHub Pages'
+directory handling. This avoids a redirect on refresh that can discard browser
+history state and cause duplicate parent seeding. Slashless shared links still
+work through Pages' normal redirect. There is no
 404 redirect, query-string state transport, or duplicated application markup.
 Unknown routes retain GitHub Pages' normal 404 behavior. Privacy and Terms
 remain independent documents.

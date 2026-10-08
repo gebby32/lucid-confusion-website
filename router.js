@@ -4,7 +4,9 @@ const canonical = path => path.replace(/\/+$/, '') || '/';
 export const gamePath = (cabinet, title) => `/${cabinet}/games/${title.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/['’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
 let current, render, pending = false, revision = 0, busy = false, traversing = false;
 const marker = 'lucid-routing-v1';
-const url = path => path + location.search;
+// Match GitHub Pages' directory URLs. Redirecting a slashless URL on refresh
+// can discard history.state, which would incorrectly seed the parents again.
+const url = path => (path === '/' ? path : path + '/') + location.search;
 const entry = path => ({ lucidRouter: marker, path });
 
 async function restore() {

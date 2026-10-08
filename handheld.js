@@ -131,7 +131,7 @@ export async function showHandhelds() {
     if (!shown || current !== generation) return;
     const items = games.map(game => {
       const link = document.createElement('a');
-      link.href = gamePath('retro-handheld', game.title);
+      link.href = gamePath('retro-handheld', game.title) + '/';
       link.dataset.game = game.id;
       const image = document.createElement('img');
       image.src = game.image; image.alt = ''; image.loading = 'lazy'; image.decoding = 'async';

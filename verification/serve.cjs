@@ -6,6 +6,10 @@ const types = { '.js':'text/javascript', '.html':'text/html', '.css':'text/css',
 http.createServer((req,res)=> {
  let file=path.resolve(root,'.'+decodeURIComponent(new URL(req.url,'http://localhost').pathname));
  if(!file.startsWith(root+path.sep)&&file!==root){res.writeHead(403).end();return;}
- try { if(fs.statSync(file).isDirectory()) file=path.join(file,'index.html'); res.setHeader('Content-Type',types[path.extname(file)]||'application/octet-stream'); fs.createReadStream(file).pipe(res); }
+ try { if(fs.statSync(file).isDirectory()) {
+   const url = new URL(req.url,'http://localhost');
+   if (!url.pathname.endsWith('/')) { res.writeHead(301,{Location:url.pathname+'/'+url.search}).end(); return; }
+   file=path.join(file,'index.html');
+ } res.setHeader('Content-Type',types[path.extname(file)]||'application/octet-stream'); fs.createReadStream(file).pipe(res); }
  catch {res.writeHead(404).end('Not found');}
-}).listen(8771,'127.0.0.1',()=>console.log('Preview: http://127.0.0.1:8771'));
+}).listen(Number(process.env.PORT || 8771),'127.0.0.1',()=>console.log('Preview port: '+(process.env.PORT || 8771)));

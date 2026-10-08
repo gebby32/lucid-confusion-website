@@ -1,7 +1,7 @@
 const { chromium } = require('playwright');
 const assert = require('node:assert/strict');
 const base = (process.env.PREVIEW_URL || 'http://127.0.0.1:8771/').replace(/\/$/, '');
-const ready = (page, path) => page.waitForFunction(path => location.pathname === path && document.documentElement.dataset.routing === 'ready' && window.arcadeDebug && !arcadeDebug.state.zoomTransition, path);
+const ready = (page, path) => page.waitForFunction(path => (location.pathname.replace(/\/+$/, '') || '/') === path && document.documentElement.dataset.routing === 'ready' && window.arcadeDebug && !arcadeDebug.state.zoomTransition, path);
 (async () => {
   const browser = await chromium.launch({ headless: true, channel: 'msedge' });
   try {

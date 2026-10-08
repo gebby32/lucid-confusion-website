@@ -32,3 +32,8 @@ do not involve listening to physical speakers. Mobile checks use emulation.
 
 Historical scripts targeting deleted carousel buttons/old screen layouts were
 not used as current acceptance tests; current controls are covered above.
+
+Initial live verification exposed GitHub Pages' directory redirect discarding
+history state on slashless refreshes. Public routes now retain canonical
+trailing slashes, and the local preview reproduces directory redirects so the
+refresh regression covers this behavior before deployment.
