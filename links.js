@@ -1,3 +1,4 @@
+import { navigate, routeBack } from './router.js';
 const panel = document.querySelector('#links-panel');
 const main = document.querySelector('#links-battle');
 const beach = document.querySelector('#links-beach');
@@ -6,7 +7,7 @@ let opener;
 const notice = document.querySelector('#links-apple-notice');
 let noticeTimer;
 function dismissNotice() { clearTimeout(noticeTimer); notice.hidden = true; }
-function beachState(show, trigger) {
+export function beachState(show, trigger = panel.querySelector("[data-beach]")) {
   dismissNotice();
   if (show) {
     opener = trigger;
@@ -18,8 +19,8 @@ function beachState(show, trigger) {
   if (show) { beach.focus({preventScroll:true}); beach.scrollIntoView({block:'center',behavior:'instant'}); }
   else opener?.focus({preventScroll:true});
 }
-panel.querySelectorAll('[data-beach]').forEach(button => button.addEventListener('click', () => beachState(true, button)));
-beach.addEventListener('click', () => beachState(false));
+panel.querySelectorAll('[data-beach]').forEach(button => button.addEventListener('click', () => navigate('/links/beach')));
+beach.addEventListener('click', () => routeBack());
 panel.querySelector('.links-apple').addEventListener('click', () => {
   dismissNotice(); notice.hidden = false; noticeTimer = setTimeout(dismissNotice, 4500);
 });

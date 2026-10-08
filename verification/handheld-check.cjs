@@ -69,7 +69,7 @@ const snapshot = async (page, name) => { if (output) await page.screenshot({ pat
         assert.equal(playerBounds.width, viewport.width); assert.equal(playerBounds.height, viewport.height);
         assert.equal(await page.evaluate(() => document.fullscreenElement), null);
         const gameRequests = requests.slice(before).filter(url => /\/assets\/handhelds\/[^/]+\/index.html/.test(url));
-        assert.deepEqual(gameRequests, [new URL(game.url, page.url()).href]);
+        assert.deepEqual(gameRequests, [new URL(game.url, new URL('/', page.url())).href]);
         await page.keyboard.press('Enter');
         await page.keyboard.press('ArrowRight');
         await page.waitForTimeout(200);
@@ -78,6 +78,7 @@ const snapshot = async (page, name) => { if (output) await page.screenshot({ pat
         await snapshot(page, `handheld-${game.id}-${label}`);
         assert.equal(await page.locator('#handheld-back').getAttribute('aria-label'), 'Back to Arcade');
         await page.locator('#handheld-back').click();
+        await page.waitForFunction(() => document.querySelectorAll('iframe').length === 0);
         assert.equal(await page.locator('iframe').count(), 0);
         assert(await page.locator('#handheld-grid').isVisible());
         assert.equal(await page.locator('#screen-return img').getAttribute('alt'), 'Back to Cabinet');

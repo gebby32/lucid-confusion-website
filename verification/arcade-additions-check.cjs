@@ -11,7 +11,7 @@ for(const file of ['assets/handhelds/catalog.json','assets/retro-arcade/catalog.
   await page.locator('#arcade').focus();await page.keyboard.press('ArrowLeft');await page.keyboard.press('Enter');await page.waitForFunction(()=>arcadeDebug.state.view==='cabinet'&&!arcadeDebug.state.zoomTransition);await page.keyboard.press('Enter');await page.waitForSelector('#handheld-grid a');
   assert(!requests.some(u=>ids.some(id=>u.includes('/'+id+'/index.html'))));
   for(const id of ids){
-   const link=page.locator(`#handheld-grid a[href*="/${id}/"]`);await link.scrollIntoViewIfNeeded();await link.locator('img').evaluate(i=>i.decode());
+   const link=page.locator(`#handheld-grid a[data-game="${id}"]`);await link.scrollIntoViewIfNeeded();await link.locator('img').evaluate(i=>i.decode());
    if(process.env.VERIFICATION_OUTPUT)await page.screenshot({path:process.env.VERIFICATION_OUTPUT+'/new-grid-'+id+'-'+mobile+'.png'});
    const before=requests.length;if(mobile)await link.tap();else await link.click();
    const iframe=page.locator('#handheld-player iframe');await iframe.waitFor();const game=await(await iframe.elementHandle()).contentFrame();await game.waitForFunction(()=>window.LP?.Shell?.view&&LP.States.current);

@@ -1,12 +1,13 @@
+import { navigate, routeBack, startRouter } from './router.js';
 import * as THREE from 'three';
 import { GLTFLoader } from './assets/vendor/three/loaders/GLTFLoader.js';
 import { CabinetScreen, zoomToScreen } from './assets/arcade/screen-controller.js';
 import './contact.js';
-import { handheldTeaser, showHandhelds, hideHandhelds, backToHandhelds, isHandheldPlaying } from './handheld.js';
-import { retroTeaser, showRetroArcade, hideRetroArcade, isRetroPlaying } from './retro-arcade.js';
-import { linksTeaser, showLinks } from './links.js';
+import { handheldTeaser, showHandhelds, hideHandhelds, isHandheldPlaying, launchHandheld, stopHandheld } from './handheld.js';
+import { retroTeaser, showRetroArcade, hideRetroArcade, isRetroPlaying, launchRetro, stopRetro } from './retro-arcade.js';
+import { linksTeaser, showLinks, beachState } from './links.js';
 
-// Set href to a real destination when each section is ready. No invented routes.
+// Cabinet models retain their original IDs; public URLs are centralized in routes.js.
 const cabinets = [
   { id: 'about-us', name: 'About Us', href: null },
   { id: 'retro-handheld', name: 'Retro Handheld', href: null },
@@ -42,7 +43,7 @@ const contactPanel = document.querySelector('#contact-panel');
 const handheldPanel = document.querySelector('#handheld-panel');
 const retroPanel = document.querySelector('#retro-panel');
 const linksPanel = document.querySelector('#links-panel');
-document.querySelector('#links-return').addEventListener('click', () => backOneLevel());
+document.querySelector('#links-return').addEventListener('click', () => routeBack('/links'));
 // Reading gestures belong to the HTML story; double activation on the frame
 // retains the one-level return gesture without interrupting text selection.
 let framePress = null;
@@ -91,8 +92,13 @@ function fullCRTPose(screen) {
   return pose;
 }
 
-function changeZoomView(next) {
+function changeZoomView(next, restoring = false) {
   if (!focusedScreen) return;
+  if (!restoring) {
+    if (next === 'cabinet') routeBack(cabinetPath());
+    else navigate(cabinetPath() + ([1, 2].includes(active) ? '/games' : '/view'));
+    return;
+  }
   cancelZoom?.();
   clearMonitorTap();
   view = next;
@@ -162,9 +168,8 @@ function changeZoomView(next) {
       crtContent.setAttribute('aria-label', `${cabinets[active].name} interface`);
       crtContent.hidden = false;
       if (isLinks) { showLinks(); announcement.textContent = 'The Links. Explore the signs.'; }
-      if (isRetro) { showRetroArcade(); announcement.textContent = 'Retro Arcade. Choose a game.'; }
+      if (isRetro) { announcement.textContent = 'Retro Arcade. Choose a game.'; }
       if (isHandheld) {
-        showHandhelds();
         announcement.textContent = 'Retro Handheld Arcade. Choose a game.';
       }
       if (isAbout) {
@@ -181,11 +186,10 @@ function changeZoomView(next) {
   } });
 }
 
+function cabinetPath() { return '/' + (active === 5 ? 'links' : cabinets[active].id); }
 function backOneLevel() {
   clearMonitorTap();
-  if (view === 'crt' && cabinets[active].id === 'retro-handheld' && backToHandhelds()) return;
-  if (view === 'crt') changeZoomView('cabinet');
-  else closeScreen();
+  routeBack();
 }
 
 function zoomPose(screen) {
@@ -246,7 +250,8 @@ function updateScreenEffects(now) {
   for (const screen of screens.values()) screen.update(now / 1000);
   return [...screens.values()].some(screen => screen.mode === 'noise');
 }
-function closeScreen() {
+function closeScreen(restoring = false) {
+  if (focusedScreen && !restoring) { routeBack('/'); return; }
   document.body.classList.remove('links-open');
   if (!focusedScreen) return;
   hideHandhelds();
@@ -394,10 +399,11 @@ function move(direction) {
   if (reducedMotion.matches) { angle = target; updateSelection(); announceSelection(); }
   invalidate();
 }
-function openCabinet() {
+function openCabinet(restoring = false) {
   if (focusedScreen || pointer || Math.abs(target - angle) > 0.015 || Math.abs(velocity) > 0.01) return;
   const screen = screens.get(active);
   if (!screen) return;
+  if (!restoring) { navigate(cabinetPath()); return; }
   ring.rotation.y = angle;
   ring.updateMatrixWorld(true);
   for (const item of screens.values()) item.setIdle();
@@ -666,6 +672,35 @@ async function initialize() {
   }
   if (failed.length) loading.textContent = `Could not load ${failed.join(', ')}. Reload to retry.`;
   else loading.hidden = true;
+  await startRouter(async (route, stale) => {
+    const settled = async () => {
+      while (zoomTransition) await new Promise(resolve => setTimeout(resolve, 16));
+    };
+    await settled();
+    if (stale()) return;
+    if (!route.game || route.index !== active) {
+      await stopHandheld();
+      await stopRetro();
+    }
+    if (stale()) return;
+    if (route.index === undefined) { closeScreen(true); return; }
+    if (active !== route.index || !focusedScreen) {
+      closeScreen(true);
+      angle = target = -route.index * step; active = route.index; velocity = 0;
+      pointer = null;
+      ring.rotation.y = angle; ring.updateMatrixWorld(true);
+      openCabinet(true);
+      await settled();
+    }
+    if (stale()) return;
+    if (view !== route.view) { changeZoomView(route.view, true); await settled(); }
+    if (stale()) return;
+    if (route.view === 'crt') {
+      if (route.index === 1) { await showHandhelds(); if (!stale() && route.game) await launchHandheld(route.game); }
+      if (route.index === 2) { await showRetroArcade(); if (!stale() && route.game) await launchRetro(route.game); }
+      if (route.index === 5) beachState(!!route.beach);
+    }
+  });
   // Read-only diagnostics for local verification, enabled only with ?debug=1.
   if (new URLSearchParams(location.search).has('debug')) {
     window.arcadeDebug = { scene, camera, ring, renderer, models, settings, screens, get state() { return { angle, target, active, loaded, failed, velocity, dragging: !!pointer, focused: !!focusedScreen, view, zoomTransition, litIndex }; } };

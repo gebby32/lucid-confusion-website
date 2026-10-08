@@ -1,3 +1,4 @@
+import { navigate, routeBack, gamePath } from './router.js';
 const frame = document.querySelector('#handheld-frame');
 const panel = document.querySelector('#handheld-panel');
 const grid = document.querySelector('#handheld-grid');
@@ -130,7 +131,8 @@ export async function showHandhelds() {
     if (!shown || current !== generation) return;
     const items = games.map(game => {
       const link = document.createElement('a');
-      link.href = game.url;
+      link.href = gamePath('retro-handheld', game.title);
+      link.dataset.game = game.id;
       const image = document.createElement('img');
       image.src = game.image; image.alt = ''; image.loading = 'lazy'; image.decoding = 'async';
       image.width = game.width; image.height = game.height;
@@ -140,23 +142,7 @@ export async function showHandhelds() {
         if (event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
         event.preventDefault();
         if (selected) return;
-        selected = game; selectedLink = link;
-        const backImage = gameBack.querySelector('img');
-        if (!backImage.hasAttribute('src')) backImage.src = './assets/arcade/art/back-to-arcade-transparent.png';
-        const iframe = document.createElement('iframe');
-        iframe.title = game.title; iframe.allow = 'autoplay; fullscreen; gamepad';
-        iframe.src = game.url;
-        iframe.addEventListener('load', () => {
-          if (selected !== game) return;
-          // Bubble listener runs after the game's own handlers, so handled
-          // keys stay with the game. The iframe is our same-origin portable file.
-          iframe.contentWindow.addEventListener('keydown', fullscreenKey);
-          iframe.contentWindow.addEventListener('keydown', returnKey, true);
-          iframe.contentWindow.focus();
-        });
-        grid.hidden = true; player.hidden = false;
-        document.body.classList.add('handheld-playing');
-        gameViewport.replaceChildren(iframe);
+        navigate(gamePath('retro-handheld', game.title));
       });
       return link;
     });
@@ -169,25 +155,48 @@ export async function showHandhelds() {
 
 export function backToHandhelds() {
   if (!selected) return false;
-  if (returning) return true;
-  returning = true;
-  (async () => {
-    try {
-      if (fullscreenPending) await fullscreenOperation.catch(() => {});
-      if (document.fullscreenElement) await document.exitFullscreen();
-      // Unload only after fullscreen has exited, then restore the same grid.
-      stopGame();
-      grid.hidden = false;
-      selectedLink?.focus({ preventScroll: true });
-    } catch {
-      fullscreenStatus.textContent = 'Could not exit fullscreen. Please try Back to Arcade again.';
-    } finally { returning = false; }
-  })();
+  routeBack();
   return true;
+}
+
+export async function stopHandheld() {
+  returning = true;
+  try {
+    if (fullscreenPending) await fullscreenOperation.catch(() => {});
+    if (document.fullscreenElement) await document.exitFullscreen();
+    stopGame();
+    grid.hidden = false;
+    selectedLink?.focus({ preventScroll: true });
+  } finally { returning = false; }
 }
 
 export function hideHandhelds() {
   shown = false; generation++;
   stopGame(); selectedLink = null;
   grid.replaceChildren(); grid.hidden = false; status.hidden = true;
+}
+
+export async function launchHandheld(id) {
+  await showHandhelds();
+  const game = (await catalogPromise).find(game => game.id === id);
+  const link = [...grid.querySelectorAll("a")].find(link => link.dataset.game === id);
+  if (!game || !link || selected?.id === id) return;
+  await stopHandheld();
+  selected = game; selectedLink = link;
+  const backImage = gameBack.querySelector('img');
+  if (!backImage.hasAttribute('src')) backImage.src = './assets/arcade/art/back-to-arcade-transparent.png';
+  const iframe = document.createElement('iframe');
+  iframe.title = game.title; iframe.allow = 'autoplay; fullscreen; gamepad';
+  iframe.src = game.url;
+  iframe.addEventListener('load', () => {
+    if (selected !== game) return;
+    // Bubble listener runs after the game's own handlers, so handled
+    // keys stay with the game. The iframe is our same-origin portable file.
+    iframe.contentWindow.addEventListener('keydown', fullscreenKey);
+    iframe.contentWindow.addEventListener('keydown', returnKey, true);
+    iframe.contentWindow.focus();
+  });
+  grid.hidden = true; player.hidden = false;
+  document.body.classList.add('handheld-playing');
+  gameViewport.replaceChildren(iframe);
 }
