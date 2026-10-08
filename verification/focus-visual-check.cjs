@@ -16,9 +16,10 @@ const baseline = !!process.env.BASELINE;
         const THREE = await import('/assets/vendor/three/three.module.min.js');
         const d = arcadeDebug;
         const world = d.screens.get(d.state.active).focusPose().target;
+        const startRingZ = d.ring.position.z;
         window.sampleFocus = () => {
           const rect = document.querySelector('#arcade').getBoundingClientRect();
-          const p = world.clone().project(d.camera);
+          const p = world.clone(); p.z += d.ring.position.z - startRingZ; p.project(d.camera);
           return { x: rect.x + (p.x + 1) * rect.width / 2, y: rect.y + (1 - p.y) * rect.height / 2, t: performance.now(), transition: d.state.zoomTransition };
         };
         window.focusSamples = [sampleFocus()]; window.shifts = [];
