@@ -4,7 +4,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict');
   const page=await browser.newPage({viewport:mobile?{width:390,height:844}:{width:1440,height:900},isMobile:mobile,hasTouch:mobile}),errors=[],loads=[];
   page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});page.on('request',r=>{if(/\/assets\/(handhelds\/[^/]+|retro-arcade\/games\/[^/]+)\/index.html/.test(r.url()))loads.push(r.url())});
   await page.goto((process.env.PREVIEW_URL||'http://127.0.0.1:8771/')+'?debug=1');await page.waitForFunction(()=>window.arcadeDebug);await page.emulateMedia({reducedMotion:'reduce'});
-  await page.locator('#arcade').focus();if(kind==='handheld')await page.keyboard.press('ArrowLeft');await page.keyboard.press('Enter');await page.waitForFunction(()=>arcadeDebug.state.view==='cabinet'&&!arcadeDebug.state.zoomTransition);await page.keyboard.press('Enter');await page.waitForSelector('#'+kind+'-grid a');assert.equal(loads.length,0);
+  await page.locator('#arcade').focus();if(kind==='handheld')await page.keyboard.press('ArrowLeft');await page.keyboard.press('Enter');await page.waitForFunction(()=>arcadeDebug.state.view==='intro'&&!arcadeDebug.state.zoomTransition);await page.keyboard.press('Enter');await page.waitForSelector('#'+kind+'-grid a');assert.equal(loads.length,0);
   for(const fullscreen of [false,true]){
    const selectionBack=page.locator('#screen-return');
    assert.equal(await selectionBack.locator('img').getAttribute('src'),'./assets/arcade/art/back-to-cabinet-transparent.png');
@@ -26,21 +26,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict');
    if(process.env.VERIFICATION_OUTPUT)await page.screenshot({path:process.env.VERIFICATION_OUTPUT+'/return-'+kind+'-'+mobile+'-'+fullscreen+'.png'});
    if(mobile)await button.tap();else await button.click();await page.waitForFunction(()=>document.querySelectorAll('iframe').length===0);assert(game.isDetached());assert.equal(await page.evaluate(()=>document.fullscreenElement),null);assert.equal(await page.evaluate(()=>window.removedInFullscreen),false);assert(await page.locator('#'+kind+'-grid').isVisible());
   }
-  await page.locator('#screen-return').click();await page.waitForFunction(()=>arcadeDebug.state.view==='cabinet'&&!arcadeDebug.state.zoomTransition);assert(!(await page.locator('#screen-return').isVisible()));
-  async function cabinetPoint(){return page.evaluate(async()=>{
-   const THREE=await import('./assets/vendor/three/three.module.min.js'),d=arcadeDebug,r=document.querySelector('#arcade').getBoundingClientRect(),ray=new THREE.Raycaster();
-   for(const y of [.7,.8,.6,.9,.4,.3])for(const x of [.5,.45,.55,.4,.6]){
-    ray.setFromCamera(new THREE.Vector2(x*2-1,1-y*2),d.camera);const hit=ray.intersectObjects(d.models,true).find(h=>!h.object.userData.groundShadow);let obj=hit?.object;while(obj&&obj.userData.cabinetIndex===undefined)obj=obj.parent;
-    if(obj?.userData.cabinetIndex===d.state.active&&!d.screens.get(d.state.active).hit(ray))return{x:r.x+r.width*x,y:r.y+r.height*y};
-   }throw Error('No cabinet body hit');
-  })}
-  async function doubleReturn(){const p=await cabinetPoint();if(mobile){await page.touchscreen.tap(p.x,p.y);await page.waitForTimeout(80);await page.touchscreen.tap(p.x,p.y)}else await page.mouse.dblclick(p.x,p.y,{delay:80});await page.waitForFunction(()=>arcadeDebug.state.view==='carousel');await page.waitForTimeout(450);assert.equal(await page.evaluate(()=>arcadeDebug.state.view),'carousel')}
-  await doubleReturn();
-  // Every cabinet supports body double-return; single body clicks do not zoom.
-  for(let i=0;i<9;i++){
-   await page.locator('#arcade').focus();await page.keyboard.press('ArrowRight');await page.keyboard.press('Enter');await page.waitForFunction(()=>arcadeDebug.state.view==='cabinet'&&!arcadeDebug.state.zoomTransition);assert(!(await page.locator('#screen-return').isVisible()));
-   const p=await cabinetPoint();if(mobile)await page.touchscreen.tap(p.x,p.y);else await page.mouse.click(p.x,p.y);await page.waitForTimeout(450);assert.equal(await page.evaluate(()=>arcadeDebug.state.view),'cabinet');await doubleReturn();
-  }
+  await page.locator('#screen-return').click();await page.waitForFunction(()=>arcadeDebug.state.view==='carousel'&&document.documentElement.dataset.routing==='ready');assert(!(await page.locator('#screen-return').isVisible()));
   assert.equal(loads.length,2);assert.deepEqual(errors,[]);console.log(`${kind} ${mobile?'mobile':'desktop'}: shared image, fixed upper-left, hidden bottom control, unchanged game bounds, F toggle, normal/fullscreen return and unload passed`);await page.close();
  }
 }finally{await browser.close()}})().catch(e=>{console.error(e);process.exit(1)});

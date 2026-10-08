@@ -20,7 +20,7 @@ const errors = [];
         let active = await page.evaluate(() => arcadeDebug.state.active);
         while (active !== index) { await page.keyboard.press('ArrowRight'); active = (active + 1) % 9; }
         await page.keyboard.press('Enter'); await ready(page, path);
-        assert.equal(await page.evaluate(() => arcadeDebug.state.view), 'cabinet');
+        assert.equal(await page.evaluate(() => arcadeDebug.state.view), 'intro');
       }
       await open(0, '/about-us');
       await page.keyboard.press('Enter'); await ready(page, '/about-us/view');
@@ -48,16 +48,14 @@ const errors = [];
         await forward(page, focus); await forward(page, grid); await forward(page, gamePath);
         assert.equal(await page.locator('iframe').count(), 1);
         await page.locator(`#${kind}-back`).click(); await ready(page, grid);
-        await page.locator('#screen-return').click(); await ready(page, focus);
-        await back(page, '/');
+        await page.locator('#screen-return').click(); await ready(page, '/');
       }
       await open(5, '/links'); await page.keyboard.press('Enter'); await ready(page, '/links/view');
       await page.locator('[data-beach]').click(); await ready(page, '/links/beach');
       await back(page, '/links/view'); await forward(page, '/links/beach');
       await page.locator('#links-beach').click(); await ready(page, '/links/view');
       await forward(page, '/links/beach');
-      await page.locator('#links-return').click(); await ready(page, '/links');
-      await back(page, '/');
+      await page.locator('#links-return').click(); await ready(page, '/');
       assert.equal(await page.locator('iframe').count(), 0);
       console.log(`${mobile ? 'Mobile touch' : 'Desktop'}: About, both game cabinets, Links, parent controls, fullscreen cleanup, browser Back/Forward passed`);
       await context.close();

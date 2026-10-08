@@ -15,7 +15,7 @@ const url = process.env.PREVIEW_URL || 'http://127.0.0.1:61863/';
       await page.waitForFunction(() => window.arcadeDebug);
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.locator('#arcade').focus(); await page.keyboard.press('ArrowLeft'); await page.keyboard.press('Enter');
-      await page.waitForFunction(() => arcadeDebug.state.view === 'cabinet' && !arcadeDebug.state.zoomTransition);
+      await page.waitForFunction(() => arcadeDebug.state.view === 'intro' && !arcadeDebug.state.zoomTransition);
       await page.keyboard.press('Enter'); await page.waitForSelector('#handheld-grid a');
       assert.equal(requests.length, 0);
       async function open(index = 0) {

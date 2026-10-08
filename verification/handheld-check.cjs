@@ -26,7 +26,7 @@ const snapshot = async (page, name) => { if (output) await page.screenshot({ pat
       await page.locator('#arcade').focus();
       await page.keyboard.press('ArrowLeft');
       await page.keyboard.press('Enter');
-      await page.waitForFunction(() => arcadeDebug.state.view === 'cabinet' && !arcadeDebug.state.zoomTransition && arcadeDebug.screens.get(1).mode === 'texture');
+      await page.waitForFunction(() => arcadeDebug.state.view === 'intro' && !arcadeDebug.state.zoomTransition && arcadeDebug.screens.get(1).mode === 'texture');
       assert.equal(await page.locator('#handheld-grid a').count(), 0);
       assert.equal(await page.locator('iframe').count(), 0);
       assert.equal(requests.filter(url => url.includes('/assets/handhelds/')).length, 0);
@@ -85,7 +85,7 @@ const snapshot = async (page, name) => { if (output) await page.screenshot({ pat
         console.log(`${label}: ${game.title} launched on demand and returned`);
       }
       await page.locator('#screen-return').click();
-      await page.waitForFunction(() => arcadeDebug.state.view === 'cabinet' && !arcadeDebug.state.zoomTransition);
+      await page.waitForFunction(() => arcadeDebug.state.view === 'carousel' && !arcadeDebug.state.zoomTransition);
       assert.equal(await page.locator('#handheld-grid a').count(), 0);
       await page.keyboard.press('Escape');
       await page.waitForFunction(() => arcadeDebug.state.view === 'carousel');

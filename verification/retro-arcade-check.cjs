@@ -26,7 +26,7 @@ for (const item of JSON.parse(fs.readFileSync('verification/retro-arcade-source.
    await page.waitForFunction(()=>window.arcadeDebug?.screens.size===9);
    assert(!requests.some(u=>u.includes('/retro-arcade/')));
    await page.locator('#arcade').focus(); await page.keyboard.press('Enter');
-   await page.waitForFunction(()=>arcadeDebug.state.view==='cabinet'&&!arcadeDebug.state.zoomTransition);
+   await page.waitForFunction(()=>arcadeDebug.state.view==='intro'&&!arcadeDebug.state.zoomTransition);
    await page.waitForFunction(()=>document.querySelector('#retro-frame').naturalWidth>0);
    await page.waitForFunction(()=>arcadeDebug.screens.get(2).source?.image instanceof HTMLCanvasElement);
    const early = await page.evaluate(()=>arcadeDebug.screens.get(2).source.image.toDataURL());
@@ -87,7 +87,7 @@ for (const item of JSON.parse(fs.readFileSync('verification/retro-arcade-source.
     assert(loaded.length>0);assert(loaded.every(u=>u.includes('/games/'+item.id+'/')));
     console.log(size.width+': '+item.title+' lazy launch, native scaling/input, fullscreen, return/unload passed');
    }
-   await page.locator('#screen-return').click();await page.waitForFunction(()=>arcadeDebug.state.view==='cabinet'&&!arcadeDebug.state.zoomTransition);
+   await page.locator('#screen-return').click();await page.waitForFunction(()=>arcadeDebug.state.view==='carousel'&&!arcadeDebug.state.zoomTransition);
    await page.keyboard.press('Escape');await page.waitForFunction(()=>arcadeDebug.state.view==='carousel');
    assert.deepEqual(errors,[]);await context.close();
   }

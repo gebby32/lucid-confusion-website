@@ -6,7 +6,7 @@ export const routes = {
   "/about-us": {
     "parent": "/",
     "index": 0,
-    "view": "cabinet",
+    "view": "intro",
     "title": "About Us"
   },
   "/about-us/view": {
@@ -18,7 +18,7 @@ export const routes = {
   "/retro-handheld": {
     "parent": "/",
     "index": 1,
-    "view": "cabinet",
+    "view": "intro",
     "title": "Retro Handheld"
   },
   "/retro-handheld/games": {
@@ -191,7 +191,7 @@ export const routes = {
   "/retro-arcade": {
     "parent": "/",
     "index": 2,
-    "view": "cabinet",
+    "view": "intro",
     "title": "Retro Arcade"
   },
   "/retro-arcade/games": {
@@ -252,7 +252,7 @@ export const routes = {
   "/demo-arcade": {
     "parent": "/",
     "index": 3,
-    "view": "cabinet",
+    "view": "intro",
     "title": "Demo Arcade"
   },
   "/demo-arcade/view": {
@@ -264,7 +264,7 @@ export const routes = {
   "/merch-shop": {
     "parent": "/",
     "index": 4,
-    "view": "cabinet",
+    "view": "intro",
     "title": "Merch Shop"
   },
   "/merch-shop/view": {
@@ -276,7 +276,7 @@ export const routes = {
   "/links": {
     "parent": "/",
     "index": 5,
-    "view": "cabinet",
+    "view": "intro",
     "title": "The Links"
   },
   "/links/view": {
@@ -295,7 +295,7 @@ export const routes = {
   "/new-stuff": {
     "parent": "/",
     "index": 6,
-    "view": "cabinet",
+    "view": "intro",
     "title": "New Stuff"
   },
   "/new-stuff/view": {
@@ -307,7 +307,7 @@ export const routes = {
   "/coming-soon": {
     "parent": "/",
     "index": 7,
-    "view": "cabinet",
+    "view": "intro",
     "title": "Coming Soon"
   },
   "/coming-soon/view": {
@@ -319,7 +319,7 @@ export const routes = {
   "/contact-us": {
     "parent": "/",
     "index": 8,
-    "view": "cabinet",
+    "view": "intro",
     "title": "Contact Us"
   },
   "/contact-us/view": {

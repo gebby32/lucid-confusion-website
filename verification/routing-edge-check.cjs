@@ -16,16 +16,16 @@ const ready = (page, path) => page.waitForFunction(path => (location.pathname.re
     assert.equal(await page.evaluate(() => history.length), initialLength + 1);
     await page.goForward(); await ready(page, '/retro-arcade');
     await page.locator('#arcade').focus(); await page.keyboard.press('Enter');
-    await page.waitForFunction(() => arcadeDebug.state.zoomTransition);
+    await ready(page, '/retro-arcade/games');
     await page.goBack(); await ready(page, '/retro-arcade');
     assert.equal(await page.locator('iframe').count(), 0);
-    assert.equal(await page.evaluate(() => arcadeDebug.state.view), 'cabinet');
-    // Leaving focus using rotation should consume one history entry, even when
-    // many pointermove events arrive before the popstate event is dispatched.
+    assert.equal(await page.evaluate(() => arcadeDebug.state.view), 'intro');
+    // Dragging the CRT cannot rotate or return to an obsolete cabinet pose.
     await page.mouse.move(400, 450); await page.mouse.down();
     for (let i = 1; i <= 12; i++) await page.mouse.move(400 + i * 20, 450);
-    await page.mouse.up(); await ready(page, '/');
-    assert.equal(await page.evaluate(() => arcadeDebug.state.view), 'carousel');
+    await page.mouse.up(); await ready(page, '/retro-arcade');
+    assert.equal(await page.evaluate(() => arcadeDebug.state.view), 'intro');
+    await page.locator('#screen-return').click(); await ready(page, '/');
     await page.emulateMedia({ reducedMotion: 'reduce' });
     // Check every existing cabinet content state by fresh URL, including stubs.
     for (const cabinet of ['about-us', 'demo-arcade', 'merch-shop', 'new-stuff', 'coming-soon', 'contact-us', 'links']) {
@@ -45,8 +45,8 @@ const ready = (page, path) => page.waitForFunction(path => (location.pathname.re
     await page.waitForFunction(() => window.arcadeDebug && location.pathname.includes('sloth-kart-racing'));
     await page.goBack(); await page.goBack(); await ready(page, '/retro-handheld');
     assert.equal(await page.locator('iframe').count(), 0);
-    assert.equal(await page.evaluate(() => arcadeDebug.state.view), 'cabinet');
+    assert.equal(await page.evaluate(() => arcadeDebug.state.view), 'intro');
     assert.deepEqual(errors, []);
-    console.log('Animated rapid Back/Forward, no duplicate entries, drag return, all cabinet deep links, trailing-slash normalization, delayed catalog cancellation passed.');
+    console.log('Animated rapid Back/Forward, no duplicate entries, CRT drag isolation, all cabinet deep links, trailing-slash normalization, delayed catalog cancellation passed.');
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

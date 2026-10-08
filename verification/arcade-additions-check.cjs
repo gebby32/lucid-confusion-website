@@ -8,7 +8,7 @@ for(const file of ['assets/handhelds/catalog.json','assets/retro-arcade/catalog.
   const page=await browser.newPage({viewport:mobile?{width:390,height:844}:{width:1440,height:900},isMobile:mobile,hasTouch:mobile}), errors=[], requests=[];
   page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});page.on('response',r=>{if(r.status()>=400)errors.push(r.status()+' '+r.url())});page.on('request',r=>requests.push(r.url()));
   await page.goto((process.env.PREVIEW_URL||'http://127.0.0.1:8771/')+'?debug=1');await page.waitForFunction(()=>window.arcadeDebug);await page.emulateMedia({reducedMotion:'reduce'});
-  await page.locator('#arcade').focus();await page.keyboard.press('ArrowLeft');await page.keyboard.press('Enter');await page.waitForFunction(()=>arcadeDebug.state.view==='cabinet'&&!arcadeDebug.state.zoomTransition);await page.keyboard.press('Enter');await page.waitForSelector('#handheld-grid a');
+  await page.locator('#arcade').focus();await page.keyboard.press('ArrowLeft');await page.keyboard.press('Enter');await page.waitForFunction(()=>arcadeDebug.state.view==='intro'&&!arcadeDebug.state.zoomTransition);await page.keyboard.press('Enter');await page.waitForSelector('#handheld-grid a');
   assert(!requests.some(u=>ids.some(id=>u.includes('/'+id+'/index.html'))));
   for(const id of ids){
    const link=page.locator(`#handheld-grid a[data-game="${id}"]`);await link.scrollIntoViewIfNeeded();await link.locator('img').evaluate(i=>i.decode());

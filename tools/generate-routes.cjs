@@ -7,7 +7,7 @@ const slug = title => title.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').to
 for (const [index, title] of cabinets.entries()) {
   const cabinet = title === 'The Links' ? 'links' : slug(title);
   const base = '/' + cabinet;
-  routes[base] = { parent: '/', index, view: 'cabinet', title };
+  routes[base] = { parent: '/', index, view: 'intro', title };
   const content = base + (index === 1 || index === 2 ? '/games' : '/view');
   routes[content] = { parent: base, index, view: 'crt', title };
   if (index === 5) routes[base + '/beach'] = { parent: content, index, view: 'crt', beach: true, title: 'Beach Break | The Links' };
