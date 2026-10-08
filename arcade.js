@@ -212,6 +212,9 @@ function zoomPose(screen) {
     if (corners.every(point => { const p = point.clone().project(framing); return p.z > -1 && p.z < 1 && Math.abs(p.x) <= 0.92 && Math.abs(p.y) <= 0.9; })) break;
     distance *= 1.05;
   }
+  // A small pullback keeps the existing top alignment with more breathing room.
+  framing.position.copy(pose.target).addScaledVector(normal, distance * 1.06);
+  framing.lookAt(pose.target); framing.updateMatrixWorld();
   pose.position.copy(framing.position);
   let top = -Infinity;
   screen.root.traverse(object => {
@@ -411,19 +414,23 @@ function openCabinet(restoring = false) {
   view = 'cabinet';
   lastMonitorTap = null;
   zoomTransition = true;
+  const fromQuaternion = camera.quaternion.clone();
   stage.parentElement.classList.add('screen-open');
   camera.aspect = stage.clientWidth / stage.clientHeight;
   renderer.setSize(stage.clientWidth, stage.clientHeight);
   const pose = zoomPose(screen);
   returnButton.hidden = true;
   const fromZoom = camera.zoom, fromOffset = camera.view?.offsetY || 0;
+  const destination = camera.clone();
+  destination.position.copy(pose.position); destination.lookAt(pose.target);
   const direction = camera.getWorldDirection(new THREE.Vector3());
   const controls = { enabled: true, target: camera.position.clone().addScaledVector(direction, 5), update() {
     const t = Math.min(1, (performance.now() - started) / duration);
     const ease = t * t * (3 - 2 * t);
     camera.zoom = THREE.MathUtils.lerp(fromZoom, 1, ease);
     camera.setViewOffset(stage.clientWidth, stage.clientHeight, 0, THREE.MathUtils.lerp(fromOffset, pose.offsetY, ease), stage.clientWidth, stage.clientHeight);
-    camera.lookAt(this.target); camera.updateMatrixWorld(); invalidate();
+    camera.quaternion.slerpQuaternions(fromQuaternion, destination.quaternion, ease);
+    camera.updateMatrixWorld(); invalidate();
   } };
   const duration = reducedMotion.matches ? 1 : 700, started = performance.now();
   cancelZoom = zoomToScreen({ screen: { focusPose: () => pose }, camera, controls, duration, onComplete() {
@@ -563,7 +570,11 @@ function resize() {
   const previousHeight = stage.parentElement.clientHeight * (width <= 600 ? 0.45 : 0.59);
   const previousAspect = width / previousHeight;
   const previousDistance = Math.max(settings.cameraDistance, 3.35 / (Math.tan(THREE.MathUtils.degToRad(settings.fov / 2)) * previousAspect) + settings.radius);
-  const distance = settings.radius + (previousDistance - settings.radius) * height / previousHeight / 3.2;
+  // A fixed, full-room canvas avoids a layout jump when focus starts and draws
+  // behind the footer. Keep the original carousel's 20%-to-96% framing inside it.
+  const framingHeight = height * 0.76;
+  camera.aspect = width / framingHeight;
+  const distance = settings.radius + (previousDistance - settings.radius) * framingHeight / previousHeight / 3.2;
   camera.position.set(0, 0.6 + distance * settings.cameraElevation, distance);
   camera.lookAt(0, 0.2, 0);
   camera.zoom = 1;
@@ -584,7 +595,9 @@ function resize() {
   camera.updateMatrixWorld();
   camera.zoom = original.height / frontBounds().height * 0.9;
   camera.updateProjectionMatrix();
-  const offsetY = (original.center - frontBounds().center) * height / 2;
+  const offsetY = (original.center - frontBounds().center) * framingHeight / 2 - height * 0.08;
+  camera.zoom *= framingHeight / height;
+  camera.aspect = width / height;
   camera.setViewOffset(width, height, 0, offsetY, width, height);
   camera.updateProjectionMatrix();
   renderer.setPixelRatio(Math.min(devicePixelRatio, width < 700 ? 1.5 : 1.75));
