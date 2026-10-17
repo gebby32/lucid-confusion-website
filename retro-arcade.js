@@ -19,7 +19,7 @@ export async function retroTeaser(draw) {
   canvas.width = frame.naturalWidth; canvas.height = frame.naturalHeight;
   typePreviewText(canvas, context => context.drawImage(frame, 0, 0), [
     { text: 'RETRO ARCADE', y: canvas.height * .47, size: 76 },
-    { text: '< CLICK TO VIEW >', y: canvas.height * .58, size: 54 },
+    { text: '<click to continue>', y: canvas.height * .58, size: 54 },
   ], draw);
 }
 

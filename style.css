@@ -28,6 +28,11 @@ body { background: #10091a; color: #f7efff; font-family: Arial, sans-serif; }
 #crt-content #about-story .about-signature { margin-top: 1.3em; margin-bottom: .4em; font-size: 1.12em; }
 #crt-content #about-story .about-slogan { font-weight: 700; margin-bottom: 0; }
 #about-story:focus { outline: none; }
+#new-stuff-panel { position: absolute; inset: 12% 6% 18%; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; touch-action: pan-y pinch-zoom; pointer-events: auto; padding: clamp(12px, 1.5vw, 20px); background: #000; color: #39ff6a; font-family: VT323, "Share Tech Mono", "IBM Plex Mono", monospace; scrollbar-width: thin; scrollbar-color: #39ff6a66 #000; }
+#new-stuff-panel article + article { margin-top: clamp(32px, 4vw, 48px); }
+#crt-content #new-stuff-panel h2 { margin: 0 0 clamp(12px, 1.5vw, 20px); text-shadow: 0 0 3px #39ff6a30; }
+#new-stuff-panel video { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: contain; background: #000; }
+#new-stuff-panel:focus { outline: none; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .construction { display: var(--show-construction); position: absolute; width: min(19.1dvh, 12vw); bottom: 8%; right: 2%; pointer-events: none; }
 .construction-left { left: 2%; right: auto; }

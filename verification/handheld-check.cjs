@@ -30,7 +30,7 @@ const snapshot = async (page, name) => { if (output) await page.screenshot({ pat
       assert.equal(await page.locator('#handheld-grid a').count(), 0);
       assert.equal(await page.locator('iframe').count(), 0);
       assert.equal(requests.filter(url => url.includes('/assets/handhelds/')).length, 0);
-      assert.equal(await page.locator('#announcement').textContent(), 'RETRO GAMES. CLICK TO VIEW.');
+      assert.equal(await page.locator('#announcement').textContent(), 'Retro Handheld Games. <click to continue>');
       await snapshot(page, `handheld-teaser-${label}`);
       const point = await page.evaluate(() => {
         const v = arcadeDebug.screens.get(1).focusPose().target.project(arcadeDebug.camera), r = document.querySelector('#arcade').getBoundingClientRect();

@@ -8,6 +8,7 @@ import './contact.js';
 import { handheldTeaser, showHandhelds, hideHandhelds, isHandheldPlaying, launchHandheld, stopHandheld } from './handheld.js';
 import { retroTeaser, showRetroArcade, hideRetroArcade, isRetroPlaying, launchRetro, stopRetro } from './retro-arcade.js';
 import { linksTeaser, showLinks, beachState } from './links.js';
+import { showNewStuff, hideNewStuff } from './new-stuff.js';
 
 // Cabinet models retain their original IDs; public URLs are centralized in routes.js.
 const cabinets = [
@@ -48,18 +49,19 @@ const contactPanel = document.querySelector('#contact-panel');
 const handheldPanel = document.querySelector('#handheld-panel');
 const retroPanel = document.querySelector('#retro-panel');
 const linksPanel = document.querySelector('#links-panel');
+const newStuffPanel = document.querySelector('#new-stuff-panel');
 document.querySelector('#links-return').addEventListener('click', () => routeBack('/links'));
 // Reading gestures belong to the HTML story; double activation on the frame
 // retains the carousel return gesture without interrupting text selection.
 let framePress = null;
 crtContent.addEventListener('pointerdown', event => {
-  framePress = !linksPanel.contains(event.target) && !aboutStory.contains(event.target) && !contactPanel.contains(event.target) && !handheldPanel.contains(event.target) && !retroPanel.contains(event.target) && event.isPrimary && event.button === 0
+  framePress = !linksPanel.contains(event.target) && !aboutStory.contains(event.target) && !contactPanel.contains(event.target) && !handheldPanel.contains(event.target) && !retroPanel.contains(event.target) && !newStuffPanel.contains(event.target) && event.isPrimary && event.button === 0
     ? { x: event.clientX, y: event.clientY } : null;
 });
 crtContent.addEventListener('pointerup', event => {
   const press = framePress;
   framePress = null;
-  if (!press || view !== 'crt' || zoomTransition || linksPanel.contains(event.target) || aboutStory.contains(event.target) || contactPanel.contains(event.target) || handheldPanel.contains(event.target) || retroPanel.contains(event.target)
+  if (!press || view !== 'crt' || zoomTransition || linksPanel.contains(event.target) || aboutStory.contains(event.target) || contactPanel.contains(event.target) || handheldPanel.contains(event.target) || retroPanel.contains(event.target) || newStuffPanel.contains(event.target)
     || Math.hypot(event.clientX - press.x, event.clientY - press.y) > 7) return;
   const tap = { time: event.timeStamp, x: event.clientX, y: event.clientY, type: event.pointerType };
   if (lastMonitorTap && tap.type === lastMonitorTap.type && tap.time - lastMonitorTap.time < 400
@@ -127,6 +129,7 @@ function showContent() {
   const isHandheld = cabinets[active].id === 'retro-handheld';
   const isRetro = cabinets[active].id === 'retro-arcade';
   const isLinks = cabinets[active].id === 'the-links';
+  const isNewStuff = cabinets[active].id === 'new-stuff';
   const frame = cabinets[active].frame;
   crtContent.classList.toggle('framed-placeholder', !!frame);
   crtContent.style.backgroundImage = frame ? `url("${frame}")` : '';
@@ -149,8 +152,8 @@ function showContent() {
   crtContent.classList.toggle('retro-view', isRetro);
   document.querySelector('#retro-frame').hidden = !isRetro;
   retroPanel.hidden = !isRetro;
-  document.querySelector('#crt-title').hidden = isAbout || isContact || isHandheld || isRetro || isLinks;
-  document.querySelector('#crt-placeholder').hidden = isAbout || isContact || isHandheld || isRetro || isLinks;
+  document.querySelector('#crt-title').hidden = isAbout || isContact || isHandheld || isRetro || isLinks || isNewStuff;
+  document.querySelector('#crt-placeholder').hidden = isAbout || isContact || isHandheld || isRetro || isLinks || isNewStuff;
   document.querySelector('#contact-frame').hidden = !isContact;
   contactPanel.hidden = !isContact;
   document.querySelector('#about-frame').hidden = !isAbout;
@@ -158,6 +161,7 @@ function showContent() {
   document.querySelector('#crt-title').textContent = cabinets[active].name.toUpperCase();
   crtContent.setAttribute('aria-label', `${cabinets[active].name} interface`);
   crtContent.hidden = false;
+  if (isNewStuff) { showNewStuff(); announcement.textContent = 'New Stuff. Sloths vs Penguins and OmniStash promotional videos. Scroll inside the monitor to watch.'; }
   if (isLinks) { showLinks(); announcement.textContent = 'The Links. Explore the signs.'; }
   if (isRetro) { announcement.textContent = 'Retro Arcade. Choose a game.'; }
   if (isHandheld) {
@@ -254,7 +258,7 @@ function closeScreen(restoring = false) {
 }
 returnButton.addEventListener('click', returnToCarousel);
 document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && focusedScreen && !isHandheldPlaying() && !isRetroPlaying()) { event.preventDefault(); returnToCarousel(); }
+  if (event.key === 'Escape' && focusedScreen && !isHandheldPlaying() && !isRetroPlaying() && !newStuffPanel.contains(document.fullscreenElement)) { event.preventDefault(); returnToCarousel(); }
 });
 async function showScreenMessage(screen) {
   const generation = ++previewGeneration;
@@ -270,12 +274,12 @@ async function showScreenMessage(screen) {
   }
   if (cabinets[active].id === 'retro-arcade') {
     retroTeaser(draw).catch(error => console.error('Unable to load the Retro Arcade frame', error));
-    announcement.textContent = 'RETRO ARCADE. CLICK TO VIEW.';
+    announcement.textContent = 'RETRO ARCADE. <click to continue>';
     return;
   }
   if (cabinets[active].id === 'retro-handheld') {
     handheldTeaser(draw).catch(error => console.error('Unable to load the handheld arcade frame', error));
-    announcement.textContent = 'RETRO GAMES. CLICK TO VIEW.';
+    announcement.textContent = 'Retro Handheld Games. <click to continue>';
     return;
   }
   if (cabinets[active].id === 'contact-us') {
@@ -287,6 +291,7 @@ async function showScreenMessage(screen) {
     return;
   }
   const cabinet = cabinets[active];
+  const isNewStuff = cabinet.id === 'new-stuff';
   let border;
   if (cabinet.frame) {
     border = new Image();
@@ -300,12 +305,15 @@ async function showScreenMessage(screen) {
   typePreviewText(canvas, context => {
     context.fillStyle = '#071b1b'; context.fillRect(0, 0, canvas.width, canvas.height);
     if (border) context.drawImage(border, 0, 0, canvas.width, canvas.height);
-  }, [
+  }, isNewStuff ? [
+    { text: 'New Stuff', y: 260, size: 46, maxWidth: 880 },
+    { text: '<click to continue>', y: 385, size: 66 },
+  ] : [
     { text: cabinet.name.toUpperCase(), y: 260, size: 46, maxWidth: 880 },
     { text: 'Coming soon.', y: 385, size: 66 },
     { text: 'Stay tuned!', y: 458, size: 44 },
   ], draw);
-  announcement.textContent = `${cabinet.name}. Coming soon. Stay tuned!`;
+  announcement.textContent = isNewStuff ? 'New Stuff. <click to continue>' : `${cabinet.name}. Coming soon. Stay tuned!`;
   invalidate();
 }
 async function showContactTeaser(screen, draw) {
@@ -320,9 +328,9 @@ async function showContactTeaser(screen, draw) {
       { text: 'Comments? Concerns? Complaints...', y: 475, size: 60 },
       { text: 'Custom game or software requests?', y: 550, size: 60 },
       { text: 'Hit me up!', y: 625, size: 64 },
-      { text: 'CLICK THE SCREEN TO CONTINUE', y: 790, size: 64 },
+      { text: '<click to continue>', y: 790, size: 64 },
     ].map(line => ({ ...line, fitWidth: canvas.width * .86 })), draw);
-    if (view === 'intro') announcement.textContent = 'WANT TO GET IN TOUCH? Comments? Concerns? Complaints... Custom game or software requests? Hit me up! CLICK THE SCREEN TO CONTINUE';
+    if (view === 'intro') announcement.textContent = 'WANT TO GET IN TOUCH? Comments? Concerns? Complaints... Custom game or software requests? Hit me up! <click to continue>';
     invalidate();
   } catch (error) { console.error('Unable to load the Contact Us teaser frame', error); }
 }
@@ -338,9 +346,9 @@ async function showAboutTeaser(screen, draw) {
       { text: 'LUCID CONFUSION CREATIONS', y: 403, size: 64 },
       { text: 'Computers. Video games. Europe. Shamans.', y: 535, size: 60 },
       { text: 'Twitch. Questionable decisions. Software.', y: 605, size: 60 },
-      { text: 'CLICK THE SCREEN TO READ', y: 775, size: 66 },
+      { text: '<click to continue>', y: 775, size: 66 },
     ].map(line => ({ ...line, fitWidth: canvas.width * .86 })), draw);
-    if (view === 'intro') announcement.textContent = 'A BRIEF, MOSTLY TRUE HISTORY OF LUCID CONFUSION CREATIONS. Computers. Video games. Europe. Shamans. Twitch. Questionable decisions. Software. CLICK THE SCREEN TO READ';
+    if (view === 'intro') announcement.textContent = 'A BRIEF, MOSTLY TRUE HISTORY OF LUCID CONFUSION CREATIONS. Computers. Video games. Europe. Shamans. Twitch. Questionable decisions. Software. <click to continue>';
     invalidate();
   } catch (error) {
     console.error('Unable to load the About Us teaser frame', error);
@@ -699,6 +707,7 @@ async function initialize() {
   if (failed.length) loading.textContent = `Could not load ${failed.join(', ')}. Reload to retry.`;
   else loading.hidden = true;
   await startRouter(async (route, stale) => {
+    if (route.index !== 6 || route.view !== 'crt') await hideNewStuff();
     const settled = async () => {
       while (zoomTransition) await new Promise(resolve => setTimeout(resolve, 16));
     };
