@@ -10,6 +10,7 @@ import { retroTeaser, showRetroArcade, hideRetroArcade, isRetroPlaying, launchRe
 import { linksTeaser, showLinks, beachState } from './links.js';
 import { showNewStuff, hideNewStuff } from './new-stuff.js';
 import { showDemoArcade, hideDemoArcade } from './demo-arcade.js';
+import { showComingSoon, hideComingSoon } from './coming-soon.js';
 
 // Cabinet models retain their original IDs; public URLs are centralized in routes.js.
 const cabinets = [
@@ -52,18 +53,19 @@ const retroPanel = document.querySelector('#retro-panel');
 const linksPanel = document.querySelector('#links-panel');
 const newStuffPanel = document.querySelector('#new-stuff-panel');
 const demoArcadePanel = document.querySelector('#demo-arcade-panel');
+const comingSoonPanel = document.querySelector('#coming-soon-panel');
 document.querySelector('#links-return').addEventListener('click', () => routeBack('/links'));
 // Reading gestures belong to the HTML story; double activation on the frame
 // retains the carousel return gesture without interrupting text selection.
 let framePress = null;
 crtContent.addEventListener('pointerdown', event => {
-  framePress = !linksPanel.contains(event.target) && !aboutStory.contains(event.target) && !contactPanel.contains(event.target) && !handheldPanel.contains(event.target) && !retroPanel.contains(event.target) && !newStuffPanel.contains(event.target) && !demoArcadePanel.contains(event.target) && event.isPrimary && event.button === 0
+  framePress = !linksPanel.contains(event.target) && !aboutStory.contains(event.target) && !contactPanel.contains(event.target) && !handheldPanel.contains(event.target) && !retroPanel.contains(event.target) && !newStuffPanel.contains(event.target) && !demoArcadePanel.contains(event.target) && !comingSoonPanel.contains(event.target) && event.isPrimary && event.button === 0
     ? { x: event.clientX, y: event.clientY } : null;
 });
 crtContent.addEventListener('pointerup', event => {
   const press = framePress;
   framePress = null;
-  if (!press || view !== 'crt' || zoomTransition || linksPanel.contains(event.target) || aboutStory.contains(event.target) || contactPanel.contains(event.target) || handheldPanel.contains(event.target) || retroPanel.contains(event.target) || newStuffPanel.contains(event.target) || demoArcadePanel.contains(event.target)
+  if (!press || view !== 'crt' || zoomTransition || linksPanel.contains(event.target) || aboutStory.contains(event.target) || contactPanel.contains(event.target) || handheldPanel.contains(event.target) || retroPanel.contains(event.target) || newStuffPanel.contains(event.target) || demoArcadePanel.contains(event.target) || comingSoonPanel.contains(event.target)
     || Math.hypot(event.clientX - press.x, event.clientY - press.y) > 7) return;
   const tap = { time: event.timeStamp, x: event.clientX, y: event.clientY, type: event.pointerType };
   if (lastMonitorTap && tap.type === lastMonitorTap.type && tap.time - lastMonitorTap.time < 400
@@ -133,6 +135,7 @@ function showContent() {
   const isLinks = cabinets[active].id === 'the-links';
   const isNewStuff = cabinets[active].id === 'new-stuff';
   const isDemo = cabinets[active].id === 'demo-arcade';
+  const isComingSoon = cabinets[active].id === 'coming-soon';
   const frame = cabinets[active].frame;
   crtContent.classList.toggle('framed-placeholder', !!frame);
   crtContent.style.backgroundImage = frame ? `url("${frame}")` : '';
@@ -155,8 +158,8 @@ function showContent() {
   crtContent.classList.toggle('retro-view', isRetro);
   document.querySelector('#retro-frame').hidden = !isRetro;
   retroPanel.hidden = !isRetro;
-  document.querySelector('#crt-title').hidden = isAbout || isContact || isHandheld || isRetro || isLinks || isNewStuff || isDemo;
-  document.querySelector('#crt-placeholder').hidden = isAbout || isContact || isHandheld || isRetro || isLinks || isNewStuff || isDemo;
+  document.querySelector('#crt-title').hidden = isAbout || isContact || isHandheld || isRetro || isLinks || isNewStuff || isDemo || isComingSoon;
+  document.querySelector('#crt-placeholder').hidden = isAbout || isContact || isHandheld || isRetro || isLinks || isNewStuff || isDemo || isComingSoon;
   document.querySelector('#contact-frame').hidden = !isContact;
   contactPanel.hidden = !isContact;
   document.querySelector('#about-frame').hidden = !isAbout;
@@ -165,6 +168,7 @@ function showContent() {
   crtContent.setAttribute('aria-label', `${cabinets[active].name} interface`);
   crtContent.hidden = false;
   if (isDemo) { announcement.textContent = 'Demo Arcade. Play Lucid Logic Circuit Control.'; }
+  if (isComingSoon) { announcement.textContent = 'Coming Soon. Promotional video.'; }
   if (isNewStuff) { showNewStuff(); announcement.textContent = 'New Stuff. Sloths vs Penguins and OmniStash promotional videos. Scroll inside the monitor to watch.'; }
   if (isLinks) { showLinks(); announcement.textContent = 'The Links. Explore the signs.'; }
   if (isRetro) { announcement.textContent = 'Retro Arcade. Choose a game.'; }
@@ -262,7 +266,7 @@ function closeScreen(restoring = false) {
 }
 returnButton.addEventListener('click', returnToCarousel);
 document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && focusedScreen && !isHandheldPlaying() && !isRetroPlaying() && !newStuffPanel.contains(document.fullscreenElement)) { event.preventDefault(); returnToCarousel(); }
+  if (event.key === 'Escape' && focusedScreen && !isHandheldPlaying() && !isRetroPlaying() && !newStuffPanel.contains(document.fullscreenElement) && !comingSoonPanel.contains(document.fullscreenElement)) { event.preventDefault(); returnToCarousel(); }
 });
 async function showScreenMessage(screen) {
   const generation = ++previewGeneration;
@@ -295,7 +299,7 @@ async function showScreenMessage(screen) {
     return;
   }
   const cabinet = cabinets[active];
-  const hasContinuePrompt = cabinet.id === 'new-stuff' || cabinet.id === 'demo-arcade';
+  const hasContinuePrompt = cabinet.id === 'new-stuff' || cabinet.id === 'demo-arcade' || cabinet.id === 'coming-soon';
   let border;
   if (cabinet.frame) {
     border = new Image();
@@ -711,6 +715,7 @@ async function initialize() {
   if (failed.length) loading.textContent = `Could not load ${failed.join(', ')}. Reload to retry.`;
   else loading.hidden = true;
   await startRouter(async (route, stale) => {
+    if (route.index !== 7 || route.view !== 'crt') await hideComingSoon();
     if (route.index !== 3 || route.view !== 'crt') hideDemoArcade();
     if (route.index !== 6 || route.view !== 'crt') await hideNewStuff();
     const settled = async () => {
@@ -736,6 +741,7 @@ async function initialize() {
     if (view !== route.view) { openCRT(route.index, route.view); await settled(); }
     if (stale()) return;
     if (route.view === 'crt') {
+      if (route.index === 7) showComingSoon();
       if (route.index === 3) showDemoArcade();
       if (route.index === 1) { await showHandhelds(); if (!stale() && route.game) await launchHandheld(route.game); }
       if (route.index === 2) { await showRetroArcade(); if (!stale() && route.game) await launchRetro(route.game); }

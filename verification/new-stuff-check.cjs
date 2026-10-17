@@ -85,7 +85,7 @@ const stopped = page => page.waitForFunction(() => [...document.querySelectorAll
       await page.locator('#arcade').focus(); await page.keyboard.press('ArrowRight');
       await page.keyboard.press('Enter'); await ready(page, '/coming-soon');
       await page.keyboard.press('Enter'); await ready(page, '/coming-soon/view');
-      assert(!(await panel.isVisible())); assert(await page.locator('#crt-placeholder').isVisible()); await stopped(page);
+      assert(!(await panel.isVisible())); assert(await page.locator('#coming-soon-panel').isVisible()); await stopped(page);
       await page.goto(base + '/new-stuff/view/?debug=1'); await ready(page, '/new-stuff/view'); await stopped(page);
       assert(await page.locator('#new-stuff-panel').isVisible());
       await page.locator('#new-stuff-panel video').first().evaluate(async v => { v.muted = true; await v.play(); });
