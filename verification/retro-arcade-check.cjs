@@ -26,13 +26,17 @@ for (const item of JSON.parse(fs.readFileSync('verification/retro-arcade-source.
    await page.waitForFunction(()=>window.arcadeDebug?.screens.size===9);
    assert(!requests.some(u=>u.includes('/retro-arcade/')));
    await page.locator('#arcade').focus(); await page.keyboard.press('Enter');
-   await page.waitForFunction(()=>arcadeDebug.state.view==='intro'&&!arcadeDebug.state.zoomTransition);
+   // Typing starts during the approach. Observe it then, independently of how
+   // long the cabinet motion takes, rather than sampling two completed frames.
+   await page.waitForFunction(()=>arcadeDebug.state.view==='intro');
    await page.waitForFunction(()=>document.querySelector('#retro-frame').naturalWidth>0);
-   await page.waitForFunction(()=>arcadeDebug.screens.get(2).source?.image instanceof HTMLCanvasElement);
-   const early = await page.evaluate(()=>arcadeDebug.screens.get(2).source.image.toDataURL());
+   await page.waitForFunction(()=>arcadeDebug.screens.get(2).mode==='texture'&&arcadeDebug.screens.get(2).source?.image instanceof HTMLCanvasElement);
+   const canvasHash = async () => crypto.createHash('sha256').update(await page.evaluate(()=>arcadeDebug.screens.get(2).source.image.toDataURL())).digest('hex');
+   const early = await canvasHash();
    await page.waitForTimeout(1400);
-   const complete = await page.evaluate(()=>arcadeDebug.screens.get(2).source.image.toDataURL());
+   const complete = await canvasHash();
    assert.notEqual(early,complete,'Typewriter canvas advances');
+   await page.waitForFunction(()=>!arcadeDebug.state.zoomTransition);
    await page.emulateMedia({reducedMotion:'reduce'});
    assert(!requests.some(u=>/retro-arcade\/(catalog|games|art\/[^/]+\.webp)/.test(u)));
    if(output)await page.screenshot({path:output+'/retro-teaser-'+size.width+'.png'});

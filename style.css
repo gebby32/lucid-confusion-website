@@ -2,9 +2,9 @@
 * { box-sizing: border-box; }
 html, body { margin: 0; min-height: 100%; width: 100%; }
 body { background: #10091a; color: #f7efff; font-family: Arial, sans-serif; }
-.arcade-room { position: relative; height: max(720px, 100svh); overflow: hidden; isolation: isolate; background: url("assets/arcade/art/10-6%20background%20update.png") center center / cover no-repeat; }
-.brand { position: absolute; top: -3%; left: 50%; transform: translateX(-50%); width: min(771px, 73.44vw); margin: 0; pointer-events: none; }
-.brand img { display: block; width: 100%; max-height: 41.4svh; object-fit: contain; filter: drop-shadow(0 0 var(--banner-glow) #63f48d66); }
+.arcade-room { position: relative; height: 100dvh; overflow: hidden; isolation: isolate; background: url("assets/arcade/art/10-6%20background%20update.png") center center / cover no-repeat; }
+.brand { position: absolute; top: -3%; left: 50%; transform: translateX(-50%); width: min(84.17dvh, 73.44vw); margin: 0; pointer-events: none; }
+.brand img { display: block; width: 100%; max-height: 41.4dvh; object-fit: contain; filter: drop-shadow(0 0 var(--banner-glow) #63f48d66); }
 #arcade { position: absolute; inset: 0; touch-action: pan-y pinch-zoom; cursor: grab; outline-offset: -5px; }
 #arcade.dragging { cursor: grabbing; }
 #arcade canvas { display: block; width: 100%; height: 100%; }
@@ -12,13 +12,13 @@ body { background: #10091a; color: #f7efff; font-family: Arial, sans-serif; }
 .arcade-room.screen-open .screen-return { z-index: 3; }
 .arcade-room.screen-open:not(.crt-open) .screen-return { position: fixed; top: 12px; left: 12px; bottom: auto; transform: none; }
 .arcade-room.crt-open::after { content: ''; position: absolute; inset: 0; background: #050708; z-index: 1; }
-.arcade-room.crt-open #arcade { inset: auto; left: 50%; top: 50svh; transform: translate(-50%, -50%); width: min(96vw, 112svh); height: min(72vw, 84svh); }
-#crt-content { position: absolute; z-index: 3; left: 50%; top: 50svh; transform: translate(-50%, -50%); width: min(88.32vw, 103.04svh); aspect-ratio: 4 / 3; background: #071b1b; color: #8dffca; border-radius: 3%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; pointer-events: none; }
+.arcade-room.crt-open #arcade { inset: auto; left: 50%; top: 50dvh; transform: translate(-50%, -50%); width: min(96vw, 112dvh); height: min(72vw, 84dvh); }
+#crt-content { position: absolute; z-index: 3; left: 50%; top: 50dvh; transform: translate(-50%, -50%); width: min(88.32vw, 103.04dvh); aspect-ratio: 4 / 3; background: #071b1b; color: #8dffca; border-radius: 3%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; pointer-events: none; }
 #crt-content[hidden] { display: none; }
 #crt-content h2 { font-size: clamp(14px, 2.5vw, 32px); margin: 0 0 5%; }
 #crt-content p { font-size: clamp(18px, 3vw, 40px); margin: 0; line-height: 1.5; text-shadow: 0 0 12px #4bd8b788; }
 .arcade-room.crt-open .screen-return { z-index: 4; }
-#crt-content.about-view { width: min(96vw, 112svh); background: transparent; border-radius: 0; pointer-events: auto; }
+#crt-content.about-view { width: min(96vw, 112dvh); background: transparent; border-radius: 0; pointer-events: auto; }
 #about-frame { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
 #about-story { position: absolute; inset: 14% 5.5%; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; touch-action: pan-y pinch-zoom; pointer-events: auto; user-select: text; -webkit-user-select: text; padding: clamp(12px, 2vw, 28px); scrollbar-width: thin; scrollbar-color: #39ff6a66 #071b1b; text-align: left; color: #39ff6a; font-family: VT323, "Share Tech Mono", "IBM Plex Mono", monospace; font-size: clamp(18px, 2.2vw, 28px); line-height: 1.5; text-shadow: 0 0 3px #39ff6a30; }
 #crt-content #about-story p { font: inherit; line-height: inherit; text-shadow: inherit; margin: 0 0 .85em; }
@@ -28,7 +28,7 @@ body { background: #10091a; color: #f7efff; font-family: Arial, sans-serif; }
 #crt-content #about-story .about-slogan { font-weight: 700; margin-bottom: 0; }
 #about-story:focus { outline: none; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.construction { display: var(--show-construction); position: absolute; width: clamp(85px, 12vw, 175px); bottom: 8%; right: 2%; pointer-events: none; }
+.construction { display: var(--show-construction); position: absolute; width: min(19.1dvh, 12vw); bottom: 8%; right: 2%; pointer-events: none; }
 .construction-left { left: 2%; right: auto; }
 .loading { position: absolute; top: 29%; left: 50%; transform: translateX(-50%); background: #180c29e8; border: 1px solid #b88ad65c; padding: 10px 16px; border-radius: 8px; font-size: 13px; pointer-events: none; }
 .loading[hidden] { display: none; }
@@ -36,21 +36,14 @@ body { background: #10091a; color: #f7efff; font-family: Arial, sans-serif; }
 #arcade:focus { outline: none; }
 .screen-return { position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%); padding: 10px 16px; color: #e2ffef; background: #180d27ee; border: 1px solid #a4ffc366; border-radius: 8px; cursor: pointer; }
 :focus-visible { outline: 2px solid #a4ffc3; outline-offset: 3px; }
-.site-footer { position: absolute; top: max(688px, calc(100svh - 32px)); left: 0; width: 100%; display: flex; justify-content: center; gap: 24px; padding: 8px; font-size: 11px; background: transparent; border: 0; box-shadow: none; z-index: 5; pointer-events: none; }
+.site-footer { position: absolute; bottom: 0; left: 0; width: 100%; display: flex; justify-content: center; gap: 24px; padding: 8px; font-size: 11px; background: transparent; border: 0; box-shadow: none; z-index: 5; pointer-events: none; }
 .site-footer a { pointer-events: auto; }
 .site-footer a, .no-script a { color: #eee0f4; text-shadow: 0 1px 4px #000; }
 .no-script { position: absolute; top: 40%; padding: 20px; background: #160e26; }
 @media (max-width: 600px) {
-  .arcade-room { height: max(660px, 100svh); }
   .brand { width: 70.38vw; top: 5%; }
   #arcade { inset: 0; }
 
-  .construction { width: 70px; bottom: 24%; right: 1%; }
+  .construction { width: min(17.95vw, 12dvh); bottom: 24%; right: 1%; }
   .construction-left { left: 1%; right: auto; }
-  .site-footer { top: max(628px, calc(100svh - 32px)); }
-}
-@media (max-height: 550px) and (min-width: 601px) {
-  .arcade-room { height: 600px; }
-  .brand img { max-height: 234px; }
-  .site-footer { top: 568px; }
 }

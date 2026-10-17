@@ -1,4 +1,4 @@
-#crt-content.handheld-view { width: min(96vw, 112svh); background: transparent; border-radius: 0; pointer-events: auto; }
+#crt-content.handheld-view { width: min(96vw, 112dvh); background: transparent; border-radius: 0; pointer-events: auto; }
 #handheld-frame { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
 #handheld-panel { position: absolute; inset: 14% 5.5%; overflow: hidden; color: #39ff6a; font-family: VT323, "Share Tech Mono", "IBM Plex Mono", monospace; text-shadow: 0 0 3px #39ff6a30; }
 #handheld-grid { height: 100%; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; touch-action: pan-y pinch-zoom; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-content: start; gap: clamp(14px, 2vw, 28px); padding: 12px; scrollbar-width: thin; scrollbar-color: #39ff6a66 #071b1b; }

@@ -1,16 +1,34 @@
 # Two-stage zoom and routing verification — October 17, 2026
 
-Local rollback checkpoint: `c423ad3`. Implementation branch:
+Local rollback checkpoints: `c423ad3` before restoring the two-stage flow and
+`fd8f7c3` before correcting viewport sizing and floor motion. Implementation branch:
 `codex/grounded-cabinet-zoom`. No push or deployment was performed.
 
-Local headless Microsoft Edge checks passed:
+The user's small-window failure was reproduced at 1360x600: the old 720px
+minimum scene height allowed a 120px page scroll, cutting off the focused cabinet
+and leaving its bottom above the visible floor. Earlier tests did not exercise
+page scrolling, and world-space floor contact alone did not verify perceived
+grounding. Those earlier checks were insufficient.
 
-- `two-stage-zoom-check.cjs`: animated desktop, portrait phone, small phone and
-  landscape phone transitions; pixel-identical room/branding/decorations before
-  and after the first zoom; fixed first-stage camera, uniform group scaling,
-  zero vertical group movement and unchanged per-cabinet transforms; viewport
-  fit without clipping, zero layout shift, two click/tap stages, UI and browser
+Updated local headless Microsoft Edge checks passed:
+
+- `two-stage-zoom-check.cjs`: 1360x600, 1520x695, 1920x916, 1440x900,
+  390x844, 320x568 and 844x390. Attempts to scroll leave the scene at y=0;
+  room/branding/decorations are pixel-identical before/after the first zoom.
+  Every sampled animation frame checks forward ring translation, all nine
+  projected cabinet bases moving down toward the viewer, unchanged geometry
+  scale, zero vertical group movement/tilt and unchanged relative transforms.
+  Also checks viewport fit, zero layout shift, two click/tap stages, UI/browser
   history round trips, viewport resizing and all nine cabinet intros/content.
+- `viewport-framing-check.cjs`: equivalent 1920x900 physical areas at emulated
+  100%, 125% and 150% display scaling have equal normalized cabinet/branding/
+  decoration dimensions. Checks scroll attempts, reload without duplicate history,
+  legal-link hit targets, resizing during both zoom stages, 4:3 content, reverse
+  history and exact bounds of all nine cabinet meshes on desktop/portrait phone.
+  Cabinets fill the height unless the viewport is too narrow for their original
+  proportions, in which case width limits the fit and the bottom remains aligned.
+  Root, intermediate animation and final captures were visually inspected,
+  including the previously failing 1360x600 viewport.
 
 - `routing-check.cjs`: About Us, both game cabinets and Links, each history level
   in both directions, controls, desktop and touch/mobile, direct links, refresh,
@@ -32,6 +50,8 @@ Local headless Microsoft Edge checks passed:
   exceptions, fullscreen and new-game compatibility.
 - `retro-arcade-check.cjs`: all seven games on desktop, phone and tablet, native
   gameplay/input, fullscreen, lazy loading, unload, Coming Soon, asset hashes.
+  The typewriter check now samples during typing rather than after the longer
+  first zoom has already allowed the unchanged intro to finish.
   One original source image is no longer at its historical location; its
   published copy still matches the recorded SHA-256.
 - JavaScript syntax checks and `git diff --check` passed.

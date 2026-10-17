@@ -14,9 +14,13 @@ Routes:
 - `/<game-cabinet>/games/<display-name-slug>/`: a published game
 - `/links/view/`: Links battle screen; `/links/beach/`: beach gag
 
-The first transition moves and uniformly scales the entire carousel on its
-floor plane. The resting camera, room background, banner and decorations stay
-fixed; the cabinet proportions, relative angles and ground shadows are preserved.
+The first transition slides the entire rigid carousel forward on its floor
+plane without scaling its geometry. The cabinet-only camera lowers its sightline
+and adjusts vertical framing so the rear bases advance toward the viewer instead
+of rising on screen. The CSS room background, banner and decorations stay fixed
+during the transition; cabinet proportions, relative angles and ground shadows
+are preserved. Scene dimensions follow the actual viewport without minimum-height
+page overflow, and branding/decorations scale proportionally with that viewport.
 The front cabinet fits the visible viewport height, with a width limit on narrow
 screens to prevent cropping. Clicking its CRT performs the second zoom into the
 existing 4:3 content or selection screen. Slugs use
@@ -54,6 +58,7 @@ With Playwright available via `NODE_PATH`, serve the repository using
 
 ```
 node verification/two-stage-zoom-check.cjs
+node verification/viewport-framing-check.cjs
 node verification/routing-check.cjs
 node verification/routing-edge-check.cjs
 node verification/links-check.cjs

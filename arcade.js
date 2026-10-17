@@ -359,23 +359,31 @@ function introPose(index) {
   destination.updateMatrixWorld();
   const desiredAngle = -index * step;
   const focusAngle = angle + THREE.MathUtils.euclideanModulo(desiredAngle - angle + Math.PI, Math.PI * 2) - Math.PI;
-  return { camera: destination, ...cabinetFraming(screens.get(index), ring, destination, focusAngle, width, height, innerHeight) };
+  return { camera: destination, ...cabinetFraming(screens.get(index), ring, destination, focusAngle, width, height) };
 }
 
-function animatePose(pose, duration, complete) {
+function animatePose(getPose, duration, complete) {
   cancelZoom?.();
   const from = camera.clone(), fromScale = ring.scale.x, fromZ = ring.position.z, fromAngle = angle;
+  let pose = getPose(), width = stage.clientWidth, height = stage.clientHeight;
   const started = performance.now();
   let animation;
   zoomTransition = true;
   const tick = now => {
-    const t = reducedMotion.matches ? 1 : Math.min(1, (now - started) / duration);
+    if (width !== stage.clientWidth || height !== stage.clientHeight) {
+      width = stage.clientWidth; height = stage.clientHeight;
+      pose = getPose();
+    }
+    // A queued animation frame can carry a timestamp just before this transition
+    // started. Negative progress would produce a tiny forward/backward hop.
+    const t = reducedMotion.matches ? 1 : THREE.MathUtils.clamp((now - started) / duration, 0, 1);
     const ease = t * t * (3 - 2 * t);
     camera.position.lerpVectors(from.position, pose.camera.position, ease);
     camera.quaternion.slerpQuaternions(from.quaternion, pose.camera.quaternion, ease);
     camera.zoom = THREE.MathUtils.lerp(from.zoom, pose.camera.zoom, ease);
-    camera.setViewOffset(stage.clientWidth, stage.clientHeight, 0,
-      THREE.MathUtils.lerp(from.view?.offsetY || 0, pose.camera.view?.offsetY || 0, ease), stage.clientWidth, stage.clientHeight);
+    camera.setViewOffset(width, height, 0, height * THREE.MathUtils.lerp(
+      (from.view?.offsetY || 0) / (from.view?.fullHeight || height),
+      (pose.camera.view?.offsetY || 0) / (pose.camera.view?.fullHeight || height), ease), width, height);
     angle = target = THREE.MathUtils.lerp(fromAngle, pose.angle, ease);
     ring.rotation.y = angle;
     ring.scale.setScalar(THREE.MathUtils.lerp(fromScale, pose.scale, ease));
@@ -406,15 +414,17 @@ function openCRT(index, next = 'intro') {
   hideHandhelds(); hideRetroArcade();
   fullStage();
   stage.parentElement.classList.add('screen-open');
-  let pose = introPose(index);
+  let getPose = () => introPose(index);
   if (next === 'crt') {
-    const crt = fullCRTPose(screen), destination = camera.clone();
-    destination.position.copy(crt.position); destination.lookAt(crt.target); destination.zoom = 1;
-    destination.setViewOffset(stage.clientWidth, stage.clientHeight, 0, crt.offsetY, stage.clientWidth, stage.clientHeight);
-    pose = { camera: destination, scale: ring.scale.x, z: ring.position.z, angle };
+    getPose = () => {
+      const crt = fullCRTPose(screen), destination = camera.clone();
+      destination.position.copy(crt.position); destination.lookAt(crt.target); destination.zoom = 1;
+      destination.setViewOffset(stage.clientWidth, stage.clientHeight, 0, crt.offsetY, stage.clientWidth, stage.clientHeight);
+      return { camera: destination, scale: ring.scale.x, z: ring.position.z, angle };
+    };
   }
   returnButton.hidden = true;
-  animatePose(pose, next === 'intro' ? 1100 : 850, () => {
+  animatePose(getPose, next === 'intro' ? 1800 : 850, () => {
     stage.parentElement.classList.toggle('crt-open', next === 'crt');
     resize();
     if (next === 'intro') showIntro(); else showContent();
@@ -427,9 +437,11 @@ function leaveCabinet() {
   document.body.classList.remove('links-open');
   hideHandhelds(); hideRetroArcade();
   returnButton.hidden = true;
-  const destination = camera.clone();
-  setCarouselCamera(destination, stage.clientWidth, stage.clientHeight);
-  animatePose({ camera: destination, scale: 1, z: 0, angle: restingAngle }, 1000, () => closeScreen(true));
+  animatePose(() => {
+    const destination = camera.clone();
+    setCarouselCamera(destination, stage.clientWidth, stage.clientHeight);
+    return { camera: destination, scale: 1, z: 0, angle: restingAngle };
+  }, 1000, () => closeScreen(true));
 }
 stage.addEventListener('keydown', event => {
   if (['ArrowLeft', 'ArrowRight', 'Enter', ' '].includes(event.key)) {
