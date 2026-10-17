@@ -1,4 +1,5 @@
 import { navigate, routeBack } from './router.js';
+import { typePreviewText } from './assets/arcade/preview-text.js';
 const panel = document.querySelector('#links-panel');
 const main = document.querySelector('#links-battle');
 const beach = document.querySelector('#links-beach');
@@ -40,11 +41,17 @@ export function showLinks() {
   document.querySelector('#crt-content').scrollTop = 0;
   panel.querySelector('.links-google').focus({preventScroll:true});
 }
-export function linksTeaser() {
+export async function linksTeaser(draw) {
+  const frame = document.querySelector('#links-frame');
+  if (!frame.hasAttribute('src')) frame.src = frame.dataset.src;
+  await frame.decode();
   const canvas = document.createElement('canvas'); canvas.width = 1024; canvas.height = 768;
-  const ctx = canvas.getContext('2d'); ctx.fillStyle = '#000'; ctx.fillRect(0,0,1024,768);
-  ctx.fillStyle = '#39ff6a'; ctx.textAlign = 'center'; ctx.shadowColor = '#39ff6a'; ctx.shadowBlur = 7;
-  ctx.font = '48px monospace'; ctx.fillText('Important Links to',512,315); ctx.fillText('Important Things',512,380);
-  ctx.font = '36px monospace'; ctx.fillText('<click to continue>',512,475);
-  return canvas;
+  typePreviewText(canvas, ctx => {
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
+  }, [
+    { text: 'Important Links to', y: 315, size: 48 },
+    { text: 'Important Things', y: 380, size: 48 },
+    { text: '<click to continue>', y: 475, size: 36 },
+  ], draw);
 }

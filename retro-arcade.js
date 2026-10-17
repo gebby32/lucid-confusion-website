@@ -1,4 +1,5 @@
 import { navigate, routeBack, gamePath } from './router.js';
+import { typePreviewText } from './assets/arcade/preview-text.js';
 const frame = document.querySelector('#retro-frame');
 const panel = document.querySelector('#retro-panel');
 const grid = document.querySelector('#retro-grid');
@@ -16,20 +17,10 @@ export async function retroTeaser(draw) {
   await frame.decode();
   const canvas = document.createElement('canvas');
   canvas.width = frame.naturalWidth; canvas.height = frame.naturalHeight;
-  const context = canvas.getContext('2d'), font = getComputedStyle(panel).fontFamily;
-  const title = 'RETRO GAMES', prompt = '< CLICK TO VIEW >', total = title.length + prompt.length;
-  const start = performance.now(), reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function type(now) {
-    const count = reduce ? total : Math.min(total, Math.floor((now - start) / 45));
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.drawImage(frame, 0, 0);
-    context.fillStyle = '#39ff6a'; context.textAlign = 'center'; context.shadowColor = '#39ff6a30'; context.shadowBlur = 3;
-    context.font = `76px ${font}`; context.fillText(title.slice(0, count), canvas.width / 2, canvas.height * .47);
-    context.font = `54px ${font}`; context.fillText(prompt.slice(0, Math.max(0, count - title.length)), canvas.width / 2, canvas.height * .58);
-    context.shadowBlur = 0;
-    if (draw(canvas) && count < total) requestAnimationFrame(type);
-  }
-  type(start);
+  typePreviewText(canvas, context => context.drawImage(frame, 0, 0), [
+    { text: 'RETRO ARCADE', y: canvas.height * .47, size: 76 },
+    { text: '< CLICK TO VIEW >', y: canvas.height * .58, size: 54 },
+  ], draw);
 }
 
 async function toggleFullscreen() {

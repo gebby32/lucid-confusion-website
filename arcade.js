@@ -2,6 +2,7 @@ import { navigate, routeBack, startRouter } from './router.js';
 import * as THREE from 'three';
 import { GLTFLoader } from './assets/vendor/three/loaders/GLTFLoader.js';
 import { CabinetScreen } from './assets/arcade/screen-controller.js';
+import { typePreviewText } from './assets/arcade/preview-text.js';
 import { cabinetFraming } from './assets/arcade/cabinet-framing.js';
 import './contact.js';
 import { handheldTeaser, showHandhelds, hideHandhelds, isHandheldPlaying, launchHandheld, stopHandheld } from './handheld.js';
@@ -13,11 +14,11 @@ const cabinets = [
   { id: 'about-us', name: 'About Us', href: null },
   { id: 'retro-handheld', name: 'Retro Handheld', href: null },
   { id: 'retro-arcade', name: 'Retro Arcade', href: null },
-  { id: 'demo-arcade', name: 'Demo Arcade', href: null },
-  { id: 'merch-shop', name: 'Merch Shop', href: null },
+  { id: 'demo-arcade', name: 'Demo Arcade', href: null, frame: './assets/arcade/art/4 Demo Arcade.png' },
+  { id: 'merch-shop', name: 'Merch Shop', href: null, frame: './assets/arcade/art/1 Merch Shop.png' },
   { id: 'the-links', name: 'The Links', href: null },
-  { id: 'new-stuff', name: 'New Stuff', href: null },
-  { id: 'coming-soon', name: 'Coming Soon', href: null },
+  { id: 'new-stuff', name: 'New Stuff', href: null, frame: './assets/arcade/art/2 New Stuff.png' },
+  { id: 'coming-soon', name: 'Coming Soon', href: null, frame: './assets/arcade/art/3 Coming Soon.png' },
   { id: 'contact-us', name: 'Contact Us', href: null },
 ];
 // Visual tuning lives here. Original geometry, materials and files are preserved.
@@ -38,6 +39,7 @@ let touchInput = matchMedia('(hover: none)').matches;
 let hoverPoint = null, litIndex = null, focusedScreen = null, cancelZoom = null;
 let lastMonitorTap = null, zoomTransition = false;
 let view = 'carousel';
+let previewGeneration = 0;
 let restingAngle = angle;
 let cabinetScale = 1, monitorProgress = 0;
 const crtContent = document.querySelector('#crt-content');
@@ -125,6 +127,9 @@ function showContent() {
   const isHandheld = cabinets[active].id === 'retro-handheld';
   const isRetro = cabinets[active].id === 'retro-arcade';
   const isLinks = cabinets[active].id === 'the-links';
+  const frame = cabinets[active].frame;
+  crtContent.classList.toggle('framed-placeholder', !!frame);
+  crtContent.style.backgroundImage = frame ? `url("${frame}")` : '';
   returnButton.classList.toggle('game-return', !isLinks);
   returnButton.replaceChildren();
   if (!isLinks) {
@@ -251,102 +256,90 @@ returnButton.addEventListener('click', returnToCarousel);
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && focusedScreen && !isHandheldPlaying() && !isRetroPlaying()) { event.preventDefault(); returnToCarousel(); }
 });
-function showScreenMessage(screen) {
+async function showScreenMessage(screen) {
+  const generation = ++previewGeneration;
+  const draw = canvas => {
+    if (generation !== previewGeneration || focusedScreen !== screen || view !== 'intro') return false;
+    if (screen.source?.image !== canvas) screen.setCanvas(canvas);
+    invalidate(); return true;
+  };
   if (cabinets[active].id === 'the-links') {
-    screen.setCanvas(linksTeaser());
+    linksTeaser(draw).catch(error => console.error('Unable to load The Links teaser frame', error));
     announcement.textContent = 'Important Links to Important Things <click to continue>';
     return;
   }
   if (cabinets[active].id === 'retro-arcade') {
-    retroTeaser(canvas => {
-      if (focusedScreen !== screen || view !== 'intro') return false;
-      if (screen.source?.image !== canvas) screen.setCanvas(canvas);
-      invalidate(); return true;
-    }).catch(error => console.error('Unable to load the Retro Arcade frame', error));
-    announcement.textContent = 'RETRO GAMES. CLICK TO VIEW.';
+    retroTeaser(draw).catch(error => console.error('Unable to load the Retro Arcade frame', error));
+    announcement.textContent = 'RETRO ARCADE. CLICK TO VIEW.';
     return;
   }
   if (cabinets[active].id === 'retro-handheld') {
-    handheldTeaser().then(canvas => {
-      if (focusedScreen !== screen) return;
-      screen.setCanvas(canvas);
-      if (view === 'intro') announcement.textContent = 'RETRO GAMES. CLICK TO VIEW.';
-      invalidate();
-    }).catch(error => console.error('Unable to load the handheld arcade frame', error));
+    handheldTeaser(draw).catch(error => console.error('Unable to load the handheld arcade frame', error));
+    announcement.textContent = 'RETRO GAMES. CLICK TO VIEW.';
     return;
   }
   if (cabinets[active].id === 'contact-us') {
-    showContactTeaser(screen);
+    showContactTeaser(screen, draw);
     return;
   }
   if (cabinets[active].id === 'about-us') {
-    showAboutTeaser(screen);
+    showAboutTeaser(screen, draw);
     return;
+  }
+  const cabinet = cabinets[active];
+  let border;
+  if (cabinet.frame) {
+    border = new Image();
+    border.src = cabinet.frame;
+    try { await border.decode(); }
+    catch (error) { console.error(`Unable to load the ${cabinet.name} frame`, error); border = null; }
+    if (focusedScreen !== screen) return;
   }
   const canvas = document.createElement('canvas');
   canvas.width = 1024; canvas.height = 768;
-  const context = canvas.getContext('2d');
-  context.fillStyle = '#071b1b'; context.fillRect(0, 0, 1024, 768);
-  context.textAlign = 'center'; context.fillStyle = '#8dffca';
-  context.font = 'bold 46px Arial'; context.fillText(cabinets[active].name.toUpperCase(), 512, 260, 880);
-  context.shadowColor = '#4bd8b7'; context.shadowBlur = 12;
-  context.font = 'bold 66px Arial'; context.fillText('Coming soon.', 512, 385);
-  context.font = '44px Arial'; context.fillText('Stay tuned!', 512, 458);
-  screen.setCanvas(canvas);
-  announcement.textContent = `${cabinets[active].name}. Coming soon. Stay tuned!`;
+  typePreviewText(canvas, context => {
+    context.fillStyle = '#071b1b'; context.fillRect(0, 0, canvas.width, canvas.height);
+    if (border) context.drawImage(border, 0, 0, canvas.width, canvas.height);
+  }, [
+    { text: cabinet.name.toUpperCase(), y: 260, size: 46, maxWidth: 880 },
+    { text: 'Coming soon.', y: 385, size: 66 },
+    { text: 'Stay tuned!', y: 458, size: 44 },
+  ], draw);
+  announcement.textContent = `${cabinet.name}. Coming soon. Stay tuned!`;
+  invalidate();
 }
-async function showContactTeaser(screen) {
+async function showContactTeaser(screen, draw) {
   const frame = document.querySelector('#contact-frame');
   try {
     await frame.decode();
     if (focusedScreen !== screen) return;
     const canvas = document.createElement('canvas');
     canvas.width = frame.naturalWidth; canvas.height = frame.naturalHeight;
-    const context = canvas.getContext('2d');
-    context.drawImage(frame, 0, 0);
-    context.textAlign = 'center'; context.fillStyle = '#39FF6A';
-    context.shadowColor = '#39ff6a30'; context.shadowBlur = 3;
-    const font = getComputedStyle(contactPanel).fontFamily;
-    const line = (text, y, size) => {
-      context.font = `${size}px ${font}`;
-      while (context.measureText(text).width > canvas.width * 0.86) context.font = `${--size}px ${font}`;
-      context.fillText(text, canvas.width / 2, y);
-    };
-    line('WANT TO GET IN TOUCH?', 325, 68);
-    line('Comments? Concerns? Complaints...', 475, 60);
-    line('Custom game or software requests?', 550, 60);
-    line('Hit me up!', 625, 64);
-    line('CLICK THE SCREEN TO CONTINUE', 790, 64);
-    screen.setCanvas(canvas);
+    typePreviewText(canvas, context => context.drawImage(frame, 0, 0), [
+      { text: 'WANT TO GET IN TOUCH?', y: 325, size: 68 },
+      { text: 'Comments? Concerns? Complaints...', y: 475, size: 60 },
+      { text: 'Custom game or software requests?', y: 550, size: 60 },
+      { text: 'Hit me up!', y: 625, size: 64 },
+      { text: 'CLICK THE SCREEN TO CONTINUE', y: 790, size: 64 },
+    ].map(line => ({ ...line, fitWidth: canvas.width * .86 })), draw);
     if (view === 'intro') announcement.textContent = 'WANT TO GET IN TOUCH? Comments? Concerns? Complaints... Custom game or software requests? Hit me up! CLICK THE SCREEN TO CONTINUE';
     invalidate();
   } catch (error) { console.error('Unable to load the Contact Us teaser frame', error); }
 }
-async function showAboutTeaser(screen) {
+async function showAboutTeaser(screen, draw) {
   const frame = document.querySelector('#about-frame');
   try {
     await frame.decode();
     if (focusedScreen !== screen) return;
     const canvas = document.createElement('canvas');
     canvas.width = frame.naturalWidth; canvas.height = frame.naturalHeight;
-    const context = canvas.getContext('2d');
-    context.drawImage(frame, 0, 0);
-    context.textAlign = 'center';
-    context.fillStyle = '#39FF6A';
-    context.shadowColor = '#39ff6a30'; context.shadowBlur = 3;
-    const font = getComputedStyle(aboutStory).fontFamily;
-    const center = canvas.width / 2;
-    const line = (text, y, size) => {
-      context.font = `${size}px ${font}`;
-      while (context.measureText(text).width > canvas.width * 0.86) context.font = `${--size}px ${font}`;
-      context.fillText(text, center, y);
-    };
-    line('A BRIEF, MOSTLY TRUE HISTORY OF', 325, 64);
-    line('LUCID CONFUSION CREATIONS', 403, 64);
-    line('Computers. Video games. Europe. Shamans.', 535, 60);
-    line('Twitch. Questionable decisions. Software.', 605, 60);
-    line('CLICK THE SCREEN TO READ', 775, 66);
-    screen.setCanvas(canvas);
+    typePreviewText(canvas, context => context.drawImage(frame, 0, 0), [
+      { text: 'A BRIEF, MOSTLY TRUE HISTORY OF', y: 325, size: 64 },
+      { text: 'LUCID CONFUSION CREATIONS', y: 403, size: 64 },
+      { text: 'Computers. Video games. Europe. Shamans.', y: 535, size: 60 },
+      { text: 'Twitch. Questionable decisions. Software.', y: 605, size: 60 },
+      { text: 'CLICK THE SCREEN TO READ', y: 775, size: 66 },
+    ].map(line => ({ ...line, fitWidth: canvas.width * .86 })), draw);
     if (view === 'intro') announcement.textContent = 'A BRIEF, MOSTLY TRUE HISTORY OF LUCID CONFUSION CREATIONS. Computers. Video games. Europe. Shamans. Twitch. Questionable decisions. Software. CLICK THE SCREEN TO READ';
     invalidate();
   } catch (error) {

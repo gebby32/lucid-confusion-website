@@ -1,4 +1,5 @@
 import { navigate, routeBack, gamePath } from './router.js';
+import { typePreviewText } from './assets/arcade/preview-text.js';
 const frame = document.querySelector('#handheld-frame');
 const panel = document.querySelector('#handheld-panel');
 const grid = document.querySelector('#handheld-grid');
@@ -98,20 +99,14 @@ function loadFrame() {
   return frame.decode();
 }
 
-export async function handheldTeaser() {
+export async function handheldTeaser(draw) {
   await loadFrame();
   const canvas = document.createElement('canvas');
   canvas.width = frame.naturalWidth; canvas.height = frame.naturalHeight;
-  const context = canvas.getContext('2d');
-  context.drawImage(frame, 0, 0);
-  context.fillStyle = '#39ff6a'; context.textAlign = 'center';
-  context.shadowColor = '#39ff6a30'; context.shadowBlur = 3;
-  const font = getComputedStyle(panel).fontFamily;
-  context.font = `76px ${font}`;
-  context.fillText('RETRO GAMES', canvas.width / 2, canvas.height * .47);
-  context.font = `54px ${font}`;
-  context.fillText('< CLICK TO VIEW >', canvas.width / 2, canvas.height * .58);
-  return canvas;
+  typePreviewText(canvas, context => context.drawImage(frame, 0, 0), [
+    { text: 'RETRO GAMES', y: canvas.height * .47, size: 76 },
+    { text: '< CLICK TO VIEW >', y: canvas.height * .58, size: 54 },
+  ], draw);
 }
 
 export async function showHandhelds() {
