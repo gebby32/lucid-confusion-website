@@ -10,7 +10,7 @@ body { background: #10091a; color: #f7efff; font-family: Arial, sans-serif; }
 #arcade canvas { display: block; width: 100%; height: 100%; }
 .arcade-room.screen-open #arcade { inset: 0; z-index: 2; }
 .arcade-room.screen-open .screen-return { z-index: 3; }
-.arcade-room.screen-open:not(.crt-open) .screen-return { position: fixed; top: 12px; left: 12px; bottom: auto; transform: none; }
+.arcade-room.screen-open:not(.crt-open) #screen-return { position: fixed; top: 12px; left: 12px; bottom: auto; transform: none; }
 .arcade-room.screen-open::after { content: ''; position: absolute; inset: 0; background: #050708; opacity: var(--monitor-progress, 0); pointer-events: none; z-index: 1; }
 #crt-content { position: absolute; z-index: 3; left: 50%; top: 50dvh; transform: translate(-50%, -50%); width: min(88.32vw, 103.04dvh); aspect-ratio: 4 / 3; background: #071b1b; color: #8dffca; border-radius: 3%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; pointer-events: none; }
 #crt-content[hidden] { display: none; }

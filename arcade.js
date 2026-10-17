@@ -125,9 +125,9 @@ function showContent() {
   const isHandheld = cabinets[active].id === 'retro-handheld';
   const isRetro = cabinets[active].id === 'retro-arcade';
   const isLinks = cabinets[active].id === 'the-links';
-  returnButton.classList.toggle('game-return', isHandheld || isRetro || isAbout);
+  returnButton.classList.toggle('game-return', !isLinks);
   returnButton.replaceChildren();
-  if (isHandheld || isRetro || isAbout) {
+  if (!isLinks) {
     const image = document.createElement('img');
     image.src = './assets/arcade/art/back-to-cabinet-transparent.png';
     image.alt = 'Back to Cabinet'; image.width = 216; image.height = 72; image.draggable = false;
@@ -176,8 +176,11 @@ function showIntro() {
   document.body.classList.remove('links-open');
   crtContent.hidden = true;
   hideHandhelds(); hideRetroArcade();
-  returnButton.classList.remove('game-return');
-  returnButton.textContent = 'Back to Arcade';
+  returnButton.classList.add('game-return');
+  const image = document.createElement('img');
+  image.src = './assets/arcade/art/back-to-arcade-transparent.png';
+  image.alt = 'Back to Arcade'; image.width = 216; image.height = 72; image.draggable = false;
+  returnButton.replaceChildren(image);
   returnButton.hidden = false;
   stage.focus({ preventScroll: true });
   invalidate();
