@@ -32,7 +32,7 @@ async function background(page) {
       if(output)await page.screenshot({path:`${output}/corrected-root-${viewport.width}.png`});
       await page.evaluate(async()=>{
         const T=await import('/assets/vendor/three/three.module.min.js'),d=arcadeDebug,initialRotation=d.camera.quaternion.toArray();
-        const mounts=d.models.map(m=>m.matrix.toArray());
+        const mounts=d.models.map(m=>({position:m.position.toArray(),rotation:m.quaternion.toArray()}));
         let lastZ=d.ring.position.z;
         let feet=d.models.map(m=>new T.Vector3().setFromMatrixPosition(m.matrixWorld).project(d.camera).y);
         window.motionErrors=[];window.motionFrames=0;window.recordMotion=true;window.layoutShifts=0;
@@ -46,8 +46,10 @@ async function background(page) {
           if(nextFeet.some((y,i)=>y>feet[i]+1e-5))motionErrors.push(`A cabinet foot rose on screen: ${Math.max(...nextFeet.map((y,i)=>y-feet[i]))}`);
           feet=nextFeet;
           if(d.ring.position.y!==0||d.ring.rotation.x!==0||d.ring.rotation.z!==0)motionErrors.push('Carousel left its floor plane');
-          if(d.ring.scale.toArray().some(s=>s!==1))motionErrors.push('Carousel geometry changed size');
-          if(d.models.some((m,i)=>JSON.stringify(m.matrix.toArray())!==JSON.stringify(mounts[i])))motionErrors.push('Relative cabinet transform changed');
+          if(d.ring.scale.toArray().some(s=>s!==1))motionErrors.push('Carousel floor radius scaled');
+          const scale=d.models[0].scale.x;
+          if(d.models.some(m=>m.scale.toArray().some(s=>Math.abs(s-scale)>1e-10)))motionErrors.push('Cabinets lost shared uniform scaling');
+          if(d.models.some((m,i)=>JSON.stringify({position:m.position.toArray(),rotation:m.quaternion.toArray()})!==JSON.stringify(mounts[i])))motionErrors.push('Cabinet mounts moved within the carousel');
           motionFrames++;requestAnimationFrame(sample);
         }requestAnimationFrame(sample);
       });
@@ -58,6 +60,7 @@ async function background(page) {
       assert(await page.evaluate(()=>motionFrames>5));
       assert.equal(await page.evaluate(()=>layoutShifts),0);
       const introCamera=await camera(page);
+      assert.deepEqual(introCamera,resting,'The entire first approach keeps the resting viewpoint and projection');
       assert.deepEqual(await background(page),room,'The full background, branding and decorations remain pixel-identical');
       const bounds=await page.evaluate(async()=>{
         const T=await import('/assets/vendor/three/three.module.min.js'),d=arcadeDebug,r=document.querySelector('#arcade').getBoundingClientRect();
@@ -109,7 +112,7 @@ async function background(page) {
         await page.locator('#screen-return').click();await ready(page);assert.equal(await state(page),'carousel');
       }
       assert.deepEqual(errors,[]);
-      console.log(`${viewport.width}x${viewport.height}: no page scroll, fixed background, rigid forward motion, monotonic floor contact in screen space, full framing, two click/tap zooms, UI/history round trips, resize and nine cabinets passed`);
+      console.log(`${viewport.width}x${viewport.height}: no page scroll, fixed background/viewpoint, shared floor-anchored approach, full framing, two click/tap zooms, UI/history round trips, resize and nine cabinets passed`);
       await page.close();
     }
   }finally{await browser.close();}

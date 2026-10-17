@@ -1,7 +1,8 @@
 # Two-stage zoom and routing verification — October 17, 2026
 
 Local rollback checkpoints: `c423ad3` before restoring the two-stage flow and
-`fd8f7c3` before correcting viewport sizing and floor motion. Implementation branch:
+`fd8f7c3` before correcting viewport sizing, and `24f39d0` before locking both
+zoom stages to one viewpoint. Implementation branch:
 `codex/grounded-cabinet-zoom`. No push or deployment was performed.
 
 The user's small-window failure was reproduced at 1360x600: the old 720px
@@ -10,14 +11,21 @@ and leaving its bottom above the visible floor. Earlier tests did not exercise
 page scrolling, and world-space floor contact alone did not verify perceived
 grounding. Those earlier checks were insufficient.
 
+The next review exposed another gap: the first approach still animated camera
+height, and the second stage changed both camera height and pitch to follow the
+slanted CRT normal. The final implementation removes both camera movements and
+the CRT-entry canvas resize. The prior preview's projected floor movement is
+not applied to the static site background.
+
 Updated local headless Microsoft Edge checks passed:
 
 - `two-stage-zoom-check.cjs`: 1360x600, 1520x695, 1920x916, 1440x900,
   390x844, 320x568 and 844x390. Attempts to scroll leave the scene at y=0;
   room/branding/decorations are pixel-identical before/after the first zoom.
   Every sampled animation frame checks forward ring translation, all nine
-  projected cabinet bases moving down toward the viewer, unchanged geometry
-  scale, zero vertical group movement/tilt and unchanged relative transforms.
+  projected cabinet bases moving down toward the viewer, shared uniform cabinet
+  scaling about floor anchors, zero vertical group movement/tilt, and unchanged
+  mounting positions/angles. The first-stage camera/projection stays unchanged.
   Also checks viewport fit, zero layout shift, two click/tap stages, UI/browser
   history round trips, viewport resizing and all nine cabinet intros/content.
 - `viewport-framing-check.cjs`: equivalent 1920x900 physical areas at emulated
@@ -29,6 +37,14 @@ Updated local headless Microsoft Edge checks passed:
   proportions, in which case width limits the fit and the bottom remains aligned.
   Root, intermediate animation and final captures were visually inspected,
   including the previously failing 1360x600 viewport.
+- `motion-continuity-check.cjs`: the actual site at 1360x600 and 390x844,
+  covering approach, CRT entry, return to cabinet, and return to carousel.
+  Every sampled frame checks fixed camera position/orientation, a level floor,
+  locked mounts, shared proportional scaling, and monotonic projected ground
+  contact in the correct direction. Captures cover the intermediate frames and
+  endpoints. With `VERIFICATION_OUTPUT`, Playwright records the real browser
+  through all four transitions (requires its FFmpeg runtime); these are not
+  separately rendered proposal animations.
 
 - `routing-check.cjs`: About Us, both game cabinets and Links, each history level
   in both directions, controls, desktop and touch/mobile, direct links, refresh,

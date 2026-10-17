@@ -39,6 +39,7 @@ let hoverPoint = null, litIndex = null, focusedScreen = null, cancelZoom = null;
 let lastMonitorTap = null, zoomTransition = false;
 let view = 'carousel';
 let restingAngle = angle;
+let cabinetScale = 1, monitorProgress = 0;
 const crtContent = document.querySelector('#crt-content');
 const aboutStory = document.querySelector('#about-story');
 const contactPanel = document.querySelector('#contact-panel');
@@ -70,31 +71,49 @@ function clearMonitorTap() {
 }
 
 function fullCRTPose(screen) {
-  const pose = screen.focusPose(1);
-  const normal = pose.position.clone().sub(pose.target).normalize();
-  const probe = new THREE.PerspectiveCamera(camera.fov, camera.aspect, 0.01, 100);
+  const probe = camera.clone();
+  setCarouselCamera(probe, stage.parentElement.clientWidth, stage.parentElement.clientHeight);
   const positions = screen.display.geometry.attributes.position;
   const width = stage.clientWidth, height = stage.clientHeight;
   const crtWidth = Math.min(innerWidth * 0.96, innerHeight * 1.12);
   const crtHeight = Math.min(innerWidth * 0.72, innerHeight * 0.84);
   const limitX = 0.94 * Math.min(1, crtWidth / width);
   const limitY = 0.94 * Math.min(1, crtHeight / height);
-  let distance = 0.25;
-  for (let i = 0; i < 100; i++) {
-    probe.position.copy(pose.target).addScaledVector(normal, distance);
-    probe.lookAt(pose.target); probe.updateMatrixWorld();
-    let extent = 0;
+  probe.aspect = width / height; probe.zoom = 1; probe.clearViewOffset(); probe.updateMatrixWorld();
+  const bounds = () => {
+    let left = Infinity, right = -Infinity, top = -Infinity, bottom = Infinity;
     const point = new THREE.Vector3();
     for (let j = 0; j < positions.count; j++) {
       point.fromBufferAttribute(positions, j).applyMatrix4(screen.display.matrixWorld).project(probe);
-      extent = Math.max(extent, Math.abs(point.x) / limitX, Math.abs(point.y) / limitY);
+      left = Math.min(left, point.x); right = Math.max(right, point.x);
+      bottom = Math.min(bottom, point.y); top = Math.max(top, point.y);
     }
-    if (extent <= 1) break;
-    distance *= 1.02;
+    return { left, right, top, bottom };
+  };
+  const before = bounds();
+  probe.zoom = Math.min(2 * limitX / (before.right - before.left), 2 * limitY / (before.top - before.bottom));
+  probe.updateProjectionMatrix();
+  const fitted = bounds();
+  // Optical zoom: preserve the viewpoint, including the CRT's natural slant.
+  // Align the frame through the projection window, never lookAt its surface normal.
+  probe.setViewOffset(width, height, (fitted.left + fitted.right) * width / 4,
+    -(fitted.top + fitted.bottom) * height / 4, width, height);
+  return probe;
+}
+
+function setCabinetScale(scale) {
+  cabinetScale = scale;
+  for (const mount of models) mount.scale.setScalar(scale);
+}
+
+function setMonitorProgress(progress) {
+  monitorProgress = progress;
+  stage.parentElement.style.setProperty('--monitor-progress', progress);
+  if (!progress) stage.style.clipPath = '';
+  else {
+    const width = Math.min(innerWidth * .96, innerHeight * 1.12), height = width * .75;
+    stage.style.clipPath = `inset(${progress * (stage.clientHeight - height) / 2}px ${progress * (stage.clientWidth - width) / 2}px)`;
   }
-  pose.position.copy(probe.position);
-  pose.offsetY = stage.parentElement.classList.contains('crt-open') ? 0 : (height - innerHeight) / 2;
-  return pose;
 }
 
 function showContent() {
@@ -207,7 +226,8 @@ function closeScreen(restoring = false) {
   cancelZoom = null;
   focusedScreen.setIdle();
   focusedScreen = null;
-  ring.scale.setScalar(1); ring.position.set(0, 0, 0);
+  setCabinetScale(1); ring.position.set(0, 0, 0);
+  setMonitorProgress(0);
   angle = target = restingAngle; ring.rotation.y = angle;
   updateSelection();
   zoomTransition = false;
@@ -342,18 +362,13 @@ function move(direction) {
   invalidate();
 }
 function fullStage() {
-  if (!stage.parentElement.classList.contains('crt-open')) return;
-  const oldHeight = stage.clientHeight;
+  // Keep the renderer at one viewport size through both stages. The monitor
+  // window is a clip, so entering/leaving content cannot reframe the carousel.
   stage.parentElement.classList.remove('crt-open');
-  const width = stage.clientWidth, height = stage.clientHeight;
-  camera.zoom *= oldHeight / height;
-  camera.aspect = width / height;
-  camera.setViewOffset(width, height, 0, (height - innerHeight) / 2, width, height);
-  renderer.setSize(width, height);
 }
 
 function introPose(index) {
-  const width = stage.clientWidth, height = stage.clientHeight;
+  const width = stage.parentElement.clientWidth, height = stage.parentElement.clientHeight;
   const destination = camera.clone();
   setCarouselCamera(destination, width, height);
   destination.updateMatrixWorld();
@@ -364,7 +379,7 @@ function introPose(index) {
 
 function animatePose(getPose, duration, complete) {
   cancelZoom?.();
-  const from = camera.clone(), fromScale = ring.scale.x, fromZ = ring.position.z, fromAngle = angle;
+  const from = camera.clone(), fromScale = cabinetScale, fromZ = ring.position.z, fromAngle = angle, fromMonitor = monitorProgress;
   let pose = getPose(), width = stage.clientWidth, height = stage.clientHeight;
   const started = performance.now();
   let animation;
@@ -377,17 +392,22 @@ function animatePose(getPose, duration, complete) {
     // A queued animation frame can carry a timestamp just before this transition
     // started. Negative progress would produce a tiny forward/backward hop.
     const t = reducedMotion.matches ? 1 : THREE.MathUtils.clamp((now - started) / duration, 0, 1);
-    const ease = t * t * (3 - 2 * t);
-    camera.position.lerpVectors(from.position, pose.camera.position, ease);
-    camera.quaternion.slerpQuaternions(from.quaternion, pose.camera.quaternion, ease);
+    const ease = t * t * t * (t * (6 * t - 15) + 10);
+    // Navigation never animates eye height, camera travel or pitch. Only a
+    // viewport resize can recalibrate this shared resting viewpoint.
+    camera.position.copy(pose.camera.position);
+    camera.quaternion.copy(pose.camera.quaternion);
     camera.zoom = THREE.MathUtils.lerp(from.zoom, pose.camera.zoom, ease);
-    camera.setViewOffset(width, height, 0, height * THREE.MathUtils.lerp(
+    camera.setViewOffset(width, height, width * THREE.MathUtils.lerp(
+      (from.view?.offsetX || 0) / (from.view?.fullWidth || width),
+      (pose.camera.view?.offsetX || 0) / (pose.camera.view?.fullWidth || width), ease), height * THREE.MathUtils.lerp(
       (from.view?.offsetY || 0) / (from.view?.fullHeight || height),
       (pose.camera.view?.offsetY || 0) / (pose.camera.view?.fullHeight || height), ease), width, height);
     angle = target = THREE.MathUtils.lerp(fromAngle, pose.angle, ease);
     ring.rotation.y = angle;
-    ring.scale.setScalar(THREE.MathUtils.lerp(fromScale, pose.scale, ease));
+    setCabinetScale(THREE.MathUtils.lerp(fromScale, pose.scale, ease));
     ring.position.set(0, 0, THREE.MathUtils.lerp(fromZ, pose.z, ease));
+    setMonitorProgress(THREE.MathUtils.lerp(fromMonitor, pose.monitor || 0, ease));
     camera.updateMatrixWorld(); ring.updateMatrixWorld(true); invalidate();
     if (t < 1) animation = requestAnimationFrame(tick);
     else { cancelZoom = null; zoomTransition = false; complete(); }
@@ -406,6 +426,7 @@ function openCRT(index, next = 'intro') {
     screen.setNoise();
   }
   focusedScreen = screen;
+  const monitorTransition = next === 'crt' || view === 'crt';
   view = next;
   if (next === 'intro') showScreenMessage(screen);
   clearMonitorTap();
@@ -417,15 +438,13 @@ function openCRT(index, next = 'intro') {
   let getPose = () => introPose(index);
   if (next === 'crt') {
     getPose = () => {
-      const crt = fullCRTPose(screen), destination = camera.clone();
-      destination.position.copy(crt.position); destination.lookAt(crt.target); destination.zoom = 1;
-      destination.setViewOffset(stage.clientWidth, stage.clientHeight, 0, crt.offsetY, stage.clientWidth, stage.clientHeight);
-      return { camera: destination, scale: ring.scale.x, z: ring.position.z, angle };
+      return { camera: fullCRTPose(screen), scale: cabinetScale, z: ring.position.z, angle, monitor: 1 };
     };
   }
   returnButton.hidden = true;
-  animatePose(getPose, next === 'intro' ? 1800 : 850, () => {
+  animatePose(getPose, monitorTransition ? 1650 : 2200, () => {
     stage.parentElement.classList.toggle('crt-open', next === 'crt');
+    setMonitorProgress(next === 'crt' ? 1 : 0);
     resize();
     if (next === 'intro') showIntro(); else showContent();
   });
@@ -441,7 +460,7 @@ function leaveCabinet() {
     const destination = camera.clone();
     setCarouselCamera(destination, stage.clientWidth, stage.clientHeight);
     return { camera: destination, scale: 1, z: 0, angle: restingAngle };
-  }, 1000, () => closeScreen(true));
+  }, 2200, () => closeScreen(true));
 }
 stage.addEventListener('keydown', event => {
   if (['ArrowLeft', 'ArrowRight', 'Enter', ' '].includes(event.key)) {
@@ -548,19 +567,15 @@ function resize() {
       if (view === 'intro') {
         const pose = introPose(active);
         camera.copy(pose.camera);
-        ring.scale.setScalar(pose.scale); ring.position.set(0, 0, pose.z);
+        setCabinetScale(pose.scale); ring.position.set(0, 0, pose.z);
         angle = target = pose.angle; ring.rotation.y = angle; ring.updateMatrixWorld(true);
       } else {
-        const pose = fullCRTPose(focusedScreen);
-        camera.position.copy(pose.position);
-        if (pose.quaternion) camera.quaternion.copy(pose.quaternion);
-        else camera.lookAt(pose.target);
-        camera.zoom = pose.zoom ?? 1;
-        camera.setViewOffset(width, height, 0, pose.offsetY, width, height);
+        camera.copy(fullCRTPose(focusedScreen));
       }
     }
     camera.updateProjectionMatrix();
     renderer.setSize(width, height);
+    setMonitorProgress(monitorProgress);
     invalidate();
     return;
   }

@@ -14,16 +14,21 @@ Routes:
 - `/<game-cabinet>/games/<display-name-slug>/`: a published game
 - `/links/view/`: Links battle screen; `/links/beach/`: beach gag
 
-The first transition slides the entire rigid carousel forward on its floor
-plane without scaling its geometry. The cabinet-only camera lowers its sightline
-and adjusts vertical framing so the rear bases advance toward the viewer instead
-of rising on screen. The CSS room background, banner and decorations stay fixed
-during the transition; cabinet proportions, relative angles and ground shadows
-are preserved. Scene dimensions follow the actual viewport without minimum-height
+Both stages retain the resting camera's position and orientation. The first
+transition translates the carousel carriage forward and applies one shared
+uniform enlargement around the cabinets' floor anchors. Their mount positions
+and angles within the ring remain locked, keeping rear anchors from retreating
+as the cabinets grow. The CSS room, banner and decorations stay fixed throughout
+the approach. Scene dimensions follow the actual viewport without minimum-height
 page overflow, and branding/decorations scale proportionally with that viewport.
 The front cabinet fits the visible viewport height, with a width limit on narrow
 screens to prevent cropping. Clicking its CRT performs the second zoom into the
-existing 4:3 content or selection screen. Slugs use
+existing 4:3 content or selection screen. That second stage uses optical zoom
+and a gradually closing monitor window; it never aligns the camera with the
+slanted CRT normal. The renderer stays viewport-sized throughout, eliminating
+a camera/canvas reframe when content appears. Both stages use symmetric easing
+with zero endpoint velocity and acceleration, including the reverse transitions.
+Slugs use
 lowercase words, hyphens and normalized accents. The public game links point to site routes; iframe sources remain the
 original game files. Modified clicks and copying links retain native behavior.
 
@@ -59,6 +64,7 @@ With Playwright available via `NODE_PATH`, serve the repository using
 ```
 node verification/two-stage-zoom-check.cjs
 node verification/viewport-framing-check.cjs
+node verification/motion-continuity-check.cjs
 node verification/routing-check.cjs
 node verification/routing-edge-check.cjs
 node verification/links-check.cjs
