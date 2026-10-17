@@ -1,0 +1,78 @@
+[
+  {
+    "path": "_next/static/chunks/app-route-prefetch-policy-DL_M0_4q.js",
+    "sha256": "d65044aaa436b1106f81df808be3a44c881364ab779663c4a3f81d4e07cc568a"
+  },
+  {
+    "path": "_next/static/chunks/framework-D_rUT4EX.js",
+    "sha256": "939d0fabebb3b2f01753bb866b067d8d3384fb06da19f0e6557609d3b1a9f4f7"
+  },
+  {
+    "path": "_next/static/chunks/index-Cwo_Rt3x.js",
+    "sha256": "d0a97c5628a7aa056444e6dd1fa27050e3001c7a7d134882da30d93bfe1d4772"
+  },
+  {
+    "path": "_next/static/chunks/layout-segment-context-D9v_Hh0l.js",
+    "sha256": "b50eb19cffca0a70caa03831335ac0852dd2c74d84c1a9646088bb281e4225ad"
+  },
+  {
+    "path": "_next/static/chunks/page-DhI11pmM.js",
+    "sha256": "5d7f6f810fd15494a15eb46eed15606141f71ceda821c7055b5c30a6be28b3e1"
+  },
+  {
+    "path": "_next/static/chunks/rolldown-runtime-C60lm6uB.js",
+    "sha256": "5db5ba82eef00d1dee7e86e663098c9427d01183a88d357437daff295aec3e75"
+  },
+  {
+    "path": "_next/static/chunks/streamed-icons-Bumrcy-j.js",
+    "sha256": "7eb2a6b44b9c0faa7300c8dd36b0fae7a35d9f65e139dd9046b3df193aa83bc8"
+  },
+  {
+    "path": "_next/static/css/index.CPLozsiK.css",
+    "sha256": "48ea38c35a7e2b4f7757ce0c30f401e03947c31ed8ced5e2d82e7a34e456a55b"
+  },
+  {
+    "path": "_next/static/d3084690-da45-40f4-a7f8-b5b52ff8c309/_buildManifest.js",
+    "sha256": "47f02b34be6dc481257b6efce4c19e19111f37ef5c437f8ffed44f0da97fa9bb"
+  },
+  {
+    "path": "_next/static/d3084690-da45-40f4-a7f8-b5b52ff8c309/_ssgManifest.js",
+    "sha256": "653f3e53e89b4f8548ff86c19e92bb3c6b84b6be7485a320b1e00893ed877479"
+  },
+  {
+    "path": ".vite/manifest.json",
+    "sha256": "3d46eb17f229a780d692e11f6116a412342bb335298c4d3f9fffc49ff303e893"
+  },
+  {
+    "path": "404.html",
+    "sha256": "7baf268dd410f9ecdfdb3fb6edcee033446dd884d193a5c19f1eb677904ef5d0"
+  },
+  {
+    "path": "console-machined.png",
+    "sha256": "3b89f3b8b83b28db956185c851bcee5170daf0ec5a48f01c244c9da3577d5bd5"
+  },
+  {
+    "path": "console.png",
+    "sha256": "a0ed7b3a397f8788b327263635069555a128a4c29ad37ae6927d2f6e37dfbc64"
+  },
+  {
+    "path": "favicon.svg",
+    "sha256": "fdfae758eef5e68be338006e70abd434eeed4d99877e15abb0218900d5ae347c"
+  },
+  {
+    "path": "index.html",
+    "sha256": "bed3cb9dc1949d7fd9f3163202cfb7b66a3f13d7f6e66a40e4fec60f0b395dfb"
+  },
+  {
+    "path": "index.rsc",
+    "sha256": "6204b7f0b9d17c225936d09582876396968b3c560c66e180ee7befecd9679bd5"
+  },
+  {
+    "path": "vinext-client-entry-manifest.json",
+    "sha256": "4147e5a35f513385f11f5cea5aa80c6662fc463560b54e9b4924a07af7c9d21f"
+  },
+  {
+    "path": "welcome.png",
+    "sha256": "fbe92e2612d92bad6230d451e6d4872a084a5f381277b4345f1640061e147bb7"
+  }
+]

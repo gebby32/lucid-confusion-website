@@ -3,3 +3,4 @@
 # Preserve the original self-contained handheld game files byte-for-byte.
 assets/handhelds/**/index.html -text
 assets/retro-arcade/games/** -text
+games/lucid-logic/** -text
