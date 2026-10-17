@@ -26,6 +26,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict');
    if(process.env.VERIFICATION_OUTPUT)await page.screenshot({path:process.env.VERIFICATION_OUTPUT+'/return-'+kind+'-'+mobile+'-'+fullscreen+'.png'});
    if(mobile)await button.tap();else await button.click();await page.waitForFunction(()=>document.querySelectorAll('iframe').length===0);assert(game.isDetached());assert.equal(await page.evaluate(()=>document.fullscreenElement),null);assert.equal(await page.evaluate(()=>window.removedInFullscreen),false);assert(await page.locator('#'+kind+'-grid').isVisible());
   }
+  await page.locator('#screen-return').click();await page.waitForFunction(()=>arcadeDebug.state.view==='intro'&&document.documentElement.dataset.routing==='ready');
   await page.locator('#screen-return').click();await page.waitForFunction(()=>arcadeDebug.state.view==='carousel'&&document.documentElement.dataset.routing==='ready');assert(!(await page.locator('#screen-return').isVisible()));
   assert.equal(loads.length,2);assert.deepEqual(errors,[]);console.log(`${kind} ${mobile?'mobile':'desktop'}: shared image, fixed upper-left, hidden bottom control, unchanged game bounds, F toggle, normal/fullscreen return and unload passed`);await page.close();
  }

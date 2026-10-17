@@ -20,7 +20,7 @@ const ready = (page, path) => page.waitForFunction(path => (location.pathname.re
     await page.goBack(); await ready(page, '/retro-arcade');
     assert.equal(await page.locator('iframe').count(), 0);
     assert.equal(await page.evaluate(() => arcadeDebug.state.view), 'intro');
-    // Dragging the CRT cannot rotate or return to an obsolete cabinet pose.
+    // Dragging the focused cabinet cannot rotate the carousel or enter content.
     await page.mouse.move(400, 450); await page.mouse.down();
     for (let i = 1; i <= 12; i++) await page.mouse.move(400 + i * 20, 450);
     await page.mouse.up(); await ready(page, '/retro-arcade');

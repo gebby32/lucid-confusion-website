@@ -1,7 +1,8 @@
 import { navigate, routeBack, startRouter } from './router.js';
 import * as THREE from 'three';
 import { GLTFLoader } from './assets/vendor/three/loaders/GLTFLoader.js';
-import { CabinetScreen, zoomToScreen } from './assets/arcade/screen-controller.js';
+import { CabinetScreen } from './assets/arcade/screen-controller.js';
+import { cabinetFraming } from './assets/arcade/cabinet-framing.js';
 import './contact.js';
 import { handheldTeaser, showHandhelds, hideHandhelds, isHandheldPlaying, launchHandheld, stopHandheld } from './handheld.js';
 import { retroTeaser, showRetroArcade, hideRetroArcade, isRetroPlaying, launchRetro, stopRetro } from './retro-arcade.js';
@@ -37,13 +38,14 @@ let touchInput = matchMedia('(hover: none)').matches;
 let hoverPoint = null, litIndex = null, focusedScreen = null, cancelZoom = null;
 let lastMonitorTap = null, zoomTransition = false;
 let view = 'carousel';
+let restingAngle = angle;
 const crtContent = document.querySelector('#crt-content');
 const aboutStory = document.querySelector('#about-story');
 const contactPanel = document.querySelector('#contact-panel');
 const handheldPanel = document.querySelector('#handheld-panel');
 const retroPanel = document.querySelector('#retro-panel');
 const linksPanel = document.querySelector('#links-panel');
-document.querySelector('#links-return').addEventListener('click', () => routeBack('/'));
+document.querySelector('#links-return').addEventListener('click', () => routeBack('/links'));
 // Reading gestures belong to the HTML story; double activation on the frame
 // retains the carousel return gesture without interrupting text selection.
 let framePress = null;
@@ -156,9 +158,8 @@ function showIntro() {
   crtContent.hidden = true;
   hideHandhelds(); hideRetroArcade();
   returnButton.classList.remove('game-return');
-  returnButton.textContent = 'Back to Cabinet';
+  returnButton.textContent = 'Back to Arcade';
   returnButton.hidden = false;
-  showScreenMessage(focusedScreen);
   stage.focus({ preventScroll: true });
   invalidate();
 }
@@ -170,7 +171,7 @@ function enterContent() {
 function cabinetPath() { return '/' + (active === 5 ? 'links' : cabinets[active].id); }
 function returnToCarousel() {
   clearMonitorTap();
-  routeBack('/');
+  routeBack(view === 'crt' ? cabinetPath() : '/');
 }
 
 function pickCabinet(point) {
@@ -197,7 +198,7 @@ function updateScreenEffects(now) {
   return [...screens.values()].some(screen => screen.mode === 'noise');
 }
 function closeScreen(restoring = false) {
-  if (focusedScreen && !restoring) { routeBack('/'); return; }
+  if (focusedScreen && !restoring) { returnToCarousel(); return; }
   document.body.classList.remove('links-open');
   if (!focusedScreen) return;
   hideHandhelds();
@@ -206,6 +207,8 @@ function closeScreen(restoring = false) {
   cancelZoom = null;
   focusedScreen.setIdle();
   focusedScreen = null;
+  ring.scale.setScalar(1); ring.position.set(0, 0, 0);
+  angle = target = restingAngle; ring.rotation.y = angle;
   updateSelection();
   zoomTransition = false;
   clearMonitorTap();
@@ -338,35 +341,95 @@ function move(direction) {
   if (reducedMotion.matches) { angle = target; updateSelection(); announceSelection(); }
   invalidate();
 }
+function fullStage() {
+  if (!stage.parentElement.classList.contains('crt-open')) return;
+  const oldHeight = stage.clientHeight;
+  stage.parentElement.classList.remove('crt-open');
+  const width = stage.clientWidth, height = stage.clientHeight;
+  camera.zoom *= oldHeight / height;
+  camera.aspect = width / height;
+  camera.setViewOffset(width, height, 0, (height - innerHeight) / 2, width, height);
+  renderer.setSize(width, height);
+}
+
+function introPose(index) {
+  const width = stage.clientWidth, height = stage.clientHeight;
+  const destination = camera.clone();
+  setCarouselCamera(destination, width, height);
+  destination.updateMatrixWorld();
+  const desiredAngle = -index * step;
+  const focusAngle = angle + THREE.MathUtils.euclideanModulo(desiredAngle - angle + Math.PI, Math.PI * 2) - Math.PI;
+  return { camera: destination, ...cabinetFraming(screens.get(index), ring, destination, focusAngle, width, height, innerHeight) };
+}
+
+function animatePose(pose, duration, complete) {
+  cancelZoom?.();
+  const from = camera.clone(), fromScale = ring.scale.x, fromZ = ring.position.z, fromAngle = angle;
+  const started = performance.now();
+  let animation;
+  zoomTransition = true;
+  const tick = now => {
+    const t = reducedMotion.matches ? 1 : Math.min(1, (now - started) / duration);
+    const ease = t * t * (3 - 2 * t);
+    camera.position.lerpVectors(from.position, pose.camera.position, ease);
+    camera.quaternion.slerpQuaternions(from.quaternion, pose.camera.quaternion, ease);
+    camera.zoom = THREE.MathUtils.lerp(from.zoom, pose.camera.zoom, ease);
+    camera.setViewOffset(stage.clientWidth, stage.clientHeight, 0,
+      THREE.MathUtils.lerp(from.view?.offsetY || 0, pose.camera.view?.offsetY || 0, ease), stage.clientWidth, stage.clientHeight);
+    angle = target = THREE.MathUtils.lerp(fromAngle, pose.angle, ease);
+    ring.rotation.y = angle;
+    ring.scale.setScalar(THREE.MathUtils.lerp(fromScale, pose.scale, ease));
+    ring.position.set(0, 0, THREE.MathUtils.lerp(fromZ, pose.z, ease));
+    camera.updateMatrixWorld(); ring.updateMatrixWorld(true); invalidate();
+    if (t < 1) animation = requestAnimationFrame(tick);
+    else { cancelZoom = null; zoomTransition = false; complete(); }
+  };
+  animation = requestAnimationFrame(tick);
+  cancelZoom = () => cancelAnimationFrame(animation);
+}
+
 function openCRT(index, next = 'intro') {
   const screen = screens.get(index);
   if (!screen) return;
+  if (!focusedScreen) restingAngle = angle;
   active = index;
-  for (const item of screens.values()) item.setIdle();
-  screen.setNoise(); focusedScreen = screen;
+  if (focusedScreen !== screen) {
+    for (const item of screens.values()) item.setIdle();
+    screen.setNoise();
+  }
+  focusedScreen = screen;
   view = next;
+  if (next === 'intro') showScreenMessage(screen);
   clearMonitorTap();
-  zoomTransition = true;
+  crtContent.hidden = true;
+  document.body.classList.remove('links-open');
+  hideHandhelds(); hideRetroArcade();
+  fullStage();
   stage.parentElement.classList.add('screen-open');
-  const pose = fullCRTPose(screen);
-  const fromQuaternion = camera.quaternion.clone();
-  const destination = camera.clone(); destination.position.copy(pose.position); destination.lookAt(pose.target);
-  const fromZoom = camera.zoom, fromOffset = camera.view?.offsetY || 0;
+  let pose = introPose(index);
+  if (next === 'crt') {
+    const crt = fullCRTPose(screen), destination = camera.clone();
+    destination.position.copy(crt.position); destination.lookAt(crt.target); destination.zoom = 1;
+    destination.setViewOffset(stage.clientWidth, stage.clientHeight, 0, crt.offsetY, stage.clientWidth, stage.clientHeight);
+    pose = { camera: destination, scale: ring.scale.x, z: ring.position.z, angle };
+  }
   returnButton.hidden = true;
-  const duration = reducedMotion.matches ? 1 : 950, started = performance.now();
-  const controls = { enabled: true, target: camera.position.clone().add(camera.getWorldDirection(new THREE.Vector3())), update() {
-    const t = Math.min(1, (performance.now() - started) / duration), ease = t * t * (3 - 2 * t);
-    camera.zoom = THREE.MathUtils.lerp(fromZoom, 1, ease);
-    camera.quaternion.slerpQuaternions(fromQuaternion, destination.quaternion, ease);
-    camera.setViewOffset(stage.clientWidth, stage.clientHeight, 0, THREE.MathUtils.lerp(fromOffset, pose.offsetY, ease), stage.clientWidth, stage.clientHeight);
-    camera.updateMatrixWorld(); invalidate();
-  } };
-  cancelZoom = zoomToScreen({ screen: { focusPose: () => pose }, camera, controls, duration, onComplete() {
-    zoomTransition = false;
-    stage.parentElement.classList.add('crt-open');
+  animatePose(pose, next === 'intro' ? 1100 : 850, () => {
+    stage.parentElement.classList.toggle('crt-open', next === 'crt');
     resize();
     if (next === 'intro') showIntro(); else showContent();
-  } });
+  });
+}
+
+function leaveCabinet() {
+  fullStage();
+  crtContent.hidden = true;
+  document.body.classList.remove('links-open');
+  hideHandhelds(); hideRetroArcade();
+  returnButton.hidden = true;
+  const destination = camera.clone();
+  setCarouselCamera(destination, stage.clientWidth, stage.clientHeight);
+  animatePose({ camera: destination, scale: 1, z: 0, angle: restingAngle }, 1000, () => closeScreen(true));
 }
 stage.addEventListener('keydown', event => {
   if (['ArrowLeft', 'ArrowRight', 'Enter', ' '].includes(event.key)) {
@@ -470,12 +533,19 @@ function resize() {
   camera.aspect = width / height;
   if (focusedScreen) {
     if (!zoomTransition) {
-      const pose = fullCRTPose(focusedScreen);
-      camera.position.copy(pose.position);
-      if (pose.quaternion) camera.quaternion.copy(pose.quaternion);
-      else camera.lookAt(pose.target);
-      camera.zoom = pose.zoom ?? 1;
-      camera.setViewOffset(width, height, 0, pose.offsetY, width, height);
+      if (view === 'intro') {
+        const pose = introPose(active);
+        camera.copy(pose.camera);
+        ring.scale.setScalar(pose.scale); ring.position.set(0, 0, pose.z);
+        angle = target = pose.angle; ring.rotation.y = angle; ring.updateMatrixWorld(true);
+      } else {
+        const pose = fullCRTPose(focusedScreen);
+        camera.position.copy(pose.position);
+        if (pose.quaternion) camera.quaternion.copy(pose.quaternion);
+        else camera.lookAt(pose.target);
+        camera.zoom = pose.zoom ?? 1;
+        camera.setViewOffset(width, height, 0, pose.offsetY, width, height);
+      }
     }
     camera.updateProjectionMatrix();
     renderer.setSize(width, height);
@@ -616,17 +686,17 @@ async function initialize() {
       await stopRetro();
     }
     if (stale()) return;
-    if (route.index === undefined) { closeScreen(true); return; }
+    if (route.index === undefined) { if (focusedScreen) { leaveCabinet(); await settled(); } return; }
     if (active !== route.index || !focusedScreen) {
       closeScreen(true);
       target = angle; active = route.index; velocity = 0;
       pointer = null;
       ring.rotation.y = angle; ring.updateMatrixWorld(true);
-      openCRT(route.index, route.view);
+      openCRT(route.index, 'intro');
       await settled();
     }
     if (stale()) return;
-    if (view !== route.view) { if (route.view === 'intro') showIntro(); else showContent(); }
+    if (view !== route.view) { openCRT(route.index, route.view); await settled(); }
     if (stale()) return;
     if (route.view === 'crt') {
       if (route.index === 1) { await showHandhelds(); if (!stale() && route.game) await launchHandheld(route.game); }

@@ -1,29 +1,34 @@
 # Arcade routing
 
 `router.js` owns browser history, parent navigation, route titles and serialized
-state restoration. The adapter in `arcade.js` zooms directly from the resting
-carousel into the CRT intro, then reuses the original content panels and game
+state restoration. The adapter in `arcade.js` first brings the selected cabinet
+forward for its CRT intro, then zooms into the original content panels and game
 launch/cleanup functions. Only meaningful transitions write history; carousel rotation and animation frames do not.
 
 Routes:
 
 - `/`: main arcade
-- `/<cabinet>/`: CRT intro (all nine cabinets; no focused-cabinet pose)
+- `/<cabinet>/`: full cabinet with its existing green CRT intro (all nine cabinets)
 - `/<cabinet>/view/`: existing content/placeholder screen for non-game cabinets
 - `/retro-handheld/games/` and `/retro-arcade/games/`: game selection
 - `/<game-cabinet>/games/<display-name-slug>/`: a published game
 - `/links/view/`: Links battle screen; `/links/beach/`: beach gag
 
-The existing cabinet URLs now show their green intro at the CRT camera pose.
-Clicking the CRT opens content without another camera transition. Slugs use
+The first transition moves and uniformly scales the entire carousel on its
+floor plane. The resting camera, room background, banner and decorations stay
+fixed; the cabinet proportions, relative angles and ground shadows are preserved.
+The front cabinet fits the visible viewport height, with a width limit on narrow
+screens to prevent cropping. Clicking its CRT performs the second zoom into the
+existing 4:3 content or selection screen. Slugs use
 lowercase words, hyphens and normalized accents. The public game links point to site routes; iframe sources remain the
 original game files. Modified clicks and copying links retain native behavior.
 
 A fresh deep entry seeds root and its actual ancestors before restoring the
 requested view. History state identifies these entries, preventing duplicate
 seeding on refresh. Back/Forward restores state without adding history. Site
-"Back to Cabinet" controls traverse directly to the existing root entry, retaining
-Forward. In-game "Back to Arcade" traverses to game selection. Browser Back
+"Back to Cabinet" controls traverse to the cabinet intro, retaining Forward.
+The cabinet's "Back to Arcade" control traverses to the main carousel. In-game
+"Back to Arcade" still traverses to game selection. Browser Back
 visits the meaningful intro, content, and game states. Root does not intercept
 Back. Returning to root restores the resting carousel orientation.
 
@@ -48,7 +53,7 @@ With Playwright available via `NODE_PATH`, serve the repository using
 `node verification/serve.cjs`, then run:
 
 ```
-node verification/direct-crt-check.cjs
+node verification/two-stage-zoom-check.cjs
 node verification/routing-check.cjs
 node verification/routing-edge-check.cjs
 node verification/links-check.cjs

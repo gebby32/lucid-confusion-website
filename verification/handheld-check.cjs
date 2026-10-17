@@ -85,6 +85,8 @@ const snapshot = async (page, name) => { if (output) await page.screenshot({ pat
         console.log(`${label}: ${game.title} launched on demand and returned`);
       }
       await page.locator('#screen-return').click();
+      await page.waitForFunction(() => arcadeDebug.state.view === 'intro' && !arcadeDebug.state.zoomTransition);
+      await page.locator('#screen-return').click();
       await page.waitForFunction(() => arcadeDebug.state.view === 'carousel' && !arcadeDebug.state.zoomTransition);
       assert.equal(await page.locator('#handheld-grid a').count(), 0);
       await page.keyboard.press('Escape');
