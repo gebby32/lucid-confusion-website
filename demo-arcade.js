@@ -1,10 +1,28 @@
 const panel = document.querySelector('#demo-arcade-panel');
 let resizeObserver;
 
-function fitGame(game) {
-  const width = panel.clientWidth, height = panel.clientHeight;
+const games = [
+  {
+    title: 'Lucid Logic Circuit Control',
+    image: './assets/demo-arcade/lucid-logic.png',
+    src: './games/lucid-logic/',
+  },
+  {
+    title: 'Custom Color Cube Puzzle',
+    image: './assets/demo-arcade/custom-color-cube.png',
+    src: './games/custom-color-cube/',
+  },
+  {
+    title: 'Confusion Derby: Lucid Raceway',
+    image: './assets/demo-arcade/confusion-derby.png',
+    src: './games/confusion-derby-lucid-raceway/',
+  },
+];
+
+function fitGame(game, viewport) {
+  const width = viewport.clientWidth, height = viewport.clientHeight;
   if (!width || !height) return;
-  // Keep the unmodified game's controls from overlapping in a small CRT.
+  // Keep each unmodified game usable inside the smaller CRT viewport.
   const scale = Math.min(1, width / 640);
   game.style.width = `${width / scale}px`;
   game.style.height = `${height / scale}px`;
@@ -18,21 +36,71 @@ function unloadGame() {
   panel.replaceChildren();
 }
 
-export function showDemoArcade() {
-  panel.hidden = false;
-  if (panel.firstElementChild) return;
-  const game = document.createElement('iframe');
-  game.title = 'Lucid Logic Circuit Control';
-  game.src = './games/lucid-logic/';
-  game.addEventListener('load', () => {
-    if (game.isConnected && !panel.hidden && !document.querySelector('#crt-content').hidden) {
-      game.contentWindow.focus();
+function showGameSelection() {
+  unloadGame();
+  const grid = document.createElement('div');
+  grid.className = 'demo-game-grid';
+  grid.setAttribute('aria-label', 'Choose a Demo Arcade game');
+
+  for (const game of games) {
+    const tile = document.createElement('button');
+    tile.type = 'button';
+    tile.className = 'demo-game-tile';
+    tile.setAttribute('aria-label', `Play ${game.title}`);
+    const image = document.createElement('img');
+    image.src = game.image;
+    image.alt = game.title;
+    image.draggable = false;
+    tile.append(image);
+    tile.addEventListener('click', () => launchGame(game));
+    grid.append(tile);
+  }
+
+  const comingSoon = document.createElement('div');
+  comingSoon.className = 'demo-game-tile demo-coming-soon';
+  comingSoon.setAttribute('aria-label', 'Coming Soon');
+  comingSoon.innerHTML = '<span>COMING</span><strong>SOON</strong>';
+  grid.append(comingSoon);
+  panel.append(grid);
+  grid.querySelector('button')?.focus({ preventScroll: true });
+}
+
+function launchGame(game) {
+  unloadGame();
+  const player = document.createElement('div');
+  player.className = 'demo-game-player';
+
+  const toolbar = document.createElement('div');
+  toolbar.className = 'demo-game-toolbar';
+  const back = document.createElement('button');
+  back.type = 'button';
+  back.className = 'demo-games-back';
+  back.textContent = 'Back to Games';
+  back.addEventListener('click', showGameSelection);
+  toolbar.append(back);
+
+  const viewport = document.createElement('div');
+  viewport.className = 'demo-game-viewport';
+  const frame = document.createElement('iframe');
+  frame.title = game.title;
+  frame.src = game.src;
+  frame.allow = 'fullscreen';
+  frame.addEventListener('load', () => {
+    if (frame.isConnected && !panel.hidden && !document.querySelector('#crt-content').hidden) {
+      frame.contentWindow.focus();
     }
   }, { once: true });
-  fitGame(game);
-  panel.append(game);
-  resizeObserver = new ResizeObserver(() => fitGame(game));
-  resizeObserver.observe(panel);
+  viewport.append(frame);
+  player.append(toolbar, viewport);
+  panel.append(player);
+  fitGame(frame, viewport);
+  resizeObserver = new ResizeObserver(() => fitGame(frame, viewport));
+  resizeObserver.observe(viewport);
+}
+
+export function showDemoArcade() {
+  panel.hidden = false;
+  if (!panel.firstElementChild) showGameSelection();
 }
 
 export function hideDemoArcade() {

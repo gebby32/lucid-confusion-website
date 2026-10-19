@@ -1,0 +1,6 @@
+{
+  "stations": [
+    { "id": "lucid", "name": "Lucid Radio", "tracks": [] },
+    { "id": "confusion", "name": "Confusion Radio", "tracks": [] }
+  ]
+}

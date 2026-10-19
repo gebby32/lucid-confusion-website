@@ -28,8 +28,24 @@ body { background: #10091a; color: #f7efff; font-family: Arial, sans-serif; }
 #crt-content #about-story .about-signature { margin-top: 1.3em; margin-bottom: .4em; font-size: 1.12em; }
 #crt-content #about-story .about-slogan { font-weight: 700; margin-bottom: 0; }
 #about-story:focus { outline: none; }
-#demo-arcade-panel { position: absolute; inset: 12% 6% 18%; overflow: hidden; pointer-events: auto; background: #000; }
-#demo-arcade-panel iframe { display: block; width: 100%; height: 100%; border: 0; transform-origin: top left; }
+#demo-arcade-panel { position: absolute; inset: 12% 6% 18%; overflow: hidden; pointer-events: auto; background: #000; container-type: size; }
+.demo-game-grid { --demo-gap: clamp(4px, 1.2cqh, 10px); position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(calc(100cqw - 12px), calc(133.333cqh - 20px)); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--demo-gap); }
+.demo-game-tile { position: relative; display: grid; place-items: center; width: 100%; aspect-ratio: 4 / 3; min-width: 0; margin: 0; padding: 0; overflow: hidden; border: 1px solid #6cff9a99; border-radius: clamp(2px, .6cqh, 6px); background: #09060f; color: #8dffca; box-shadow: inset 0 0 12px #000, 0 0 8px #39ff6a33; }
+button.demo-game-tile { cursor: pointer; }
+button.demo-game-tile:hover, button.demo-game-tile:focus-visible { border-color: #d58cff; box-shadow: inset 0 0 12px #000, 0 0 12px #b94dff99; }
+.demo-game-tile img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.demo-coming-soon { isolation: isolate; background: radial-gradient(circle at 50% 44%, #2b1644 0, #100817 60%, #050307 100%); font-family: VT323, "Share Tech Mono", "IBM Plex Mono", monospace; line-height: .8; text-shadow: 0 0 9px currentColor; }
+.demo-coming-soon::before, .demo-coming-soon::after { content: ''; position: absolute; z-index: -1; inset: 8%; border: 1px solid #39ff6a66; clip-path: polygon(0 14%, 8% 14%, 8% 0, 92% 0, 92% 14%, 100% 14%, 100% 86%, 92% 86%, 92% 100%, 8% 100%, 8% 86%, 0 86%); }
+.demo-coming-soon::after { inset: 13%; border-color: #bb4dff77; }
+.demo-coming-soon span, .demo-coming-soon strong { grid-area: 1 / 1; }
+.demo-coming-soon span { align-self: end; margin-bottom: 50%; color: #b75cff; font-size: clamp(12px, 7cqh, 44px); letter-spacing: .1em; }
+.demo-coming-soon strong { align-self: start; margin-top: 51%; color: #62ff8c; font-size: clamp(18px, 10cqh, 64px); letter-spacing: .06em; }
+.demo-game-player { width: 100%; height: 100%; display: grid; grid-template-rows: auto minmax(0, 1fr); background: #000; }
+.demo-game-toolbar { display: flex; justify-content: flex-start; padding: clamp(3px, .8cqh, 7px); background: #08040d; border-bottom: 1px solid #39ff6a55; }
+.demo-games-back { padding: clamp(3px, .7cqh, 7px) clamp(8px, 1.4cqw, 16px); color: #dffff0; background: #23102fee; border: 1px solid #7dffae99; border-radius: 4px; font: 700 clamp(10px, 2.8cqh, 15px) VT323, "Share Tech Mono", monospace; cursor: pointer; }
+.demo-games-back:hover, .demo-games-back:focus-visible { color: #fff; border-color: #d58cff; background: #351448; }
+.demo-game-viewport { position: relative; min-width: 0; min-height: 0; overflow: hidden; }
+.demo-game-viewport iframe { display: block; width: 100%; height: 100%; border: 0; transform-origin: top left; }
 #new-stuff-panel { position: absolute; inset: 12% 6% 18%; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; touch-action: pan-y pinch-zoom; pointer-events: auto; padding: clamp(12px, 1.5vw, 20px); background: #000; color: #39ff6a; font-family: VT323, "Share Tech Mono", "IBM Plex Mono", monospace; scrollbar-width: thin; scrollbar-color: #39ff6a66 #000; }
 #new-stuff-panel article + article { margin-top: clamp(32px, 4vw, 48px); }
 #crt-content #new-stuff-panel h2 { margin: 0 0 clamp(12px, 1.5vw, 20px); text-shadow: 0 0 3px #39ff6a30; }

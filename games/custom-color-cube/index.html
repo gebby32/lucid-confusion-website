@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111216" />
+  <title>CCCP — Custom Color Cube Puzzle</title>
+  <link rel="icon" type="image/png" id="favicon" />
+  <script type="module" crossorigin src="./assets/index-iMAxnHaE.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-B4_XYcvV.css">
+</head>
+<body>
+  <div id="bg" class="bg"></div>
+  <div id="stage" class="stage" aria-label="3D cube puzzle"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <img id="brandLogo" alt="" />
+      <div class="brand-text"><b>CCCP</b><span>Custom Color Cube Puzzle</span></div>
+    </div>
+
+    <div class="hud" aria-live="polite">
+      <div class="hud-label"><span id="puzzleLabel">Free Play</span><span id="assistedBadge" class="badge warn" hidden>Hints used</span></div>
+      <div class="stats">
+        <div class="stat"><span>Minimum</span><b id="statMin">—</b></div>
+        <div class="stat"><span>Moves</span><b id="statMoves">0</b></div>
+        <div class="stat"><span>Time</span><b id="statTime">0:00.00</b></div>
+      </div>
+    </div>
+
+    <nav class="menu" aria-label="Menu">
+      <button class="menu-btn" data-panel="play" title="Play"><svg viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z"/></svg><span>Play</span></button>
+      <button class="menu-btn" data-panel="customize" title="Customize"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="9" cy="9.5" r="1.4" class="fill"/><circle cx="14.5" cy="8.5" r="1.4" class="fill"/><circle cx="16" cy="13.5" r="1.4" class="fill"/><path d="M12 20.5c-1.5 0-2-1.2-1.4-2.3.6-1.2-.2-2.2-1.5-2.2"/></svg><span>Customize</span></button>
+      <button class="menu-btn" data-panel="music" title="Music"><svg viewBox="0 0 24 24"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg><span>Music</span></button>
+      <button class="menu-btn" data-panel="progress" title="Progress"><svg viewBox="0 0 24 24"><path d="M5 20V11M12 20V5M19 20v-6"/></svg><span>Progress</span></button>
+      <button class="menu-btn" data-panel="help" title="Help"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.5a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .8-1 1.5v.6"/><circle cx="12" cy="16.8" r=".9" class="fill"/></svg><span>Help</span></button>
+    </nav>
+  </header>
+
+  <div id="hintBar" class="hint-bar" hidden></div>
+  <div id="toast" class="toast" hidden></div>
+
+  <div id="versusBox" class="versus" hidden>
+    <div id="oppStage" class="opp-stage"></div>
+    <div class="opp-info">
+      <div class="opp-name" id="oppName">CPU</div>
+      <div class="opp-status" id="oppStatus">Inspecting…</div>
+      <div class="bar"><i id="oppBar"></i></div>
+      <div class="opp-moves"><span id="oppMoves">0</span> moves</div>
+    </div>
+  </div>
+
+  <footer class="toolbar">
+    <div class="actions">
+      <button id="btnScramble" class="tool" title="New random puzzle"><svg viewBox="0 0 24 24"><path d="M4 7h3.5c2 0 3 1 4.5 3.5S14.5 17 16.5 17H20M17 14l3 3-3 3M4 17h3.5c1.3 0 2.2-.5 3-1.4M13.5 8.4c.8-.9 1.7-1.4 3-1.4H20M17 4l3 3-3 3"/></svg><span>Scramble</span></button>
+      <button id="btnRestart" class="tool" title="Restart this puzzle"><svg viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3M4 4v4h4"/></svg><span>Restart</span></button>
+      <button id="btnReset" class="tool" title="Reset to a solved cube"><svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg><span>Reset</span></button>
+      <button id="btnHint" class="tool accent" title="Show the next optimal move (H)"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg><span>Hint</span></button>
+    </div>
+    <label class="zoom" title="Zoom">
+      <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5M8 10.5h5M10.5 8v5"/></svg>
+      <input id="zoom" type="range" min="0.55" max="1.8" step="0.01" value="1" aria-label="Zoom" />
+    </label>
+  </footer>
+
+  <aside id="panel" class="panel" hidden aria-modal="false">
+    <div class="panel-head"><h2 id="panelTitle"></h2><button id="panelClose" class="icon-btn" aria-label="Close">✕</button></div>
+    <div id="panelBody" class="panel-body"></div>
+  </aside>
+
+  <div id="countdown" class="countdown" hidden></div>
+  <div id="loading" class="loading" hidden><div class="spinner"></div><span id="loadingText"></span><button id="loadingCancel" class="btn" hidden>Cancel</button></div>
+  <div id="modal" class="modal" hidden></div>
+  <div id="tutorial" class="tutorial" hidden></div>
+  <canvas id="confetti" class="confetti"></canvas>
+
+</body>
+</html>
