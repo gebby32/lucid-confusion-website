@@ -1,0 +1,202 @@
+[
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\index.html",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/index.html",
+    "sha256": "c150bd1c19d2d2a4a8148501b12484cdcab3dd7b91654e49ceac96fb9172fe37"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\css\\style.css",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/css/style.css",
+    "sha256": "33b523db99aaf9d7efbb432b837e912cdcf9d1e96b9f083fdb1cc677de9a65e6"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\actors.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/actors.js",
+    "sha256": "f6d8d3588a402e02c48956a04e11918199092f1432b7450f0926c43ab540f57c"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\anim.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/anim.js",
+    "sha256": "e6cf912b5e494b1cdc92bb981af11c0b195be1869f4f631f259ef641b8953794"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\areas1.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/areas1.js",
+    "sha256": "570a31b9eba0fe4f3d8d65e170d06a8a90a8e82ee214c1f5d21d5398f2819dfe"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\areas2.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/areas2.js",
+    "sha256": "a0acad78efd3fc07a2669754d747181752aa47aa06852a7a25d8e90bc06bfc46"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\areas3.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/areas3.js",
+    "sha256": "ff38da428d36daf3c427a0398706b6c77fe1f84de2157463f3dfe6c037de6b43"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\chapters1.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/chapters1.js",
+    "sha256": "82faa77f17f0fdda3e5c8c20640efc0ef214c8437485a37cb207c64470084c8f"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\chapters2.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/chapters2.js",
+    "sha256": "f871722834aeae9c1177fe8f517aafd30c06093590b4dd1734f6ae337c123405"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\chapters3.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/chapters3.js",
+    "sha256": "753cb0649a56f7014f74c99d822397d6d5b99788996273c3475f863227ea5b0d"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\ctl.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/ctl.js",
+    "sha256": "3f562a813000c9d19746208a5d83a6a1589c0ac696d4252d991168202cbb2558"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\font.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/font.js",
+    "sha256": "b10cadb84a094d713305056b049b7498a45c7e537397df1d04e7570685f67bd2"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\fx3d.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/fx3d.js",
+    "sha256": "80eebdbc4aa95d900047c14a1071594ad0539af43918f18b4f8bdacfe2f15a7e"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\game-audio.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/game-audio.js",
+    "sha256": "f0606c8c0ddb42539ee0fdac4565291c23d467b86004396872b058339b626c77"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\game-config.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/game-config.js",
+    "sha256": "90c71762e4608db90bff9b1586383f14c98854618b585d54ebe84b9e640c64f8"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\game.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/game.js",
+    "sha256": "8231873fc19d74d4f4b19add5302983b2d301161d818ec1dac7b300e58ee2ef5"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\gfx.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/gfx.js",
+    "sha256": "ea0ea6ef4fb93082e66421e9bf4206720d8085bdf1d3859027652fe71b016e1c"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\gfx3d.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/gfx3d.js",
+    "sha256": "02ef6c5a203244d124b57fa95c6d81d8ddcdb635baec16662638e7108599dda8"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\heroes.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/heroes.js",
+    "sha256": "318f3dabc5b00ccd9da7b455d2f6dc26d18c7baced2d2d708a379afee4cb107d"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\hud.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/hud.js",
+    "sha256": "dd3ae154c698b0a85f1cd102fa8a0678f0f55545fd0efe18a3c6298d7144f889"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\main.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/main.js",
+    "sha256": "d09ee1833fbd5ab03c777648beedb8474e92a5d5fd616fe61dba21c55f9b7f43"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\minigames.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/minigames.js",
+    "sha256": "879b8f2694cb8e93a7610cfb2f6df557a81c73d877bd108a5c7d73f8df10db14"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\modes.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/modes.js",
+    "sha256": "e8f45ae0eddb6a7816923179dd47e7a5822737feff103843305acd893a55b97e"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\npc.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/npc.js",
+    "sha256": "63f9af543624b358fbfe5200d59c11a5524a22820f0e4508da7cc5a4dc852f1e"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\props.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/props.js",
+    "sha256": "98290d333bb9910efcd400203ae6840dccd05c8cbfc034f04b82beab9bee1b5d"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\screens.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/screens.js",
+    "sha256": "e2a5a8229f51fe34da8d6627ee18c65a14866c3519d8c7c14637bef5c944673c"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\stage.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/stage.js",
+    "sha256": "42f2e58793b70d45f1e0d184cce7a2a6a963b87d31b6fbc6d57393ab402f4ff5"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\js\\story.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/js/story.js",
+    "sha256": "487ac775cb090cc68257486d825203f5510f006d23a558286de03137ce47fe94"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\plumbing\\audio.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/plumbing/audio.js",
+    "sha256": "f3f5318006fd45ed7b56bdab5d211f489d25b93b75b37ddae5e6f810a7decb31"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\plumbing\\core.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/plumbing/core.js",
+    "sha256": "50ebdc1f1ca8f0cb02f45148c3c792ada83d40bd916c3dab8c94ffe67b72a95c"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\plumbing\\effects.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/plumbing/effects.js",
+    "sha256": "d44e56c3db9298ff3ce87b0fe408b06e51cf9d540a46900e770a92ac2065d380"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\plumbing\\gamepad.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/plumbing/gamepad.js",
+    "sha256": "ec8a5574fbb44217844b53714fb779e78cdea55cffc5dd32140da51ae2932639"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\plumbing\\input.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/plumbing/input.js",
+    "sha256": "9ab9785e45e1bb6aae8368bbb04b3e4fa8549850a42ad684b043217455d29a82"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\plumbing\\lcd.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/plumbing/lcd.js",
+    "sha256": "dde3e5b42c64e852104ccbf83f18c71cc8ec121a28bf3a91551b84b187300fce"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\plumbing\\monitor.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/plumbing/monitor.js",
+    "sha256": "3bd0f3e9124562fe3fb0d42d302e7fde194d06b0c03a2fbeac01f53cd734cb7c"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\plumbing\\storage.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/plumbing/storage.js",
+    "sha256": "382e048b8280db1efb934a817dfa83236d2fb09be83e7619234ca680b4af83fa"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\vendor\\three.bundle.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/vendor/three.bundle.js",
+    "sha256": "60282c1b31027551ea104e9e80d4aba2283bad4ef6851574f57769dd0a46802a"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\assets\\models\\sleavis.glb.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/assets/models/sleavis.glb.js",
+    "sha256": "57a2da657aef3a85b75fe2e54d1d0a143d7e45966679f1a2d2bd20817e4daa91"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\assets\\models\\slothhead.glb.js",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/assets/models/slothhead.glb.js",
+    "sha256": "2f38472e4c928a05bf476e47000315c7d344cb6952ebc9027264692722fef7a5"
+  },
+  {
+    "source": "C:\\Retro Arcade\\Sleavis and Sloth-Head Do America\\assets\\title.png",
+    "file": "assets/retro-arcade/games/sleavis-and-sloth-head-do-america/assets/title.png",
+    "sha256": "d15bce3bdbee9cf90884c71fdbad0e429c8881bc092baf58283209f6175153a8"
+  }
+]

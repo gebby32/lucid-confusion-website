@@ -44,10 +44,12 @@ for (const item of JSON.parse(fs.readFileSync('verification/retro-arcade-source.
    if(mobile)await page.touchscreen.tap(monitor.x,monitor.y);else await page.mouse.click(monitor.x,monitor.y);
    await page.waitForSelector('#retro-grid a');
    assert.equal(await page.locator('#retro-grid a').count(),catalog.filter(g=>g.url).length);
-   assert.equal(await page.locator('#retro-grid > div').innerText(),'COMING SOON...');
+   assert.equal(await page.locator('#retro-grid > div').count(),catalog.filter(g=>!g.url).length);
    assert(!requests.some(u=>u.includes('/retro-arcade/games/')));
-   await page.locator('#retro-grid > div').click();
-   assert.equal(await page.locator('#retro-game-viewport iframe').count(),0);
+   for(const placeholder of await page.locator('#retro-grid > div').all()) {
+    assert.equal(await placeholder.innerText(),'COMING SOON...');
+    await placeholder.click();assert.equal(await page.locator('#retro-game-viewport iframe').count(),0);
+   }
    await page.locator('#retro-grid').evaluate(e=>e.scrollTop=0);
    await page.waitForFunction(()=>[...document.querySelectorAll('#retro-grid img')].every(i=>i.complete&&i.naturalWidth>0));
    const bounds=await page.locator('#retro-frame').boundingBox();assert(Math.abs(bounds.width/bounds.height-4/3)<.01);
@@ -65,7 +67,7 @@ for (const item of JSON.parse(fs.readFileSync('verification/retro-arcade-source.
     assert(Math.min(fit.vw/fit.w,fit.vh/fit.h)<=1.26);
     assert(Math.abs((fit.vw-fit.w)/2-fit.x)<=1&&Math.abs((fit.vh-fit.h)/2-fit.y)<=1);
     await game.evaluate(()=>window.focus());
-    const playState=item.id==='sloth-run'?'race':['the-sloth-king','grand-theft-sloth'].includes(item.id)?'play':'game';
+    const playState=item.id==='sloth-run'?'race':['the-sloth-king','grand-theft-sloth','sleavis-and-sloth-head-do-america'].includes(item.id)?'play':'game';
     for(let attempt=0;attempt<8;attempt++) {
      if(await game.evaluate(state=>LP.States.current===state,playState))break;
      const skipIntro=item.id==='grand-theft-sloth'&&await game.evaluate(()=>LP.States.current==='intro');
@@ -76,7 +78,8 @@ for (const item of JSON.parse(fs.readFileSync('verification/retro-arcade-source.
     for(const key of ['Escape','Backspace']) {await page.keyboard.press(key);assert.equal(await page.locator('iframe').count(),1);assert((await game.evaluate(()=>window.testKeys)).includes(key));}
     // Original input mapping still receives a held directional key.
     await page.keyboard.down('ArrowRight');assert(await game.evaluate(()=>LP.Input.downKeys.has('ArrowRight')));await page.keyboard.up('ArrowRight');
-    const key=['slubble-slobble','grand-theft-sloth'].includes(item.id)?'F2':'f';
+    const key=['slubble-slobble','grand-theft-sloth','sleavis-and-sloth-head-do-america'].includes(item.id)?'F2':'f';
+    if(item.id==='sleavis-and-sloth-head-do-america') {await page.keyboard.down('f');assert(await game.evaluate(()=>LP.Input.held('use')));assert.equal(await page.evaluate(()=>document.fullscreenElement),null);await page.keyboard.up('f');}
     if(item.id==='grand-theft-sloth') {await page.keyboard.down('f');assert(await game.evaluate(()=>LP.Input.held('enter')));assert.equal(await page.evaluate(()=>document.fullscreenElement),null);await page.keyboard.up('f');}
     if(item.id==='slubble-slobble') {await page.keyboard.down('f');assert(await game.evaluate(()=>LP.Input.held('p2fire')));assert.equal(await page.evaluate(()=>document.fullscreenElement),null);await page.keyboard.up('f');}
     await page.keyboard.press(key);await page.waitForFunction(()=>document.fullscreenElement?.id==='retro-player');

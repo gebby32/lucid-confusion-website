@@ -1,0 +1,24 @@
+/* Full-screen arcade monitor layout. Elements are created by plumbing/monitor.js;
+   the picture's size and position come from LP.Shell.fit(). Usually nothing here needs editing. */
+html, body {
+  margin: 0; height: 100%; overflow: hidden;
+  background: #000;
+  touch-action: none; overscroll-behavior: none;
+  -webkit-user-select: none; user-select: none;
+  -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
+}
+#lp-stage { position: fixed; inset: 0; }
+#lp-stage.lp-nocursor, #lp-stage.lp-nocursor * { cursor: none; }
+#lp-view { position: absolute; overflow: hidden; touch-action: none; background: #000; }
+#lp-lcd {
+  display: block; width: 100%; height: 100%;
+  image-rendering: pixelated; image-rendering: crisp-edges;   /* never blur the pixels */
+}
+#lp-view.lp-off #lp-lcd { visibility: hidden; }
+
+/* shown until the scripts start (js/main.js removes it), or if they cannot */
+#boot-msg { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+  font: 14px/1.4 monospace; color: #888; text-align: center; pointer-events: none; }
+
+/* ?debug overlay */
+#lp-readout { position: fixed; left: 6px; top: 6px; z-index: 9; padding: 4px 6px; font: 12px/1.35 monospace; color: #0f0; background: rgba(0, 0, 0, 0.75); white-space: pre; pointer-events: none; }
