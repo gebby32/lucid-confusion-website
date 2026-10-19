@@ -282,6 +282,51 @@ export const routes = {
     "view": "crt",
     "title": "Demo Arcade"
   },
+  "/demo-arcade/view/lucid-logic": {
+    "parent": "/demo-arcade/view",
+    "index": 3,
+    "view": "crt",
+    "demoGame": "lucid-logic",
+    "title": "Lucid Logic Circuit Control"
+  },
+  "/demo-arcade/view/lucid-logic/fullscreen": {
+    "parent": "/demo-arcade/view/lucid-logic",
+    "index": 3,
+    "view": "crt",
+    "demoGame": "lucid-logic",
+    "demoExpanded": true,
+    "title": "Lucid Logic Circuit Control"
+  },
+  "/demo-arcade/view/custom-color-cube": {
+    "parent": "/demo-arcade/view",
+    "index": 3,
+    "view": "crt",
+    "demoGame": "custom-color-cube",
+    "title": "Custom Color Cube Puzzle"
+  },
+  "/demo-arcade/view/custom-color-cube/fullscreen": {
+    "parent": "/demo-arcade/view/custom-color-cube",
+    "index": 3,
+    "view": "crt",
+    "demoGame": "custom-color-cube",
+    "demoExpanded": true,
+    "title": "Custom Color Cube Puzzle"
+  },
+  "/demo-arcade/view/confusion-derby-lucid-raceway": {
+    "parent": "/demo-arcade/view",
+    "index": 3,
+    "view": "crt",
+    "demoGame": "confusion-derby-lucid-raceway",
+    "title": "Confusion Derby: Lucid Raceway"
+  },
+  "/demo-arcade/view/confusion-derby-lucid-raceway/fullscreen": {
+    "parent": "/demo-arcade/view/confusion-derby-lucid-raceway",
+    "index": 3,
+    "view": "crt",
+    "demoGame": "confusion-derby-lucid-raceway",
+    "demoExpanded": true,
+    "title": "Confusion Derby: Lucid Raceway"
+  },
   "/merch-shop": {
     "parent": "/",
     "index": 4,

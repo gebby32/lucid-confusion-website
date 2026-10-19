@@ -10,6 +10,17 @@ for (const [index, title] of cabinets.entries()) {
   routes[base] = { parent: '/', index, view: 'intro', title };
   const content = base + (index === 1 || index === 2 ? '/games' : '/view');
   routes[content] = { parent: base, index, view: 'crt', title };
+  if (index === 3) {
+    for (const game of [
+      { id: 'lucid-logic', title: 'Lucid Logic Circuit Control' },
+      { id: 'custom-color-cube', title: 'Custom Color Cube Puzzle' },
+      { id: 'confusion-derby-lucid-raceway', title: 'Confusion Derby: Lucid Raceway' },
+    ]) {
+      const destination = content + '/' + game.id;
+      routes[destination] = { parent: content, index, view: 'crt', demoGame: game.id, title: game.title };
+      routes[destination + '/fullscreen'] = { parent: destination, index, view: 'crt', demoGame: game.id, demoExpanded: true, title: game.title };
+    }
+  }
   if (index === 5) routes[base + '/beach'] = { parent: content, index, view: 'crt', beach: true, title: 'Beach Break | The Links' };
   if (index === 1 || index === 2) {
     const games = JSON.parse(fs.readFileSync(path.join(root, 'assets', index === 1 ? 'handhelds' : 'retro-arcade', 'catalog.json')));

@@ -742,7 +742,7 @@ async function initialize() {
     if (stale()) return;
     if (route.view === 'crt') {
       if (route.index === 7) showComingSoon();
-      if (route.index === 3) showDemoArcade();
+      if (route.index === 3) showDemoArcade(route);
       if (route.index === 1) { await showHandhelds(); if (!stale() && route.game) await launchHandheld(route.game); }
       if (route.index === 2) { await showRetroArcade(); if (!stale() && route.game) await launchRetro(route.game); }
       if (route.index === 5) beachState(!!route.beach);
