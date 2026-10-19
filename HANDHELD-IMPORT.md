@@ -1,5 +1,7 @@
 # Retro Handheld import
 
+October 19 additions: Soup Squirrel: The Ninja Squire and Phoenix Thundercock – Star Commander. Both finished portable builds are copied unchanged, with thumbnails made from their exact embedded console artwork using the existing resize settings. Source paths and SHA-256 hashes are recorded in `verification/handheld-oct19-source.json`. Both games retain native Backspace controls; F fullscreen and the existing return button remain available. Run `node verification/handheld-oct19-check.cjs` for focused desktop/touch gameplay and navigation checks, and `node verification/handheld-check.cjs` for the full handheld catalog regression.
+
 October 7 additions: Sloth Kart Racing (portable title: Super Sloth Kart Racing 2.0), Star Sloth 69, and The Legend of Emcee. These are normal entries in the existing grid. Their portable builds are copied unchanged, and thumbnails match their embedded handheld artwork. Source/published hashes are recorded in `verification/arcade-additions-source.json`. The approved Backspace exceptions preserve their native select/undo actions; F fullscreen and button return remain available.
 
 Portable HTML files are copied byte-for-byte. Thumbnails use the exact console image embedded in each build, reduced without cropping. Pink Rampage retains its original Three.js CDN imports; those load only when that game opens.

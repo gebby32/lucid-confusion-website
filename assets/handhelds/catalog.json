@@ -182,5 +182,21 @@
     "width": 305,
     "height": 360,
     "url": "./assets/handhelds/the-legend-of-emcee/index.html"
+  },
+  {
+    "id": "soup-squirrel-the-ninja-squire",
+    "title": "Soup Squirrel: The Ninja Squire",
+    "image": "./assets/handhelds/soup-squirrel-the-ninja-squire/thumbnail.webp",
+    "width": 479,
+    "height": 360,
+    "url": "./assets/handhelds/soup-squirrel-the-ninja-squire/index.html"
+  },
+  {
+    "id": "phoenix-thundercock-star-commander",
+    "title": "Phoenix Thundercock – Star Commander",
+    "image": "./assets/handhelds/phoenix-thundercock-star-commander/thumbnail.webp",
+    "width": 288,
+    "height": 360,
+    "url": "./assets/handhelds/phoenix-thundercock-star-commander/index.html"
   }
 ]

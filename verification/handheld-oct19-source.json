@@ -1,0 +1,24 @@
+[
+  {
+    "id": "soup-squirrel-the-ninja-squire",
+    "source": "C:/Retro Handhelds/Soup Squirrel The Ninja Squire/build/SoupSquirrel-portable.html",
+    "file": "assets/handhelds/soup-squirrel-the-ninja-squire/index.html",
+    "sourceSha256": "e5352a8fbebdae615873a924d222cf60ecea56cd8498e2c7bb8f2b3770d46da1",
+    "sha256": "e5352a8fbebdae615873a924d222cf60ecea56cd8498e2c7bb8f2b3770d46da1",
+    "artSource": "C:/Retro Handhelds/Soup Squirrel The Ninja Squire/assets/handheld.webp",
+    "artSha256": "c7e57378337ea5501f5a127f27ffb78eab852761e0d76c37be6e3bb480c2bfb6",
+    "artEmbeddedExactly": true,
+    "thumbnail": "assets/handhelds/soup-squirrel-the-ninja-squire/thumbnail.webp"
+  },
+  {
+    "id": "phoenix-thundercock-star-commander",
+    "source": "C:/Retro Handhelds/Fake Game Boy hits/Phoenix Thundercock - star commander/game/PhoenixThundercock-portable.html",
+    "file": "assets/handhelds/phoenix-thundercock-star-commander/index.html",
+    "sourceSha256": "4c76af2c60b2be8e926b4b4b51b2a08bae68293e76ff70e59256349791218bb5",
+    "sha256": "4c76af2c60b2be8e926b4b4b51b2a08bae68293e76ff70e59256349791218bb5",
+    "artSource": "C:/Retro Handhelds/Fake Game Boy hits/Phoenix Thundercock - star commander/game/assets/handheld.png",
+    "artSha256": "c3d4ba6611da137d1da4b60b57b3ac4d19706d3f6600fbffd9bea9217e7f0db7",
+    "artEmbeddedExactly": true,
+    "thumbnail": "assets/handhelds/phoenix-thundercock-star-commander/thumbnail.webp"
+  }
+]

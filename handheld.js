@@ -46,7 +46,7 @@ function returnKey(event) {
   if (!selected || event.key !== 'Backspace' || event.repeat || event.ctrlKey || event.metaKey || event.altKey || textEntryActive(event)) return;
   // User-approved exceptions: private initials entry or native Backspace
   // gameplay actions. Reserve the key and retain button return.
-  if (['sewer-halo', 'the-nudibranch', 'sloth-kart-racing', 'star-sloth-69', 'the-legend-of-emcee'].includes(selected.id)) return;
+  if (['sewer-halo', 'the-nudibranch', 'sloth-kart-racing', 'star-sloth-69', 'the-legend-of-emcee', 'soup-squirrel-the-ninja-squire', 'phoenix-thundercock-star-commander'].includes(selected.id)) return;
   event.preventDefault();
   event.stopImmediatePropagation();
   backToHandhelds();

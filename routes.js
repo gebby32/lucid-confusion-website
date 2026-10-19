@@ -188,6 +188,20 @@ export const routes = {
     "game": "the-legend-of-emcee",
     "title": "The Legend of Emcee"
   },
+  "/retro-handheld/games/soup-squirrel-the-ninja-squire": {
+    "parent": "/retro-handheld/games",
+    "index": 1,
+    "view": "crt",
+    "game": "soup-squirrel-the-ninja-squire",
+    "title": "Soup Squirrel: The Ninja Squire"
+  },
+  "/retro-handheld/games/phoenix-thundercock-star-commander": {
+    "parent": "/retro-handheld/games",
+    "index": 1,
+    "view": "crt",
+    "game": "phoenix-thundercock-star-commander",
+    "title": "Phoenix Thundercock – Star Commander"
+  },
   "/retro-arcade": {
     "parent": "/",
     "index": 2,
