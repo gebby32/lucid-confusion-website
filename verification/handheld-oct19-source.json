@@ -3,15 +3,15 @@
     "id": "soup-squirrel-the-ninja-squire",
     "source": "C:/Retro Handhelds/Soup Squirrel The Ninja Squire/build/SoupSquirrel-portable.html",
     "file": "assets/handhelds/soup-squirrel-the-ninja-squire/index.html",
-    "sourceSha256": "6268164fce29afb9b59aecff01edccab9354ac9a9469e52b9c02b43c03a6b642",
-    "sha256": "6268164fce29afb9b59aecff01edccab9354ac9a9469e52b9c02b43c03a6b642",
+    "sourceSha256": "75376c175757b1b856d000f16bdf26ee227ad6947525cbb8fcd00586f3533872",
+    "sha256": "75376c175757b1b856d000f16bdf26ee227ad6947525cbb8fcd00586f3533872",
     "artSource": "C:/Retro Handhelds/Soup Squirrel The Ninja Squire/assets/handheld.webp",
     "artSha256": "c7e57378337ea5501f5a127f27ffb78eab852761e0d76c37be6e3bb480c2bfb6",
     "artEmbeddedExactly": true,
     "thumbnail": "assets/handhelds/soup-squirrel-the-ninja-squire/thumbnail.webp",
-    "buildCompletedUtc": "2026-10-20T07:47:11Z",
-    "buildDescription": "Completed portable build with the 3D factory, per-world level formats, bonus worlds, and 21 secret cheat toggles",
-    "replacedSha256": "16f5e3dc7e9dbd86fe4be52c10c4d5cc4d92dffbe1014a636b4f8ada4bb26ae4"
+    "buildCompletedUtc": "2026-10-20T21:27:42Z",
+    "buildDescription": "Completed portable build with the 3D freezer, rendered 3D squirrel, factory, ten worlds, and bonus squirrel setting",
+    "replacedSha256": "6268164fce29afb9b59aecff01edccab9354ac9a9469e52b9c02b43c03a6b642"
   },
   {
     "id": "phoenix-thundercock-star-commander",

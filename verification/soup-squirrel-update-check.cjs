@@ -110,6 +110,11 @@ async function warmCache(browser) {
       await titleReady(frame);
       assert.equal(await frame.evaluate(() => Levels.total), 10);
       assert.equal(await frame.evaluate(() => Cheats.LIST.length), 21);
+      assert.equal(await frame.evaluate(async () => {
+        const pages = Object.values(Hero3DData.sets).flatMap(set => set.pages);
+        await Promise.all(pages.map(src => LP.loadImage(src).decode()));
+        return pages.length;
+      }), 4, 'All embedded 3D squirrel atlases decode');
       await page.keyboard.press('Enter');
       await frame.waitForFunction(() => LP.States.current === 'menu');
       for (const key of ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight']) {
@@ -154,11 +159,14 @@ async function warmCache(browser) {
         await frame.waitForURL(levelUrl);
         await frame.waitForFunction(() => window.GAME && LP.States.current === 'playing' && (GAME.Run3D.active ? GAME.Run3D.phase === 'run' && GAME.Run3D.hero.onGround : GAME.Game.hero.onGround));
         assert.equal(await frame.evaluate(() => GAME.Game.level), level - 1);
+        assert.equal(await frame.evaluate(() => HeroHD.on()), level >= 4, 'Original pixel squirrel early on; rendered squirrel in later worlds');
+        if (level >= 4) await frame.waitForFunction(() => LP.LCD._pool.length > 0);
         const x = await frame.evaluate(() => (GAME.Run3D.active ? GAME.Run3D.hero : GAME.Game.hero).x);
         await pad(null, 1, 220);
         assert(await frame.evaluate(x => (GAME.Run3D.active ? GAME.Run3D.hero : GAME.Game.hero).x > x, x), 'Gamepad stick moves hero');
-        if (level === 2) {
-          assert(await frame.evaluate(() => GAME.Run3D.active), 'Factory starts in 3D');
+        if (level === 2 || level === 4) {
+          const section = level === 2 ? 'factory' : 'freezer';
+          assert(await frame.evaluate(() => GAME.Run3D.active), `${section} starts in 3D`);
           const z = await frame.evaluate(() => GAME.Run3D.hero.z);
           await pad(null, 0, 220, -1);
           assert(await frame.evaluate(z => GAME.Run3D.hero.z > z, z), 'Gamepad runs forward in 3D');
@@ -180,7 +188,7 @@ async function warmCache(browser) {
           assert.equal(await frame.evaluate(() => GAME.Soup.ammo), ammo - 1, 'Keyboard/touch throws soup in 3D');
           await input('start', 'Enter'); await frame.waitForFunction(() => LP.States.current === 'paused');
           await input('start', 'Enter'); await frame.waitForFunction(() => LP.States.current === 'playing');
-          if (output) await page.screenshot({ path: path.join(output, `factory-3d-${mobile ? 'mobile' : 'desktop'}.png`) });
+          if (output) await page.screenshot({ path: path.join(output, `${section}-3d-${mobile ? 'mobile' : 'desktop'}.png`) });
           // Set up at the exit using the build's own test peeks, then walk into it
           // through normal keyboard/touch input to verify the 3D-to-2D handover.
           await frame.evaluate(() => {
@@ -189,8 +197,9 @@ async function warmCache(browser) {
           });
           await input('up', 'ArrowUp', 300);
           await frame.waitForFunction(() => !GAME.Run3D.active && GAME.Run3D.pop2D && LP.States.current === 'playing');
-          assert.equal(await frame.evaluate(() => GAME.Game.level), 1);
-          console.log(`${mobile ? 'mobile touch' : 'desktop keyboard'}: 3D movement, jump, attacks, soup, pause, and exit portal passed`);
+          assert.equal(await frame.evaluate(() => GAME.Game.level), level - 1);
+          assert.equal(await frame.evaluate(() => HeroHD.on()), level >= 4, 'Squirrel presentation survives the return to 2D');
+          console.log(`${mobile ? 'mobile touch' : 'desktop keyboard'}: ${section} 3D movement, jump, attacks, soup, pause, and exit portal passed`);
         }
         if (level === 1) {
           const y = await frame.evaluate(() => GAME.Game.hero.y);
@@ -200,6 +209,7 @@ async function warmCache(browser) {
           await pad(9); await frame.waitForFunction(() => LP.States.current === 'playing');
         }
         levels.push(await frame.evaluate(() => GAME.Game.lvl.name));
+        if (output && level === 5) await page.screenshot({ path: path.join(output, `squirrel-3d-side-${mobile ? 'mobile' : 'desktop'}.png`) });
       }
       assert(gameRequests.every(url => new URL(url).pathname === '/' + item.file), 'Portable game requests no external dependencies');
       await page.locator('#handheld-back').click(); await ready(page, '/retro-handheld/games');
