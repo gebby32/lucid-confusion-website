@@ -28,6 +28,8 @@ assert(!/<(?:script|link)\b[^>]*\s(?:src|href)=/.test(html), 'All dependencies e
 console.log(`Source verified: ${bytes.length} bytes, ${scripts.length} scripts, ${Object.keys(assets).length} embedded images; console art and thumbnail unchanged`);
 
 const base = process.env.PREVIEW_URL || 'http://127.0.0.1:8771/';
+const output = process.env.VERIFICATION_OUTPUT;
+if (output) fs.mkdirSync(output, { recursive: true });
 const route = '/retro-handheld/games/' + item.id;
 const ready = (page, pathname) => page.waitForFunction(p => window.arcadeDebug && !arcadeDebug.state.zoomTransition && document.documentElement.dataset.routing === 'ready' && location.pathname.replace(/\/$/, '') === p, pathname);
 const titleReady = frame => frame.waitForFunction(() => window.GAME && LP.States.current === 'title', null, { timeout: 45000 });
@@ -37,7 +39,7 @@ const titleReady = frame => frame.waitForFunction(() => window.GAME && LP.States
 async function warmCache(browser) {
   const root = path.resolve(__dirname, '..'), requests = [];
   let updated = false;
-  const oldCatalog = catalog.map(g => g.id === item.id ? { ...g, url: g.url.split('?')[0] } : g);
+  const oldCatalog = catalog.map(g => g.id === item.id ? { ...g, url: g.url.split('?')[0] + '?v=' + item.replacedSha256.slice(0, 12) } : g);
   const server = http.createServer((req, res) => {
     const url = new URL(req.url, 'http://localhost');
     requests.push({ url: req.url, updated, headers: req.headers });
@@ -64,7 +66,7 @@ async function warmCache(browser) {
   try {
     const page = await context.newPage();
     await page.goto(origin + '/warm.html');
-    await page.evaluate(async file => { await (await fetch('/assets/handhelds/catalog.json')).text(); await (await fetch('/' + file)).text(); }, item.file);
+    await page.evaluate(async () => { const games = await (await fetch('/assets/handhelds/catalog.json')).json(); await (await fetch(games.find(g => g.id === 'soup-squirrel-the-ninja-squire').url)).text(); });
     updated = true;
     await page.goto(origin + '/retro-handheld/games/?debug=1');
     await ready(page, '/retro-handheld/games');
@@ -119,10 +121,28 @@ async function warmCache(browser) {
       await page.keyboard.press('z'); await frame.waitForFunction(() => Cheats.on('invincible'));
       await page.keyboard.press('z'); await frame.waitForFunction(() => !Cheats.on('invincible'));
 
-      const pad = async (button, axis = 0, duration = 120) => {
-        await frame.evaluate(({ button, axis }) => { testPad.axes[0] = axis; if (button !== null) testPad.buttons[button] = { pressed: true, value: 1 }; }, { button, axis });
+      const pad = async (button, axis = 0, duration = 120, axisY = 0) => {
+        await frame.evaluate(({ button, axis, axisY }) => { testPad.axes = [axis, axisY]; if (button !== null) testPad.buttons[button] = { pressed: true, value: 1 }; }, { button, axis, axisY });
         await page.waitForTimeout(duration);
-        await frame.evaluate(() => { testPad.axes[0] = 0; testPad.buttons.forEach(b => { b.pressed = false; b.value = 0; }); });
+        await frame.evaluate(() => { testPad.axes = [0, 0]; testPad.buttons.forEach(b => { b.pressed = false; b.value = 0; }); });
+        await page.waitForTimeout(60);
+      };
+      const cdp = await context.newCDPSession(page);
+      const input = async (action, key, duration = 100) => {
+        if (!mobile) { await page.keyboard.down(key); await page.waitForTimeout(duration); await page.keyboard.up(key); }
+        else {
+          const point = await frame.evaluate(action => {
+            const zone = GAME_CONFIG.controls.find(z => z.action === action || (z.type === 'dpad' && ['up', 'down', 'left', 'right'].includes(action)));
+            const r = LP.Shell.device.getBoundingClientRect();
+            let x = zone.x, y = zone.y;
+            if (zone.type === 'dpad') { x += action === 'right' ? zone.r * .65 : action === 'left' ? -zone.r * .65 : 0; y += action === 'down' ? zone.r * .65 : action === 'up' ? -zone.r * .65 : 0; }
+            return { x: r.x + x * r.width / GAME_CONFIG.shell.width, y: r.y + y * r.height / GAME_CONFIG.shell.height };
+          }, action);
+          const box = await page.locator('#handheld-player iframe').boundingBox();
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: box.x + point.x, y: box.y + point.y }] });
+          await page.waitForTimeout(duration);
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+        }
         await page.waitForTimeout(60);
       };
       const levels = [];
@@ -132,11 +152,46 @@ async function warmCache(browser) {
         // Replace only this test's iframe document, without adding child history entries.
         await frame.evaluate(url => location.replace(url), levelUrl);
         await frame.waitForURL(levelUrl);
-        await frame.waitForFunction(() => window.GAME && LP.States.current === 'playing' && GAME.Game.hero.onGround);
+        await frame.waitForFunction(() => window.GAME && LP.States.current === 'playing' && (GAME.Run3D.active ? GAME.Run3D.phase === 'run' && GAME.Run3D.hero.onGround : GAME.Game.hero.onGround));
         assert.equal(await frame.evaluate(() => GAME.Game.level), level - 1);
-        const x = await frame.evaluate(() => GAME.Game.hero.x);
+        const x = await frame.evaluate(() => (GAME.Run3D.active ? GAME.Run3D.hero : GAME.Game.hero).x);
         await pad(null, 1, 220);
-        assert(await frame.evaluate(x => GAME.Game.hero.x > x, x), 'Gamepad stick moves hero');
+        assert(await frame.evaluate(x => (GAME.Run3D.active ? GAME.Run3D.hero : GAME.Game.hero).x > x, x), 'Gamepad stick moves hero');
+        if (level === 2) {
+          assert(await frame.evaluate(() => GAME.Run3D.active), 'Factory starts in 3D');
+          const z = await frame.evaluate(() => GAME.Run3D.hero.z);
+          await pad(null, 0, 220, -1);
+          assert(await frame.evaluate(z => GAME.Run3D.hero.z > z, z), 'Gamepad runs forward in 3D');
+          const y = await frame.evaluate(() => GAME.Run3D.hero.y);
+          await pad(0); assert(await frame.evaluate(y => GAME.Run3D.hero.y > y, y), 'Gamepad jumps in 3D');
+          await frame.waitForFunction(() => GAME.Run3D.hero.onGround);
+          const zBefore = await frame.evaluate(() => GAME.Run3D.hero.z);
+          await input('up', 'ArrowUp', 180);
+          assert(await frame.evaluate(z => GAME.Run3D.hero.z > z, zBefore), 'Keyboard/touch runs forward in 3D');
+          await input('jump', 'Space');
+          assert(await frame.evaluate(() => !GAME.Run3D.hero.onGround), 'Keyboard/touch jumps in 3D');
+          await input('punch', 'z', 40);
+          assert.equal(await frame.evaluate(() => GAME.Run3D.hero.atk), 'punch');
+          await frame.waitForFunction(() => !GAME.Run3D.hero.atk);
+          await input('kick', 'x', 40);
+          assert.equal(await frame.evaluate(() => GAME.Run3D.hero.atk), 'kick');
+          const ammo = await frame.evaluate(() => GAME.Soup.ammo);
+          await input('soup', 'c', 40);
+          assert.equal(await frame.evaluate(() => GAME.Soup.ammo), ammo - 1, 'Keyboard/touch throws soup in 3D');
+          await input('start', 'Enter'); await frame.waitForFunction(() => LP.States.current === 'paused');
+          await input('start', 'Enter'); await frame.waitForFunction(() => LP.States.current === 'playing');
+          if (output) await page.screenshot({ path: path.join(output, `factory-3d-${mobile ? 'mobile' : 'desktop'}.png`) });
+          // Set up at the exit using the build's own test peeks, then walk into it
+          // through normal keyboard/touch input to verify the 3D-to-2D handover.
+          await frame.evaluate(() => {
+            const R = GAME.Run3D, portal = R._objs().find(o => o.k === 'portal');
+            Object.assign(R.hero, { x: portal.x, z: portal.z - 1.1, y: R._seg(portal.z).h, vx: 0, vy: 0, vz: 0, onGround: true });
+          });
+          await input('up', 'ArrowUp', 300);
+          await frame.waitForFunction(() => !GAME.Run3D.active && GAME.Run3D.pop2D && LP.States.current === 'playing');
+          assert.equal(await frame.evaluate(() => GAME.Game.level), 1);
+          console.log(`${mobile ? 'mobile touch' : 'desktop keyboard'}: 3D movement, jump, attacks, soup, pause, and exit portal passed`);
+        }
         if (level === 1) {
           const y = await frame.evaluate(() => GAME.Game.hero.y);
           await pad(0); assert(await frame.evaluate(y => GAME.Game.hero.y < y, y), 'Gamepad jump');
