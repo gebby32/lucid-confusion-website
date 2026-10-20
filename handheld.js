@@ -118,7 +118,7 @@ export async function showHandhelds() {
   const current = ++generation;
   status.textContent = 'Loading games…'; status.hidden = false;
   try {
-    catalogPromise ||= fetch('./assets/handhelds/catalog.json').then(response => {
+    catalogPromise ||= fetch('./assets/handhelds/catalog.json', { cache: 'no-cache' }).then(response => {
       if (!response.ok) throw new Error('Catalog unavailable');
       return response.json();
     }).catch(error => { catalogPromise = null; throw error; });

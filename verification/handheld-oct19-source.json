@@ -3,12 +3,15 @@
     "id": "soup-squirrel-the-ninja-squire",
     "source": "C:/Retro Handhelds/Soup Squirrel The Ninja Squire/build/SoupSquirrel-portable.html",
     "file": "assets/handhelds/soup-squirrel-the-ninja-squire/index.html",
-    "sourceSha256": "e5352a8fbebdae615873a924d222cf60ecea56cd8498e2c7bb8f2b3770d46da1",
-    "sha256": "e5352a8fbebdae615873a924d222cf60ecea56cd8498e2c7bb8f2b3770d46da1",
+    "sourceSha256": "16f5e3dc7e9dbd86fe4be52c10c4d5cc4d92dffbe1014a636b4f8ada4bb26ae4",
+    "sha256": "16f5e3dc7e9dbd86fe4be52c10c4d5cc4d92dffbe1014a636b4f8ada4bb26ae4",
     "artSource": "C:/Retro Handhelds/Soup Squirrel The Ninja Squire/assets/handheld.webp",
     "artSha256": "c7e57378337ea5501f5a127f27ffb78eab852761e0d76c37be6e3bb480c2bfb6",
     "artEmbeddedExactly": true,
-    "thumbnail": "assets/handhelds/soup-squirrel-the-ninja-squire/thumbnail.webp"
+    "thumbnail": "assets/handhelds/soup-squirrel-the-ninja-squire/thumbnail.webp",
+    "buildCompletedUtc": "2026-10-20T03:32:17Z",
+    "buildDescription": "Completed portable build with The Second Helping bonus worlds and 21 secret cheat toggles",
+    "replacedSha256": "e5352a8fbebdae615873a924d222cf60ecea56cd8498e2c7bb8f2b3770d46da1"
   },
   {
     "id": "phoenix-thundercock-star-commander",

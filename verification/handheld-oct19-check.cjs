@@ -8,7 +8,8 @@ const inventory = JSON.parse(fs.readFileSync('verification/handheld-oct19-source
 const catalog = JSON.parse(fs.readFileSync('assets/handhelds/catalog.json'));
 const original = JSON.parse(execFileSync('git', ['show', 'HEAD:assets/handhelds/catalog.json']));
 const hash = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
-assert.deepEqual(catalog.slice(0, original.length), original, 'Existing games and ordering remain unchanged');
+const withoutVersion = games => games.map(game => ({ ...game, url: game.url.split('?')[0] }));
+assert.deepEqual(withoutVersion(catalog.slice(0, original.length)), withoutVersion(original), 'Existing games and ordering remain unchanged');
 for (const item of inventory) {
   assert.equal(hash(fs.readFileSync(item.source)), item.sourceSha256);
   assert.equal(hash(fs.readFileSync(item.file)), item.sourceSha256, 'Game copied byte-for-byte');
@@ -134,10 +135,13 @@ const snapshot = (page, name) => output ? page.screenshot({ path: path.join(outp
         assert.equal(await page.locator('iframe').count(), 0);
         assert.equal(await page.evaluate(() => document.fullscreenElement), null);
         await page.goForward(); await ready(page, route);
-        await page.waitForSelector('#handheld-player iframe');
+        const forward = await (await page.locator('#handheld-player iframe').elementHandle()).contentFrame();
+        await forward.waitForFunction(() => window.GAME && LP.States.current === 'title', null, { timeout: 45000 });
         await page.goBack(); await ready(page, '/retro-handheld/games');
         assert.equal(await page.locator('iframe').count(), 0);
         await page.goForward(); await ready(page, route);
+        const beforeReload = await (await page.locator('#handheld-player iframe').elementHandle()).contentFrame();
+        await beforeReload.waitForFunction(() => window.GAME && LP.States.current === 'title', null, { timeout: 45000 });
         await page.reload(); await ready(page, route);
         const refreshed = await (await page.locator('#handheld-player iframe').elementHandle()).contentFrame();
         await refreshed.waitForFunction(() => window.GAME && LP.States.current === 'title', null, { timeout:45000 });

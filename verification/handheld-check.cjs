@@ -60,7 +60,7 @@ const snapshot = async (page, name) => { if (output) await page.screenshot({ pat
         await gameFrame.waitForLoadState('load');
         await gameFrame.waitForFunction(() => [...document.images].every(image => image.complete && image.naturalWidth > 0) && document.querySelector('canvas'));
         if (game.id === 'the-circus') await gameFrame.waitForFunction(() => window.THREE && document.querySelector('#lp-3d'), { timeout: 30000 });
-        assert.equal(await gameFrame.title(), fs.readFileSync(game.url.slice(2),'utf8').match(/<title>(.*?)<\/title>/s)[1]);
+        assert.equal(await gameFrame.title(), fs.readFileSync(game.url.slice(2).split('?')[0],'utf8').match(/<title>(.*?)<\/title>/s)[1]);
         assert(!(await page.locator('#handheld-frame').isVisible()));
         assert(!(await page.locator('#arcade').isVisible()));
         const playerBounds = await page.locator('#handheld-player').boundingBox();
