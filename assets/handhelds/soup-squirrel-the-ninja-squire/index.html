@@ -236,9 +236,10 @@ window.LP = window.LP || {};
     },
     // Session memory backs every key, so progress survives for the session even where storage is
     // blocked (sandboxed iframes, private modes, full quota). localStorage still wins when it works.
-    mem: {},
+    mem: {}, stale: {},   // stale: keys whose last persistent write failed (quota) - memory is newer
     get(key, fallback) {
       const k = this.ns + '.' + key;
+      if (this.stale[k] && Object.prototype.hasOwnProperty.call(this.mem, k)) return JSON.parse(this.mem[k]);
       try { const raw = window.localStorage.getItem(k); if (raw !== null) return JSON.parse(raw); }
       catch (e) { /* blocked or corrupt: fall back to session memory */ }
       return Object.prototype.hasOwnProperty.call(this.mem, k) ? JSON.parse(this.mem[k]) : fallback;
@@ -246,10 +247,10 @@ window.LP = window.LP || {};
     set(key, value) {
       const k = this.ns + '.' + key, raw = JSON.stringify(value);
       this.mem[k] = raw;
-      try { window.localStorage.setItem(k, raw); return true; }
-      catch (e) { return false; }
+      try { window.localStorage.setItem(k, raw); delete this.stale[k]; return true; }
+      catch (e) { this.stale[k] = true; return false; }
     },
-    remove(key) { const k = this.ns + '.' + key; delete this.mem[k]; try { window.localStorage.removeItem(k); } catch (e) { /* ignore */ } }
+    remove(key) { const k = this.ns + '.' + key; delete this.mem[k]; delete this.stale[k]; try { window.localStorage.removeItem(k); } catch (e) { /* ignore */ } }
   };
 
   const BASE_SETTINGS = { sfx: 8, music: 6, contrast: 3, muted: false };
@@ -8406,9 +8407,16 @@ const Props = (function () {
       const mag = Cheats.on('magnet') ? 220 : 26;
       if ((it.kind === 'nut' || it.kind === 'dropnut' || (mag > 26 && it.kind === 'gold')) && d < mag && !p.dead && !(mag > 26 && it.kind === 'dropnut' && it.t < 12)) { const sp = mag > 26 ? 5 : 2.5; it.x += dx / d * sp; it.y += dy / d * sp; }
       if (!p.dead && Math.abs(dx) < 11 && Math.abs(dy) < 16 && (it.kind !== 'dropnut' || it.t > 12)) { collect(it, p); return true; }
+      emit(it);
       return false;
     });
   };
+  // idle sparkle / steam of a visible collectible (was spawned while drawing, so a paused screen kept adding it)
+  function emit(it) {
+    if (!World.onScreen(it.x, it.y, 20)) return;
+    if (it.kind === 'gold') { if (it.t % 10 === 0) FXS.nutSparkle(it.x + LP.rand(-6, 6), it.y - 8 + LP.rand(-6, 6)); }
+    else if ((it.kind === 'soup' || it.kind === 'heart' || it.kind === 'ramen') && it.t % 12 === 0) FXS.spawn({ x: it.x + LP.rand(-4, 4), y: it.y - 12, vy: -0.4, g: -0.01, life: 24, col: 'rgba(255,255,255,0.5)', size: 2, kind: 'steam' });
+  }
   function collect(it, p) {
     switch (it.kind) {
       case 'nut': case 'dropnut': Game.addNuts(1); LP.Audio.play('nut'); FXS.nutSparkle(it.x, it.y - 6); break;
@@ -8424,9 +8432,9 @@ const Props = (function () {
       if (it.kind === 'dropnut' && it.life < 90 && it.life % 6 < 3) continue;
       const bob = it.float ? Math.round(Math.sin(it.t * 0.08) * 2) : 0, x = it.x - cx, y = it.y - cy + bob;
       if (it.kind === 'nut' || it.kind === 'dropnut') Gfx.spr(ctx, acorn(0, Math.floor(it.t / 8)), x, y);
-      else if (it.kind === 'gold') { FXS.light(it.x, it.y - 6, 22, '#ffd23a', 0.35); Gfx.spr(ctx, acorn(1, Math.floor(it.t / 6)), x, y, { sx: 1.5, sy: 1.5 }); if (it.t % 10 === 0) FXS.nutSparkle(it.x + LP.rand(-6, 6), it.y - 8 + LP.rand(-6, 6)); }
-      else if (it.kind === 'soup') { FXS.light(it.x, it.y - 6, 18, Soup.TYPES[it.soup].colL, 0.3); Gfx.spr(ctx, soupIcon(it.soup), x, y); if (it.t % 12 === 0) FXS.spawn({ x: it.x + LP.rand(-4, 4), y: it.y - 12, vy: -0.4, g: -0.01, life: 24, col: 'rgba(255,255,255,0.5)', size: 2, kind: 'steam' }); }
-      else if (it.kind === 'heart' || it.kind === 'ramen') { Gfx.spr(ctx, it.kind === 'heart' ? heart() : soupIcon('ramen'), x, y); if (it.t % 12 === 0) FXS.spawn({ x: it.x + LP.rand(-4, 4), y: it.y - 12, vy: -0.4, g: -0.01, life: 24, col: 'rgba(255,255,255,0.5)', size: 2, kind: 'steam' }); }
+      else if (it.kind === 'gold') { FXS.light(it.x, it.y - 6, 22, '#ffd23a', 0.35); Gfx.spr(ctx, acorn(1, Math.floor(it.t / 6)), x, y, { sx: 1.5, sy: 1.5 }); }
+      else if (it.kind === 'soup') { FXS.light(it.x, it.y - 6, 18, Soup.TYPES[it.soup].colL, 0.3); Gfx.spr(ctx, soupIcon(it.soup), x, y); }
+      else if (it.kind === 'heart' || it.kind === 'ramen') { Gfx.spr(ctx, it.kind === 'heart' ? heart() : soupIcon('ramen'), x, y); }
     }
   };
 
@@ -8971,7 +8979,7 @@ const Run3D = (function () {
   // ---------------------------------------------------------------- start / stop / respawn
   R.start = function (L) {
     build(T3[L.track3d]());
-    R.active = true; R.phase = 'enter'; R.t = 0; R.msg = null; R.swirl = 1;
+    R.active = true; R.phase = 'enter'; R.t = 0; R.t2 = 0; R.landed = false; R.portal = null; R.msg = null; R.swirl = 1;
     parts = []; pops = []; bowls = [];
     R.cp = { x: 0, z: 4.5 };
     h = R.hero = newHero(0, 4.5);
@@ -8986,6 +8994,7 @@ const Run3D = (function () {
   }
   R.respawn = function () {
     h = R.hero = newHero(R.cp.x, R.cp.z);
+    if (Game.hero) Game.hero.dead = false;   // never leave the waiting 2D hero marked dead
     h.inv = 120;
     Game.hearts = Game.maxHearts;
     Soup.reset();
@@ -9005,7 +9014,8 @@ const Run3D = (function () {
   const near = (o, r, dy) => Math.abs(o.x - h.x) < r && Math.abs(o.z - h.z) < r && Math.abs((o.y + (o.cy || 0.4)) - (h.y + 0.4)) < (dy || 0.7);
   const KIND = {
     nut: { touch(o) { o.dead = true; Game.addNuts(1); LP.Audio.play('nut'); burst(o, '#ffd35a', 4); } },
-    gold: { touch(o) { o.dead = true; Game.goldAcorn({ idx: o.idx, x: -999, y: -999 }); burst(o, '#ffd23a', 18); pop(o, 'GOLDEN!', '#ffd23a'); } },
+    gold: { update(o) { if (R.t % 10 === 0) parts.push({ x: o.x + LP.rand(-0.2, 0.2), y: o.y + 0.5, z: o.z, vx: 0, vy: 0.01, vz: 0, col: '#fff3a0', life: 16 }); },
+      touch(o) { o.dead = true; Game.goldAcorn({ idx: o.idx, x: -999, y: -999 }); burst(o, '#ffd23a', 18); pop(o, 'GOLDEN!', '#ffd23a'); } },
     soup: { touch(o) { o.dead = true; Soup.give(o.soup); LP.Audio.play('powerup'); burst(o, Soup.TYPES[o.soup].colL, 10); } },
     heart: { touch(o) { o.dead = true; Game.heal(2); LP.Audio.play('heal'); Voice.quip('sq_heal', true); pop(o, "GRANDMA'S SOUP!", '#ffe8a0'); } },
     ramen: { touch(o) { o.dead = true; Soup.ammo = Soup.max; LP.Audio.play('slurp'); pop(o, 'REFILL!', '#ffd35a'); } },
@@ -9087,7 +9097,7 @@ const Run3D = (function () {
     if (h.dead || h.inv > 0 || Game.cheat || Cheats.on('invincible') || R.phase !== 'run') return;
     if (Cheats.on('thickfur')) dmg *= 0.5;
     Game.hearts -= dmg; Game.lstats.damage += dmg;
-    h.inv = 100; h.hurtT = 18; h.atk = null; h.swing = null; h.vz = -0.07; h.vy = 0.08; h.onGround = false;
+    h.inv = 100; h.hurtT = 18; h.atk = null; h.buffered = null; h.swing = null; h.vz = -0.07; h.vy = 0.08; h.onGround = false;
     LP.Audio.play('hurt'); LP.FX.hitstop(5); if (LP.Settings.get('shake')) LP.FX.shake(3, 10);
     Game.combo.n = 0; Game.combo.t = 0;
     if (Game.hearts <= 0) { Game.hearts = 0; die(); return; }
@@ -9112,6 +9122,8 @@ const Run3D = (function () {
     const d = KIND[o.k];
     if (o.dead) return false;
     if (d.blocks && how === 'punch' && !o.soaked) { LP.Audio.play('clank'); pop(o, 'CLANK!', '#c8d0dc'); h.vz = -0.05; return false; }
+    if (Cheats.on('strength')) dmg *= 3;
+    if (Cheats.on('onepunch')) dmg *= 999;
     o.hp -= dmg; o.flash = 6;
     LP.Audio.play(how === 'kick' ? 'kick' : how === 'soup' ? 'splash' : 'punch');
     if (o.hp <= 0) {
@@ -9132,8 +9144,14 @@ const Run3D = (function () {
     if (R.msg) R.msg.t++;
     if (Game.combo.t > 0 && --Game.combo.t === 0) Game.combo.n = 0;
     for (const o of objs) { if (o.dead) { if (o.k === 'bubble' && --o.rt <= 0) o.dead = false; if (o.flyT > 0) { o.flyT--; o.x += o.fvx; o.y += o.fvy; o.z += o.fvz; o.fvy -= 0.012; } continue; } const d = KIND[o.k]; if (d && d.update && Math.abs(o.z - h.z) < 40) d.update(o); if (o.flash > 0) o.flash--; }
-    LP.prune(objs, (o) => o.dead && !(o.flyT > 0) && o.k === 'pin');
+    LP.prune(objs, (o) => o.dead && !(o.flyT > 0) && (o.k === 'pin' || o.k === 'toast'));
+    // pit bubbles (were spawned while drawing, so a paused screen kept adding them)
+    if (!(R.t % 40)) for (let s = Math.max(0, Math.floor(cam.z + NEAR)), s1 = Math.min(segs.length - 1, Math.floor(cam.z + DRAW)); s <= s1; s++) {
+      const S = segs[s];
+      if ((S.hole || S.w < HW) && Math.random() < 0.3) parts.push({ x: cxAt(s) + LP.rand(-1, 1), y: S.h - 0.8, z: s + 0.5, vx: 0, vy: 0.03, vz: 0, col: '#fff0a0', life: 20 });
+    }
     LP.prune(parts, (p) => { p.x += p.vx; p.y += p.vy; p.z += p.vz; p.vy -= 0.006; return --p.life <= 0; });
+    if (parts.length > 400) parts.splice(0, parts.length - 400);
     LP.prune(pops, (p) => ++p.t > 50);
     updateBowls();
     if (R.phase === 'enter') enter();
@@ -9223,12 +9241,20 @@ const Run3D = (function () {
     if (h.onGround && !s0.hole && Math.abs(h.x - cxAt(h.z)) < s0.w && ++h.safeT > 20) { h.safe = { x: h.x, z: h.z }; h.safeT = 0; }
     if (h.y < floorH(h.z) - 1.25) { pit(); return; }
     // attacks
-    if (h.atk) { h.atkT++; attackHits(); if (h.atkT > (h.atk === 'kick' ? 24 : 14)) h.atk = null; }
-    else if (I.pressed('punch')) { h.atk = 'punch'; h.atkT = 0; h.hitIds = new Set(); LP.Audio.play('swish'); }
-    else if (I.pressed('kick')) { h.atk = 'kick'; h.atkT = 0; h.hitIds = new Set(); LP.Audio.play('tailspin'); }
+    const startAtk = (k) => { h.atk = k; h.atkT = 0; h.hitIds = new Set(); LP.Audio.play(k === 'kick' ? 'tailspin' : 'swish'); };
+    if (h.atk) {
+      h.atkT++;
+      if (I.pressed('punch')) h.buffered = 'punch'; else if (I.pressed('kick')) h.buffered = 'kick';   // queue the next one
+      attackHits();
+      if (h.atkT > (h.atk === 'kick' ? 24 : 14)) { h.atk = null; if (h.buffered) { startAtk(h.buffered); h.buffered = null; } }
+    }
+    else if (I.pressed('punch')) startAtk('punch');
+    else if (I.pressed('kick')) startAtk('kick');
     // soup: tap = throw, hold (or NOODLE) near a hook = vault
     const hook = hookInRange();
     if (I.pressed('noodle') && hook) { vault(hook); return; }
+    // a tap pressed AND released before this step (very short, or made during hit-stop) still throws
+    if (I.pressed('soup') && !I.held('soup') && h.soupHold === 0) throwBowl();
     if (I.held('soup')) { if (++h.soupHold === 9 && hook) { vault(hook); h.soupHold = 99; return; } }
     else { if (h.soupHold > 0 && h.soupHold < 9) throwBowl(); h.soupHold = 0; }
     // touching things
@@ -9299,7 +9325,7 @@ const Run3D = (function () {
     // if the arc would end over the gap but solid floor is just beyond, stretch to it
     for (let k = 0.25; land === null && k <= 4; k += 0.25) if (groundAt(o.x, z1 + k) !== null && !objs.some((q) => q.k === 'hook' && q.z > o.z + 0.5 && q.z < z1 + k)) { z1 += k; land = groundAt(o.x, z1); }
     h.swing = { o, t: 0, dur: 38, x0: h.x, y0: h.y, z0: h.z, z1, x1: o.x, y1: land !== null ? land + 0.25 : h.y + 0.4 };
-    h.atk = null; h.onGround = false; h.soupHold = 99;
+    h.atk = null; h.buffered = null; h.onGround = false; h.soupHold = 99;
     LP.Audio.play('noodle');
     if (LP.chance(0.5)) Voice.quip(LP.pick(['sq_noodle1', 'sq_noodle4', 'sq_noodle3']));
   }
@@ -9457,7 +9483,6 @@ const Run3D = (function () {
       const rz = s + ((R.t * 0.02 + s * 0.37) % 1);
       quad(ctx, P3(cxAt(rz) - HW, by + 0.01, rz), P3(cxAt(rz) + HW, by + 0.01, rz), P3(cxAt(rz) + HW, by + 0.01, rz + 0.12), P3(cxAt(rz) - HW, by + 0.01, rz + 0.12), shade(C.liq[1], f));
       for (let i = 0; i < 3; i++) { const q = P3(ca + Math.sin(s * 3.1 + i * 2.3 + R.t * 0.01) * 1.1, by, s + 0.2 + i * 0.3); if (q) { ctx.fillStyle = shade(C.bub, f); ctx.beginPath(); ctx.ellipse(q.x, q.y, 6 * q.s, 2 * q.s, 0, 0, 7); ctx.fill(); } }
-      if (!(R.t % 40) && Math.random() < 0.3) parts.push({ x: ca + LP.rand(-1, 1), y: by + 0.1, z: s + 0.5, vx: 0, vy: 0.03, vz: 0, col: '#fff0a0', life: 20 });
     }
     if (!S.hole) {
       const w = S.w, lanes = w < HW ? 1 : 4;
@@ -9497,7 +9522,7 @@ const Run3D = (function () {
     const fl = o.flash > 0 ? '#ffffff' : undefined;
     switch (o.k) {
       case 'nut': bill(ctx, Props.icons.acorn(0, Math.floor((t + o.z * 7) / 8)), o.x, o.y + 0.2 + Math.sin(t * 0.08 + o.z) * 0.05, o.z, { scale: 1.6 }); break;
-      case 'gold': { bill(ctx, Props.icons.acorn(1, Math.floor(t / 6)), o.x, o.y + 0.2, o.z, { scale: 2.6 }); if (t % 10 === 0) parts.push({ x: o.x + LP.rand(-0.2, 0.2), y: o.y + 0.5, z: o.z, vx: 0, vy: 0.01, vz: 0, col: '#fff3a0', life: 16 }); break; }
+      case 'gold': { bill(ctx, Props.icons.acorn(1, Math.floor(t / 6)), o.x, o.y + 0.2, o.z, { scale: 2.6 }); break; }
       case 'soup': bill(ctx, Props.icons.soupIcon(o.soup), o.x, o.y + 0.15, o.z, { scale: 1.8 }); break;
       case 'heart': bill(ctx, Props.icons.heart(), o.x, o.y + 0.15, o.z, { scale: 1.8 }); break;
       case 'ramen': bill(ctx, Props.icons.soupIcon('ramen'), o.x, o.y + 0.15, o.z, { scale: 1.8 }); break;
@@ -9928,7 +9953,7 @@ const Run3D = (function () {
   });
 
   // read-only peeks for the dev test bot (tools/test-helpers.js)
-  R._seg = seg; R._cx = cxAt; R._hook = () => hookInRange(); R._objs = () => objs;
+  R._seg = seg; R._cx = cxAt; R._hook = () => hookInRange(); R._objs = () => objs; R._parts = () => parts;
   return R;
 })();
 
@@ -12037,7 +12062,11 @@ const Screens = (function () {
           else if (it === 'SETTINGS') LP.States.go('settings', 'paused');
           else if (it === 'HOW TO PLAY') LP.States.go('howto', 'paused');
           else if (it === 'CHEATS') LP.States.go('cheats', 'paused');
-          else if (it === 'RESTART FROM CHECKPOINT') { if (!Game.hero.dead) { Game.hero.dead = true; Game.afterDeath(); } LP.States.go(LP.States.current === 'gameover' ? 'gameover' : 'playing'); }
+          else if (it === 'RESTART FROM CHECKPOINT') {
+            const live = Run3D.active ? Run3D.hero : Game.hero;   // in 3D the 2D hero only waits off-stage
+            if (live && !live.dead) { if (!Run3D.active) Game.hero.dead = true; Game.afterDeath(); }
+            LP.States.go(LP.States.current === 'gameover' ? 'gameover' : 'playing');
+          }
           else if (it === 'QUIT TO TITLE') { LP.Audio.stopMusic(); Voice.stop(); LP.States.go('menu'); }
         }
       },

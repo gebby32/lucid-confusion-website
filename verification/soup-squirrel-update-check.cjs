@@ -115,6 +115,21 @@ async function warmCache(browser) {
         await Promise.all(pages.map(src => LP.loadImage(src).decode()));
         return pages.length;
       }), 4, 'All embedded 3D squirrel atlases decode');
+      // Existing saved progress must not override newer session progress after a quota failure.
+      const quota = await frame.evaluate(() => {
+        const original = Storage.prototype.setItem;
+        LP.Store.set('progress', 0);
+        try {
+          Storage.prototype.setItem = () => { throw new DOMException('Test quota', 'QuotaExceededError'); };
+          const saved = LP.Store.set('progress', 2);
+          const sessionProgress = Screens.progress();
+          const persistedProgress = JSON.parse(localStorage.getItem(LP.Store.ns + '.progress'));
+          Storage.prototype.setItem = original;
+          const recovered = LP.Store.set('progress', 3);
+          return { saved, sessionProgress, persistedProgress, recovered, recoveredProgress: Screens.progress() };
+        } finally { Storage.prototype.setItem = original; LP.Store.remove('progress'); }
+      });
+      assert.deepEqual(quota, { saved: false, sessionProgress: 2, persistedProgress: 0, recovered: true, recoveredProgress: 3 });
       await page.keyboard.press('Enter');
       await frame.waitForFunction(() => LP.States.current === 'menu');
       for (const key of ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight']) {
@@ -180,15 +195,32 @@ async function warmCache(browser) {
           assert(await frame.evaluate(() => !GAME.Run3D.hero.onGround), 'Keyboard/touch jumps in 3D');
           await input('punch', 'z', 40);
           assert.equal(await frame.evaluate(() => GAME.Run3D.hero.atk), 'punch');
-          await frame.waitForFunction(() => !GAME.Run3D.hero.atk);
+          // Press kick during the punch: the completed build must queue and perform it.
           await input('kick', 'x', 40);
-          assert.equal(await frame.evaluate(() => GAME.Run3D.hero.atk), 'kick');
+          await frame.waitForFunction(() => GAME.Run3D.hero.atk === 'kick');
+          await frame.waitForFunction(() => !GAME.Run3D.hero.atk);
           const ammo = await frame.evaluate(() => GAME.Soup.ammo);
-          await input('soup', 'c', 40);
-          assert.equal(await frame.evaluate(() => GAME.Soup.ammo), ammo - 1, 'Keyboard/touch throws soup in 3D');
+          await input('soup', 'c', 0);
+          assert.equal(await frame.evaluate(() => GAME.Soup.ammo), ammo - 1, 'A very short keyboard/touch tap throws soup in 3D');
           await input('start', 'Enter'); await frame.waitForFunction(() => LP.States.current === 'paused');
+          // Freeze on an emission tick so repeated paused renders expose particle accumulation.
+          const pausedParts = await frame.evaluate(() => { GAME.Run3D.t = 40; return GAME.Run3D._parts().length; });
+          await page.waitForTimeout(400);
+          assert.equal(await frame.evaluate(() => GAME.Run3D._parts().length), pausedParts, 'Paused rendering does not add particles');
           await input('start', 'Enter'); await frame.waitForFunction(() => LP.States.current === 'playing');
           if (output) await page.screenshot({ path: path.join(output, `${section}-3d-${mobile ? 'mobile' : 'desktop'}.png`) });
+          // Restart twice through the real pause menu; a stale off-stage hero must not block it.
+          for (let restart = 0; restart < 2; restart++) {
+            const lives = await frame.evaluate(() => GAME.Game.lives);
+            await input('start', 'Enter'); await frame.waitForFunction(() => LP.States.current === 'paused');
+            const steps = await frame.evaluate(() => Screens.pauseItems().indexOf('RESTART FROM CHECKPOINT'));
+            for (let step = 0; step < steps; step++) await input('down', 'ArrowDown', 40);
+            await input('punch', 'z', 40);
+            await frame.waitForFunction(() => LP.States.current === 'playing' && GAME.Run3D.hero.onGround);
+            assert.equal(await frame.evaluate(() => GAME.Game.lives), lives - 1, 'Each checkpoint restart consumes one life');
+            assert(await frame.evaluate(() => !GAME.Game.hero.dead && !GAME.Run3D.hero.dead), 'Both hero states remain alive');
+            assert(await frame.evaluate(() => Math.abs(GAME.Run3D.hero.z - GAME.Run3D.cp.z) < .1), 'Restart returns to the 3D checkpoint');
+          }
           // Set up at the exit using the build's own test peeks, then walk into it
           // through normal keyboard/touch input to verify the 3D-to-2D handover.
           await frame.evaluate(() => {
@@ -199,7 +231,7 @@ async function warmCache(browser) {
           await frame.waitForFunction(() => !GAME.Run3D.active && GAME.Run3D.pop2D && LP.States.current === 'playing');
           assert.equal(await frame.evaluate(() => GAME.Game.level), level - 1);
           assert.equal(await frame.evaluate(() => HeroHD.on()), level >= 4, 'Squirrel presentation survives the return to 2D');
-          console.log(`${mobile ? 'mobile touch' : 'desktop keyboard'}: ${section} 3D movement, jump, attacks, soup, pause, and exit portal passed`);
+          console.log(`${mobile ? 'mobile touch' : 'desktop keyboard'}: ${section} 3D movement, jump, queued attacks, quick soup tap, paused effects, repeated checkpoint restart, and exit portal passed`);
         }
         if (level === 1) {
           const y = await frame.evaluate(() => GAME.Game.hero.y);
@@ -215,7 +247,7 @@ async function warmCache(browser) {
       await page.locator('#handheld-back').click(); await ready(page, '/retro-handheld/games');
       assert(frame.isDetached());
       assert.deepEqual(errors, []);
-      console.log(`${mobile ? 'mobile emulation' : 'desktop'}: byte hashes, 21-cheat menu, simulated gamepad, clean unload, all 10 worlds passed: ${levels.join('; ')}`);
+      console.log(`${mobile ? 'mobile emulation' : 'desktop'}: byte hashes, storage quota recovery, 21-cheat menu, simulated gamepad, clean unload, all 10 worlds passed: ${levels.join('; ')}`);
       await context.close();
     }
   } finally { await browser.close(); }
