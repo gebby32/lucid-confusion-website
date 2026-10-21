@@ -3,15 +3,15 @@
     "id": "soup-squirrel-the-ninja-squire",
     "source": "C:/Retro Handhelds/Soup Squirrel The Ninja Squire/build/SoupSquirrel-portable.html",
     "file": "assets/handhelds/soup-squirrel-the-ninja-squire/index.html",
-    "sourceSha256": "bbfab25760cb3978b3f852ab7cb2da81a54e8b296973727c28e3955046e42117",
-    "sha256": "bbfab25760cb3978b3f852ab7cb2da81a54e8b296973727c28e3955046e42117",
+    "sourceSha256": "57949432524de20a04e27559588d39b081642430f586c69fbaa7984ada58acf1",
+    "sha256": "57949432524de20a04e27559588d39b081642430f586c69fbaa7984ada58acf1",
     "artSource": "C:/Retro Handhelds/Soup Squirrel The Ninja Squire/assets/handheld.webp",
     "artSha256": "c7e57378337ea5501f5a127f27ffb78eab852761e0d76c37be6e3bb480c2bfb6",
     "artEmbeddedExactly": true,
     "thumbnail": "assets/handhelds/soup-squirrel-the-ninja-squire/thumbnail.webp",
-    "buildCompletedUtc": "2026-10-21T07:21:33Z",
-    "buildDescription": "Completed portable build with expanded brawling, voice lines, dialogue fixes, and in-game logo",
-    "replacedSha256": "c4e3c84c82539b9c93d5838570039435c1e450a75da973acb885d2e1eaa51961"
+    "buildCompletedUtc": "2026-10-21T08:24:49Z",
+    "buildDescription": "Completed portable build with Gary's Academy 2D and 3D tutorial classes",
+    "replacedSha256": "bbfab25760cb3978b3f852ab7cb2da81a54e8b296973727c28e3955046e42117"
   },
   {
     "id": "phoenix-thundercock-star-commander",
