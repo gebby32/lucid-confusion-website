@@ -115,6 +115,11 @@ async function warmCache(browser) {
         await Promise.all(pages.map(src => LP.loadImage(src).decode()));
         return pages.length;
       }), 4, 'All embedded 3D squirrel atlases decode');
+      assert(await frame.evaluate(async () => {
+        const logo = LP.loadImage('assets/lucid-logo.png');
+        await logo.decode();
+        return logo.naturalWidth > 0 && logo.naturalHeight > 0;
+      }), 'New in-game logo decodes from the portable bundle');
       // Existing saved progress must not override newer session progress after a quota failure.
       const quota = await frame.evaluate(() => {
         const original = Storage.prototype.setItem;
@@ -140,6 +145,14 @@ async function warmCache(browser) {
       await frame.waitForFunction(() => LP.States.current === 'cheats');
       await page.keyboard.press('z'); await frame.waitForFunction(() => Cheats.on('invincible'));
       await page.keyboard.press('z'); await frame.waitForFunction(() => !Cheats.on('invincible'));
+      await frame.waitForFunction(() => LP.Audio.ctx?.state === 'running');
+      assert(await frame.evaluate(() => {
+        const ids = ['sq_slam1', 'sq_stomp1', 'gary_dip6'];
+        for (const id of ids) Voice.play(id);
+        const decoded = ids.every(id => Voice.buffers[id]?.length > 0 && Voice.text(id).length > 0);
+        Voice.stop();
+        return decoded;
+      }), 'New combat and dialogue voice lines decode and play');
 
       const pad = async (button, axis = 0, duration = 120, axisY = 0) => {
         await frame.evaluate(({ button, axis, axisY }) => { testPad.axes = [axis, axisY]; if (button !== null) testPad.buttons[button] = { pressed: true, value: 1 }; }, { button, axis, axisY });
@@ -239,6 +252,12 @@ async function warmCache(browser) {
           await pad(2, 0, 50); assert(await frame.evaluate(() => GAME.Game.hero.atkId > 0), 'Gamepad punch');
           await pad(9); await frame.waitForFunction(() => LP.States.current === 'paused');
           await pad(9); await frame.waitForFunction(() => LP.States.current === 'playing');
+          await frame.waitForFunction(() => GAME.Game.hero.onGround && !GAME.Game.hero.atk);
+          await input('jump', 'Space', 100);
+          await input('down', 'ArrowDown', 20);
+          assert(await frame.evaluate(() => !!GAME.Game.hero.pound), 'Native keyboard/touch starts the new airborne slam');
+          await frame.waitForFunction(() => GAME.Game.hero.onGround && !GAME.Game.hero.pound && GAME.Game.hero.guard > 0);
+          console.log(`${mobile ? 'mobile touch' : 'desktop keyboard'}: airborne slam lands successfully`);
         }
         levels.push(await frame.evaluate(() => GAME.Game.lvl.name));
         if (output && level === 5) await page.screenshot({ path: path.join(output, `squirrel-3d-side-${mobile ? 'mobile' : 'desktop'}.png`) });
