@@ -39,7 +39,7 @@ const errors = [];
         const frame = await (await iframe.elementHandle()).contentFrame(); await frame.waitForLoadState('load');
         assert.equal(await page.locator('iframe').count(), 1);
         await frame.evaluate(() => window.focus()); await page.keyboard.press('f');
-        await page.waitForFunction(() => !!document.fullscreenElement);
+        await page.waitForFunction(() => !!document.querySelector('.game-expanded'));
         await back(page, grid);
         assert(frame.isDetached()); assert.equal(await page.locator('iframe').count(), 0);
         assert.equal(await page.evaluate(() => document.fullscreenElement), null);

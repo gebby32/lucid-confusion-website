@@ -1,5 +1,6 @@
 import { navigate, routeBack, gamePath } from './router.js';
 import { typePreviewText } from './assets/arcade/preview-text.js';
+import { createGameFullscreen } from './game-fullscreen.js';
 const frame = document.querySelector('#handheld-frame');
 const panel = document.querySelector('#handheld-panel');
 const grid = document.querySelector('#handheld-grid');
@@ -11,8 +12,8 @@ const gameBack = document.querySelector('#handheld-back');
 const fullscreenStatus = document.querySelector('#handheld-fullscreen-status');
 let shown = false, generation = 0, selected = null, selectedLink = null;
 let catalogPromise;
-let fullscreenPending = false;
-let fullscreenOperation = Promise.resolve(), returning = false;
+let returning = false;
+const fullscreen = createGameFullscreen({ player, viewport: gameViewport, status: fullscreenStatus, button: document.querySelector('#handheld-fullscreen'), handheld: true });
 
 export const isHandheldPlaying = () => selected !== null;
 
@@ -54,41 +55,21 @@ function returnKey(event) {
 
 window.addEventListener('keydown', returnKey, true);
 
-async function fullscreenKey(event) {
+function fullscreenKey(event) {
   if (!selected || returning || event.defaultPrevented || event.repeat || event.ctrlKey || event.metaKey || event.altKey
     || event.key.toLowerCase() !== 'f'
     || event.target.closest?.('input, textarea, select, [contenteditable="true"]')) return;
   const gameWindow = gameViewport.querySelector('iframe')?.contentWindow;
-  if (typingInitials(gameWindow) || fullscreenPending) return;
-  if (!player.requestFullscreen || !document.fullscreenEnabled) {
-    fullscreenStatus.textContent = 'Fullscreen is not supported in this browser.';
-    return;
-  }
+  if (typingInitials(gameWindow)) return;
   event.preventDefault();
-  fullscreenPending = true;
-  fullscreenStatus.textContent = '';
-  try {
-    fullscreenOperation = document.fullscreenElement ? document.exitFullscreen() : player.requestFullscreen();
-    await fullscreenOperation;
-  } catch {
-    fullscreenStatus.textContent = 'Fullscreen is unavailable. The game remains in window view.';
-  } finally {
-    fullscreenPending = false;
-    if (selected) gameViewport.querySelector('iframe')?.contentWindow?.focus();
-  }
+  fullscreen.toggle();
 }
 window.addEventListener('keydown', fullscreenKey);
-document.addEventListener('fullscreenchange', () => {
-  if (selected) gameViewport.querySelector('iframe')?.contentWindow?.focus();
-});
 gameBack.addEventListener('click', () => backToHandhelds());
 
 function stopGame() {
-  // Leave fullscreen before restoring the arcade. Removing the iframe stops
-  // all of the selected game's audio, animation, and keyboard listeners.
-  if (document.fullscreenElement && (document.fullscreenElement === player || player.contains(document.fullscreenElement))) {
-    document.exitFullscreen().catch(() => {});
-  }
+  // Reset presentation before unloading the game on navigation only.
+  fullscreen.reset();
   gameViewport.replaceChildren(); player.hidden = true; selected = null;
   document.body.classList.remove('handheld-playing');
   fullscreenStatus.textContent = '';
@@ -157,8 +138,6 @@ export function backToHandhelds() {
 export async function stopHandheld() {
   returning = true;
   try {
-    if (fullscreenPending) await fullscreenOperation.catch(() => {});
-    if (document.fullscreenElement) await document.exitFullscreen();
     stopGame();
     grid.hidden = false;
     selectedLink?.focus({ preventScroll: true });
@@ -185,6 +164,7 @@ export async function launchHandheld(id) {
   iframe.src = game.url;
   iframe.addEventListener('load', () => {
     if (selected !== game) return;
+    fullscreen.attach(iframe);
     // Bubble listener runs after the game's own handlers, so handled
     // keys stay with the game. The iframe is our same-origin portable file.
     iframe.contentWindow.addEventListener('keydown', fullscreenKey);

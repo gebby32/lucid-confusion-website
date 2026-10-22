@@ -79,17 +79,17 @@ for (const item of JSON.parse(fs.readFileSync('verification/retro-arcade-source.
     // Original input mapping still receives a held directional key.
     await page.keyboard.down('ArrowRight');assert(await game.evaluate(()=>LP.Input.downKeys.has('ArrowRight')));await page.keyboard.up('ArrowRight');
     const key=['slubble-slobble','grand-theft-sloth','sleavis-and-sloth-head-do-america'].includes(item.id)?'F2':'f';
-    if(item.id==='sleavis-and-sloth-head-do-america') {await page.keyboard.down('f');assert(await game.evaluate(()=>LP.Input.held('use')));assert.equal(await page.evaluate(()=>document.fullscreenElement),null);await page.keyboard.up('f');}
-    if(item.id==='grand-theft-sloth') {await page.keyboard.down('f');assert(await game.evaluate(()=>LP.Input.held('enter')));assert.equal(await page.evaluate(()=>document.fullscreenElement),null);await page.keyboard.up('f');}
-    if(item.id==='slubble-slobble') {await page.keyboard.down('f');assert(await game.evaluate(()=>LP.Input.held('p2fire')));assert.equal(await page.evaluate(()=>document.fullscreenElement),null);await page.keyboard.up('f');}
-    await page.keyboard.press(key);await page.waitForFunction(()=>document.fullscreenElement?.id==='retro-player');
+    if(item.id==='sleavis-and-sloth-head-do-america') {await page.keyboard.down('f');assert(await game.evaluate(()=>LP.Input.held('use')));assert.equal(await page.evaluate(()=>document.querySelector('.game-expanded')),null);await page.keyboard.up('f');}
+    if(item.id==='grand-theft-sloth') {await page.keyboard.down('f');assert(await game.evaluate(()=>LP.Input.held('enter')));assert.equal(await page.evaluate(()=>document.querySelector('.game-expanded')),null);await page.keyboard.up('f');}
+    if(item.id==='slubble-slobble') {await page.keyboard.down('f');assert(await game.evaluate(()=>LP.Input.held('p2fire')));assert.equal(await page.evaluate(()=>document.querySelector('.game-expanded')),null);await page.keyboard.up('f');}
+    await page.keyboard.press(key);await page.waitForFunction(()=>document.querySelector('#retro-player').classList.contains('game-expanded'));
     assert(await page.locator('#retro-back').isVisible());
-    await page.keyboard.press(key);await page.waitForFunction(()=>!document.fullscreenElement);
+    await page.keyboard.press(key);await page.waitForFunction(()=>!document.querySelector('.game-expanded'));
     if(output)await page.screenshot({path:output+'/retro-'+item.id+'-'+size.width+'.png'});
-    await page.keyboard.press(key);await page.waitForFunction(()=>document.fullscreenElement?.id==='retro-player');
+    await page.keyboard.press(key);await page.waitForFunction(()=>document.querySelector('#retro-player').classList.contains('game-expanded'));
     if(mobile)await page.locator('#retro-back').tap();else await page.locator('#retro-back').click();
     await page.waitForFunction(()=>!document.querySelector('#retro-game-viewport iframe'));
-    assert.equal(await page.evaluate(()=>document.fullscreenElement),null);assert(await page.locator('#retro-grid').isVisible());assert(game.isDetached());
+    assert.equal(await page.evaluate(()=>document.querySelector('.game-expanded')),null);assert(await page.locator('#retro-grid').isVisible());assert(game.isDetached());
     const loaded=requests.slice(start).filter(u=>u.includes('/retro-arcade/games/'));
     assert(loaded.length>0);assert(loaded.every(u=>u.includes('/games/'+item.id+'/')));
     console.log(size.width+': '+item.title+' lazy launch, native scaling/input, fullscreen, return/unload passed');

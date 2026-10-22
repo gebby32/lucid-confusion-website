@@ -59,12 +59,12 @@ const url = process.env.PREVIEW_URL || 'http://127.0.0.1:61863/';
       await game.evaluate(() => { window.__escapeReceived = 0; window.addEventListener('keydown', e => { if (e.key === 'Escape') window.__escapeReceived++; }); window.focus(); });
       await page.keyboard.press('Escape'); assert.equal(await game.evaluate(() => window.__escapeReceived), 1);
       assert.equal(await page.locator('iframe').count(), 1);
-      await page.keyboard.press('f'); await page.waitForFunction(() => document.fullscreenElement?.id === 'handheld-player');
-      await page.keyboard.press('f'); await page.waitForFunction(() => !document.fullscreenElement);
+      await page.keyboard.press('f'); await page.waitForFunction(() => document.querySelector('#handheld-player').classList.contains('game-expanded'));
+      await page.keyboard.press('f'); await page.waitForFunction(() => !document.querySelector('.game-expanded'));
       if (mobile) await page.locator('#handheld-back').tap(); else await page.locator('#handheld-back').click(); await returned();
       for (const method of ['button', 'Backspace']) {
         game = await open();
-        await page.keyboard.press('f'); await page.waitForFunction(() => document.fullscreenElement?.id === 'handheld-player');
+        await page.keyboard.press('f'); await page.waitForFunction(() => document.querySelector('#handheld-player').classList.contains('game-expanded'));
         await doubleClickStays();
         if (method === 'button') await page.locator('#handheld-back').click();
         else await page.keyboard.press('Backspace');

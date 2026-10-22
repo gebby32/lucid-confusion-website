@@ -128,7 +128,7 @@ const snapshot = (page, name) => output ? page.screenshot({ path: path.join(outp
         assert(requests.slice(before).filter(url => /\/assets\/handhelds\/[^/]+\/index.html/.test(url)).every(url => url.includes('/'+item.id+'/')), 'Only selected game loads');
         await game.evaluate(() => window.focus());
         await page.keyboard.press('f');
-        await page.waitForFunction(() => document.fullscreenElement?.id === 'handheld-player');
+        await page.waitForFunction(() => document.querySelector('#handheld-player').classList.contains('game-expanded'));
         if (mobile) await page.locator('#handheld-back').tap(); else await page.locator('#handheld-back').click();
         await ready(page, '/retro-handheld/games');
         assert(game.isDetached());

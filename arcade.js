@@ -42,6 +42,8 @@ let touchInput = matchMedia('(hover: none)').matches;
 let hoverPoint = null, litIndex = null, focusedScreen = null, cancelZoom = null;
 let lastMonitorTap = null, zoomTransition = false;
 let view = 'carousel';
+const introDoubleDelay = 400, introDoubleDistance = 28;
+let introTap = null, introTapTimer;
 let previewGeneration = 0;
 let restingAngle = angle;
 let cabinetScale = 1, monitorProgress = 0;
@@ -77,6 +79,44 @@ crtContent.addEventListener('pointercancel', () => { framePress = null; clearMon
 function clearMonitorTap() {
   lastMonitorTap = null;
 }
+
+function clearIntroTap() {
+  clearTimeout(introTapTimer);
+  introTap = null;
+}
+
+function nearbyIntroTap(event) {
+  return introTap && event.pointerType === introTap.type
+    && event.timeStamp - introTap.time <= introDoubleDelay
+    && Math.hypot(event.clientX - introTap.x, event.clientY - introTap.y) <= introDoubleDistance;
+}
+
+function tapIntro(event, press) {
+  if (!press.intro || view !== 'intro' || zoomTransition) return;
+  if (press.doubleIntro && introTap === press.doubleIntro
+    && event.timeStamp - press.started <= introDoubleDelay
+    && Math.hypot(event.clientX - introTap.x, event.clientY - introTap.y) <= introDoubleDistance) {
+    returnToCarousel();
+    return;
+  }
+  clearIntroTap();
+  // Single activation still requires the monitor. Double activation also works
+  // on the cabinet and background, without ever entering the second zoom stage.
+  pickCabinet({ x: event.clientX, y: event.clientY });
+  const tap = introTap = {
+    x: event.clientX, y: event.clientY, time: event.timeStamp, type: event.pointerType,
+    screen: focusedScreen, path: location.pathname, advance: focusedScreen.hit(raycaster),
+  };
+  introTapTimer = setTimeout(() => {
+    if (introTap !== tap) return;
+    clearIntroTap();
+    if (tap.advance && focusedScreen === tap.screen && location.pathname === tap.path) enterContent();
+  }, introDoubleDelay);
+}
+window.addEventListener('blur', clearIntroTap);
+window.addEventListener('pagehide', clearIntroTap);
+window.addEventListener('popstate', clearIntroTap);
+document.addEventListener('visibilitychange', () => { if (document.hidden) clearIntroTap(); });
 
 function fullCRTPose(screen) {
   const probe = camera.clone();
@@ -125,6 +165,7 @@ function setMonitorProgress(progress) {
 }
 
 function showContent() {
+  clearIntroTap();
   clearMonitorTap();
   view = 'crt';
   document.body.classList.toggle('links-open', cabinets[active].id === 'the-links');
@@ -188,6 +229,7 @@ function showContent() {
 }
 
 function showIntro() {
+  clearIntroTap();
   clearMonitorTap();
   view = 'intro';
   document.body.classList.remove('links-open');
@@ -204,11 +246,13 @@ function showIntro() {
 }
 
 function enterContent() {
+  clearIntroTap();
   if (view === 'intro' && !zoomTransition) navigate(cabinetPath() + ([1, 2].includes(active) ? '/games' : '/view'));
 }
 
 function cabinetPath() { return '/' + (active === 5 ? 'links' : cabinets[active].id); }
 function returnToCarousel() {
+  clearIntroTap();
   clearMonitorTap();
   routeBack(view === 'crt' ? cabinetPath() : '/');
 }
@@ -237,6 +281,7 @@ function updateScreenEffects(now) {
   return [...screens.values()].some(screen => screen.mode === 'noise');
 }
 function closeScreen(restoring = false) {
+  clearIntroTap();
   if (focusedScreen && !restoring) { returnToCarousel(); return; }
   document.body.classList.remove('links-open');
   if (!focusedScreen) return;
@@ -429,6 +474,7 @@ function animatePose(getPose, duration, complete) {
 }
 
 function openCRT(index, next = 'intro') {
+  clearIntroTap();
   const screen = screens.get(index);
   if (!screen) return;
   if (!focusedScreen) restingAngle = angle;
@@ -521,16 +567,18 @@ function render(now) {
 
 function hitCabinet(event) {
   const index = pickCabinet({ x: event.clientX, y: event.clientY });
-  if (focusedScreen) {
-    if (!zoomTransition && view === 'intro' && focusedScreen.hit(raycaster)) enterContent();
-    return;
-  }
+  if (focusedScreen) return;
   if (index !== null && !zoomTransition) navigate('/' + (index === 5 ? 'links' : cabinets[index].id));
 }
 stage.addEventListener('pointerdown', event => {
-  if (!event.isPrimary || event.button !== 0 || pointer) return;
+  if (!event.isPrimary || event.button !== 0 || pointer) { clearIntroTap(); return; }
   touchInput = event.pointerType === 'touch' || event.pointerType === 'pen';
-  pointer = { id: event.pointerId, startX: event.clientX, startY: event.clientY, x: event.clientX, time: event.timeStamp, dragged: false };
+  const intro = view === 'intro' && !zoomTransition;
+  const doubleIntro = intro && nearbyIntroTap(event) ? introTap : null;
+  // A second press that starts within the double window must cancel the queued
+  // single immediately, even if its release lands just after that window.
+  if (doubleIntro) clearTimeout(introTapTimer); else clearIntroTap();
+  pointer = { id: event.pointerId, startX: event.clientX, startY: event.clientY, x: event.clientX, time: event.timeStamp, started: event.timeStamp, intro, doubleIntro, dragged: false };
   velocity = 0;
   target = angle;
   stage.setPointerCapture(event.pointerId);
@@ -542,6 +590,7 @@ stage.addEventListener('pointermove', event => {
   const dt = Math.max(8, event.timeStamp - pointer.time) / 1000;
   if (Math.hypot(event.clientX - pointer.startX, event.clientY - pointer.startY) > 7) pointer.dragged = true;
   if (pointer.dragged) {
+    clearIntroTap();
     clearMonitorTap();
     if (view !== 'carousel') { pointer.x = event.clientX; pointer.time = event.timeStamp; return; }
     closeScreen();
@@ -564,7 +613,11 @@ function release(event, cancelled = false) {
   if (stage.hasPointerCapture(event.pointerId)) stage.releasePointerCapture(event.pointerId);
   if (cancelled || reducedMotion.matches || event.timeStamp - previous.time > 100) velocity = 0;
   if (view === 'carousel') target = Math.round((angle + velocity / 7) / step) * step;
-  if (!cancelled && !previous.dragged) { velocity = 0; hitCabinet(event); }
+  if (cancelled || previous.dragged) clearIntroTap();
+  else {
+    velocity = 0;
+    if (previous.intro) tapIntro(event, previous); else hitCabinet(event);
+  }
   invalidate();
 }
 stage.addEventListener('pointerup', event => release(event));
@@ -715,6 +768,7 @@ async function initialize() {
   if (failed.length) loading.textContent = `Could not load ${failed.join(', ')}. Reload to retry.`;
   else loading.hidden = true;
   await startRouter(async (route, stale) => {
+    clearIntroTap();
     if (route.index !== 7 || route.view !== 'crt') await hideComingSoon();
     if (route.index !== 3 || route.view !== 'crt') hideDemoArcade();
     if (route.index !== 6 || route.view !== 'crt') await hideNewStuff();

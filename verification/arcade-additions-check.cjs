@@ -19,11 +19,11 @@ for(const file of ['assets/handhelds/catalog.json','assets/retro-arcade/catalog.
    assert(Math.abs(fit.w/fit.h-fit.ratio)<.01);assert(fit.x>=-1&&fit.y>=-1&&fit.x+fit.w<=fit.vw+1&&fit.y+fit.h<=fit.vh+1);
    await game.evaluate(()=>{window.backArrivals=[];window.addEventListener('keydown',e=>{if(e.key==='Backspace')window.backArrivals.push(true)});window.focus()});
    await page.keyboard.down('Backspace');assert(await game.evaluate(()=>LP.Input.downKeys.has('Backspace')));await page.keyboard.up('Backspace');assert.equal(await page.locator('iframe').count(),1);assert.equal(await game.evaluate(()=>backArrivals.length),1);
-   await page.keyboard.press('f');await page.waitForFunction(()=>document.fullscreenElement?.id==='handheld-player');await page.keyboard.press('f');await page.waitForFunction(()=>!document.fullscreenElement);
+   await page.keyboard.press('f');await page.waitForFunction(()=>document.querySelector('#handheld-player').classList.contains('game-expanded'));await page.keyboard.press('f');await page.waitForFunction(()=>!document.querySelector('.game-expanded'));
    await page.keyboard.press('Enter');await page.keyboard.press('ArrowRight');
    if(process.env.VERIFICATION_OUTPUT)await page.screenshot({path:process.env.VERIFICATION_OUTPUT+'/new-game-'+id+'-'+mobile+'.png'});
-   await page.keyboard.press('f');await page.waitForFunction(()=>document.fullscreenElement?.id==='handheld-player');if(mobile)await page.locator('#handheld-back').tap();else await page.locator('#handheld-back').click();await page.waitForFunction(()=>!document.querySelector('iframe'));
-   assert(game.isDetached());assert.equal(await page.evaluate(()=>document.fullscreenElement),null);assert(await page.locator('#handheld-grid').isVisible());
+   await page.keyboard.press('f');await page.waitForFunction(()=>document.querySelector('#handheld-player').classList.contains('game-expanded'));if(mobile)await page.locator('#handheld-back').tap();else await page.locator('#handheld-back').click();await page.waitForFunction(()=>!document.querySelector('iframe'));
+   assert(game.isDetached());assert.equal(await page.evaluate(()=>document.querySelector('.game-expanded')),null);assert(await page.locator('#handheld-grid').isVisible());
    assert(requests.slice(before).filter(u=>/\/handhelds\/[^/]+\/index.html/.test(u)).every(u=>u.includes('/'+id+'/')));
    console.log(`${mobile?'touch':'desktop'}: ${id} native Backspace, F fullscreen, fitting, lazy launch/unload passed`);
   }

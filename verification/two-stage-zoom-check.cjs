@@ -53,7 +53,7 @@ async function background(page) {
           motionFrames++;requestAnimationFrame(sample);
         }requestAnimationFrame(sample);
       });
-      const click=async()=>{const p=await monitor(page);if(mobile)await page.touchscreen.tap(p.x,p.y);else await page.mouse.click(p.x,p.y);await ready(page);};
+      const click=async()=>{const before=await state(page),p=await monitor(page);if(mobile)await page.touchscreen.tap(p.x,p.y);else await page.mouse.click(p.x,p.y);await page.waitForFunction(view=>arcadeDebug.state.view!==view,before);await ready(page);};
       await click();assert.equal(await state(page),'intro');
       await page.waitForFunction(()=>arcadeDebug.screens.get(arcadeDebug.state.active).mode==='texture');
       assert.deepEqual(await page.evaluate(()=>{recordMotion=false;return motionErrors;}),[]);

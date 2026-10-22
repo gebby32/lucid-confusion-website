@@ -1,8 +1,7 @@
 const { chromium } = require('playwright');
 const assert = require('node:assert/strict');
 (async () => {
-  const nativeEscape = process.env.HANDHELD_NATIVE_ESCAPE === '1';
-  const browser = await chromium.launch({ headless: !nativeEscape, channel: 'msedge' });
+  const browser = await chromium.launch({ headless: true, channel: 'msedge' });
   try {
     const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
     const errors = [];
@@ -27,21 +26,19 @@ const assert = require('node:assert/strict');
     await page.keyboard.up('ArrowRight');
     assert(!(await game.evaluate(() => LP.Input.downKeys.has('ArrowRight'))));
     await page.keyboard.press('f');
-    await page.waitForFunction(() => document.fullscreenElement?.id === 'handheld-player');
-    console.log('F entered real Fullscreen API on the game container.');
+    await page.waitForFunction(() => document.querySelector('#handheld-player').classList.contains('game-expanded'));
+    assert.equal(await page.evaluate(() => document.fullscreenElement), null);
+    console.log('F entered browser-only fullscreen on the game container.');
     await page.keyboard.press('f');
-    await page.waitForFunction(() => !document.fullscreenElement);
+    await page.waitForFunction(() => !document.querySelector('.game-expanded'));
     assert(await iframe.isVisible());
     console.log('F exited fullscreen and retained the selected game.');
     await page.keyboard.press('f');
-    await page.waitForFunction(() => document.fullscreenElement?.id === 'handheld-player');
-    // CDP's synthesized Escape does not exercise Chromium's browser chrome.
-    // In native mode send a real OS Escape to the visible test window here.
-    if (nativeEscape) console.log('Ready for native Escape in the test browser.');
-    else await page.evaluate(() => document.exitFullscreen());
-    await page.waitForFunction(() => !document.fullscreenElement, null, { timeout: nativeEscape ? 60000 : 5000 });
+    await page.waitForFunction(() => document.querySelector('#handheld-player').classList.contains('game-expanded'));
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(() => !document.querySelector('.game-expanded'));
     assert(await iframe.isVisible());
-    console.log(`${nativeEscape ? 'Native Escape' : 'Fullscreen API exit'} retained the selected game.`);
+    console.log('Escape retained the selected game.');
     for (const viewport of [{ width: 320, height: 700 }, { width: 844, height: 390 }, { width: 768, height: 1024 }]) {
       await page.setViewportSize(viewport);
       await page.waitForTimeout(150);

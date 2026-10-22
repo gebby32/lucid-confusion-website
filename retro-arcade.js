@@ -1,5 +1,6 @@
 import { navigate, routeBack, gamePath } from './router.js';
 import { typePreviewText } from './assets/arcade/preview-text.js';
+import { createGameFullscreen } from './game-fullscreen.js';
 const frame = document.querySelector('#retro-frame');
 const panel = document.querySelector('#retro-panel');
 const grid = document.querySelector('#retro-grid');
@@ -9,7 +10,8 @@ const viewport = document.querySelector('#retro-game-viewport');
 const backImage = document.querySelector('#retro-back img');
 const fullscreenStatus = document.querySelector('#retro-fullscreen-status');
 let selected = null, selectedLink = null, shown = false, generation = 0;
-let catalogPromise, fullscreenOperation = Promise.resolve(), fullscreenPending = false, returning = false;
+let catalogPromise, returning = false;
+const fullscreen = createGameFullscreen({ player, viewport, status: fullscreenStatus, button: document.querySelector('#retro-fullscreen') });
 export const isRetroPlaying = () => selected !== null;
 
 export async function retroTeaser(draw) {
@@ -23,17 +25,8 @@ export async function retroTeaser(draw) {
   ], draw);
 }
 
-async function toggleFullscreen() {
-  if (!selected || returning || fullscreenPending) return;
-  if (!player.requestFullscreen || !document.fullscreenEnabled) {
-    fullscreenStatus.textContent = 'Fullscreen is not supported in this browser.'; return;
-  }
-  fullscreenPending = true; fullscreenStatus.textContent = '';
-  try {
-    fullscreenOperation = document.fullscreenElement ? document.exitFullscreen() : player.requestFullscreen();
-    await fullscreenOperation;
-  } catch { fullscreenStatus.textContent = 'Fullscreen is unavailable. The game remains in window view.'; }
-  finally { fullscreenPending = false; if (selected) viewport.querySelector('iframe')?.contentWindow?.focus(); }
+function toggleFullscreen() {
+  if (selected && !returning) fullscreen.toggle();
 }
 function fullscreenKey(event) {
   if (!selected || event.repeat || event.ctrlKey || event.metaKey || event.altKey || event.key.toLowerCase() !== 'f') return;
@@ -45,14 +38,12 @@ function fullscreenKey(event) {
   toggleFullscreen();
 }
 window.addEventListener('keydown', fullscreenKey, true);
-document.addEventListener('fullscreenchange', () => { if (selected) viewport.querySelector('iframe')?.contentWindow?.focus(); });
 document.querySelector('#retro-back').addEventListener('click', () => routeBack());
 
 export async function stopRetro() {
   returning = true;
   try {
-    if (fullscreenPending) await fullscreenOperation.catch(() => {});
-    if (document.fullscreenElement) await document.exitFullscreen();
+    fullscreen.reset();
     viewport.replaceChildren(); selected = null; player.hidden = true;
     document.body.classList.remove('retro-playing');
     fullscreenStatus.textContent = '';
@@ -108,12 +99,13 @@ export async function launchRetro(id) {
   iframe.addEventListener('load', () => {
     if (selected !== game) return;
     const win = iframe.contentWindow;
+    fullscreen.attach(iframe);
     win.addEventListener('keydown', fullscreenKey, true);
     // Delegate only Plumbing's fullscreen UI to the containing player,
     // so existing F2/menu/touch fullscreen also keeps Back visible.
     if (win.LP?.Shell) {
       win.LP.Shell.toggleFullscreen = toggleFullscreen;
-      win.LP.Shell.isFullscreen = () => !!document.fullscreenElement;
+      win.LP.Shell.isFullscreen = fullscreen.isExpanded;
     }
     win.focus();
   });

@@ -121,10 +121,10 @@ const loadedGame = async page => {
       assert(gameRequests.every(url => url.startsWith(new URL('assets/retro-arcade/games/'+id+'/',base).href)), 'All gameplay dependencies load from its own directory: '+JSON.stringify(gameRequests));
       for (const item of inventory) assert(gameRequests.some(url => new URL(url).pathname === '/'+item.file), 'Runtime requested: '+item.file);
       await game.evaluate(() => window.focus());
-      await page.keyboard.press('F2');await page.waitForFunction(() => document.fullscreenElement?.id === 'retro-player');
+      await page.keyboard.press('F2');await page.waitForFunction(() => document.querySelector('#retro-player').classList.contains('game-expanded'));
       assert(await page.locator('#retro-back').isVisible());
       if (mobile) await page.locator('#retro-back').tap();else await page.locator('#retro-back').click();
-      await ready(page,'/retro-arcade/games');assert(game.isDetached());assert.equal(await page.locator('iframe').count(),0);assert.equal(await page.evaluate(()=>document.fullscreenElement),null);
+      await ready(page,'/retro-arcade/games');assert(game.isDetached());assert.equal(await page.locator('iframe').count(),0);assert.equal(await page.evaluate(()=>document.querySelector('.game-expanded')),null);
       await page.goForward();await ready(page,route);await loadedGame(page);
       await page.goBack();await ready(page,'/retro-arcade/games');assert.equal(await page.locator('iframe').count(),0);
       await page.goForward();await ready(page,route);await loadedGame(page);
