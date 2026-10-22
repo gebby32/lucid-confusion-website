@@ -1,0 +1,5 @@
+# Public browser configuration is supplied locally, never committed.
+/merch-config.json
+/verification/merch-live-catalog.json
+/verification/merch-output/
+/.pages-site/

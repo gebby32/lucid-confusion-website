@@ -11,6 +11,7 @@ import { linksTeaser, showLinks, beachState } from './links.js';
 import { showNewStuff, hideNewStuff } from './new-stuff.js';
 import { showDemoArcade, hideDemoArcade } from './demo-arcade.js';
 import { showComingSoon, hideComingSoon } from './coming-soon.js';
+import { showMerch, hideMerch } from './merch-shop.js';
 
 // Cabinet models retain their original IDs; public URLs are centralized in routes.js.
 const cabinets = [
@@ -56,18 +57,19 @@ const linksPanel = document.querySelector('#links-panel');
 const newStuffPanel = document.querySelector('#new-stuff-panel');
 const demoArcadePanel = document.querySelector('#demo-arcade-panel');
 const comingSoonPanel = document.querySelector('#coming-soon-panel');
+const merchPanel = document.querySelector('#merch-panel');
 document.querySelector('#links-return').addEventListener('click', () => routeBack('/links'));
 // Reading gestures belong to the HTML story; double activation on the frame
 // retains the carousel return gesture without interrupting text selection.
 let framePress = null;
 crtContent.addEventListener('pointerdown', event => {
-  framePress = !linksPanel.contains(event.target) && !aboutStory.contains(event.target) && !contactPanel.contains(event.target) && !handheldPanel.contains(event.target) && !retroPanel.contains(event.target) && !newStuffPanel.contains(event.target) && !demoArcadePanel.contains(event.target) && !comingSoonPanel.contains(event.target) && event.isPrimary && event.button === 0
+  framePress = !merchPanel.contains(event.target) && !linksPanel.contains(event.target) && !aboutStory.contains(event.target) && !contactPanel.contains(event.target) && !handheldPanel.contains(event.target) && !retroPanel.contains(event.target) && !newStuffPanel.contains(event.target) && !demoArcadePanel.contains(event.target) && !comingSoonPanel.contains(event.target) && event.isPrimary && event.button === 0
     ? { x: event.clientX, y: event.clientY } : null;
 });
 crtContent.addEventListener('pointerup', event => {
   const press = framePress;
   framePress = null;
-  if (!press || view !== 'crt' || zoomTransition || linksPanel.contains(event.target) || aboutStory.contains(event.target) || contactPanel.contains(event.target) || handheldPanel.contains(event.target) || retroPanel.contains(event.target) || newStuffPanel.contains(event.target) || demoArcadePanel.contains(event.target) || comingSoonPanel.contains(event.target)
+  if (!press || view !== 'crt' || zoomTransition || merchPanel.contains(event.target) || linksPanel.contains(event.target) || aboutStory.contains(event.target) || contactPanel.contains(event.target) || handheldPanel.contains(event.target) || retroPanel.contains(event.target) || newStuffPanel.contains(event.target) || demoArcadePanel.contains(event.target) || comingSoonPanel.contains(event.target)
     || Math.hypot(event.clientX - press.x, event.clientY - press.y) > 7) return;
   const tap = { time: event.timeStamp, x: event.clientX, y: event.clientY, type: event.pointerType };
   if (lastMonitorTap && tap.type === lastMonitorTap.type && tap.time - lastMonitorTap.time < 400
@@ -177,7 +179,11 @@ function showContent() {
   const isNewStuff = cabinets[active].id === 'new-stuff';
   const isDemo = cabinets[active].id === 'demo-arcade';
   const isComingSoon = cabinets[active].id === 'coming-soon';
-  const frame = cabinets[active].frame;
+  const isMerch = cabinets[active].id === 'merch-shop';
+  document.body.classList.toggle('merch-open', isMerch);
+  crtContent.classList.toggle('merch-view', isMerch);
+  merchPanel.hidden = !isMerch;
+  const frame = isMerch ? null : cabinets[active].frame;
   crtContent.classList.toggle('framed-placeholder', !!frame);
   crtContent.style.backgroundImage = frame ? `url("${frame}")` : '';
   returnButton.classList.toggle('game-return', !isLinks);
@@ -199,8 +205,8 @@ function showContent() {
   crtContent.classList.toggle('retro-view', isRetro);
   document.querySelector('#retro-frame').hidden = !isRetro;
   retroPanel.hidden = !isRetro;
-  document.querySelector('#crt-title').hidden = isAbout || isContact || isHandheld || isRetro || isLinks || isNewStuff || isDemo || isComingSoon;
-  document.querySelector('#crt-placeholder').hidden = isAbout || isContact || isHandheld || isRetro || isLinks || isNewStuff || isDemo || isComingSoon;
+  document.querySelector('#crt-title').hidden = isAbout || isContact || isHandheld || isRetro || isLinks || isNewStuff || isDemo || isComingSoon || isMerch;
+  document.querySelector('#crt-placeholder').hidden = isAbout || isContact || isHandheld || isRetro || isLinks || isNewStuff || isDemo || isComingSoon || isMerch;
   document.querySelector('#contact-frame').hidden = !isContact;
   contactPanel.hidden = !isContact;
   document.querySelector('#about-frame').hidden = !isAbout;
@@ -208,6 +214,7 @@ function showContent() {
   document.querySelector('#crt-title').textContent = cabinets[active].name.toUpperCase();
   crtContent.setAttribute('aria-label', `${cabinets[active].name} interface`);
   crtContent.hidden = false;
+  if (isMerch) { announcement.textContent = 'Merch Shop. Browse products and manage your cart inside the monitor.'; }
   if (isDemo) { announcement.textContent = 'Demo Arcade. Play Lucid Logic Circuit Control.'; }
   if (isComingSoon) { announcement.textContent = 'Coming Soon. Promotional video.'; }
   if (isNewStuff) { showNewStuff(); announcement.textContent = 'New Stuff. Sloths vs Penguins and OmniStash promotional videos. Scroll inside the monitor to watch.'; }
@@ -344,7 +351,7 @@ async function showScreenMessage(screen) {
     return;
   }
   const cabinet = cabinets[active];
-  const hasContinuePrompt = cabinet.id === 'new-stuff' || cabinet.id === 'demo-arcade' || cabinet.id === 'coming-soon';
+  const hasContinuePrompt = cabinet.id === 'new-stuff' || cabinet.id === 'demo-arcade' || cabinet.id === 'coming-soon' || cabinet.id === 'merch-shop';
   let border;
   if (cabinet.frame) {
     border = new Image();
@@ -769,6 +776,7 @@ async function initialize() {
   else loading.hidden = true;
   await startRouter(async (route, stale) => {
     clearIntroTap();
+    if (route.index !== 4 || route.view !== 'crt') { hideMerch(); document.body.classList.remove('merch-open'); }
     if (route.index !== 7 || route.view !== 'crt') await hideComingSoon();
     if (route.index !== 3 || route.view !== 'crt') hideDemoArcade();
     if (route.index !== 6 || route.view !== 'crt') await hideNewStuff();
@@ -795,6 +803,7 @@ async function initialize() {
     if (view !== route.view) { openCRT(route.index, route.view); await settled(); }
     if (stale()) return;
     if (route.view === 'crt') {
+      if (route.index === 4) showMerch(route);
       if (route.index === 7) showComingSoon();
       if (route.index === 3) showDemoArcade(route);
       if (route.index === 1) { await showHandhelds(); if (!stale() && route.game) await launchHandheld(route.game); }

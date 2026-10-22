@@ -1,0 +1,49 @@
+name: Publish arcade
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - name: Check out approved source
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Prepare static site
+        env:
+          FOURTHWALL_STOREFRONT_TOKEN: ${{ secrets.FOURTHWALL_STOREFRONT_TOKEN }}
+        run: node tools/prepare-pages.cjs
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: .pages-site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

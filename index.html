@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="game-fullscreen.css">
   <link rel="stylesheet" href="retro-arcade.css">
   <link rel="stylesheet" href="links.css">
+  <link rel="stylesheet" href="merch-shop.css">
   <link rel="icon" type="image/png" href="favicon.png">
   <script type="importmap">{"imports":{"three":"./assets/vendor/three/three.module.min.js"}}</script>
   <script type="module" src="arcade.js"></script>
@@ -24,6 +25,21 @@
     <section id="crt-content" aria-label="Cabinet interface" hidden>
       <h2 id="crt-title"></h2>
       <p id="crt-placeholder"><strong>Coming soon.</strong><br>Stay tuned!</p>
+      <section id="merch-panel" aria-label="Merch Shop" hidden>
+        <div class="merch-monitor">
+          <button id="merch-arcade-return" type="button" aria-label="Back to Arcade"><img src="assets/arcade/art/back-to-arcade-transparent.png" width="216" height="72" alt="Back to Arcade" draggable="false"></button>
+          <div class="merch-window">
+            <nav class="merch-toolbar" aria-label="Shop navigation">
+              <button id="merch-browse" type="button">All merch</button>
+              <button id="merch-refresh" type="button" aria-label="Refresh products" title="Refresh products">↻</button>
+              <button id="merch-cart-button" type="button">Cart (0)</button>
+            </nav>
+            <div id="merch-status" role="status" aria-live="polite" hidden></div>
+            <div id="merch-content" tabindex="-1" aria-label="Products and cart"></div>
+          </div>
+          <img id="merch-frame" src="assets/arcade/art/1%20Merch%20Shop%20(widescreen).png" width="1672" height="941" alt="" aria-hidden="true" draggable="false" loading="lazy">
+        </div>
+      </section>
       <section id="demo-arcade-panel" aria-label="Demo Arcade games" hidden></section>
       <section id="new-stuff-panel" tabindex="0" aria-label="New Stuff promotional videos" hidden>
         <article>
