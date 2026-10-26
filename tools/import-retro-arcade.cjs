@@ -13,6 +13,8 @@ const hash = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
   }
   for (const entry of fs.readdirSync(source, { withFileTypes: true }).filter(entry => entry.isDirectory())) {
     const dir = path.join(source, entry.name), id = entry.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    // Keep Sleavis off the website, including its older Coming Soon placeholder.
+    if (id.startsWith('sleavis-')) continue;
     const playable = fs.existsSync(path.join(dir, 'index.html'));
     const titleFile = playable ? path.join(dir, 'assets/title.png') : path.join(dir, 'Grand Theft Sloth - title screen.png');
     const thumbnail = `art/${id}.webp`;

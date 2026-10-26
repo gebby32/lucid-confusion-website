@@ -263,13 +263,6 @@ export const routes = {
     "game": "the-sloth-king",
     "title": "The Sloth King"
   },
-  "/retro-arcade/games/sleavis-and-sloth-head-do-america": {
-    "parent": "/retro-arcade/games",
-    "index": 2,
-    "view": "crt",
-    "game": "sleavis-and-sloth-head-do-america",
-    "title": "Sleavis and Sloth-Head Do America"
-  },
   "/demo-arcade": {
     "parent": "/",
     "index": 3,

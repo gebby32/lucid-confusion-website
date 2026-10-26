@@ -54,13 +54,5 @@
     "width": 640,
     "height": 480,
     "url": "./assets/retro-arcade/games/the-sloth-king/index.html"
-  },
-  {
-    "id": "sleavis-and-sloth-head-do-america",
-    "title": "Sleavis and Sloth-Head Do America",
-    "image": "./assets/retro-arcade/art/sleavis-and-sloth-head-do-america.webp",
-    "width": 640,
-    "height": 480,
-    "url": "./assets/retro-arcade/games/sleavis-and-sloth-head-do-america/index.html"
   }
 ]

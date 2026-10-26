@@ -53,7 +53,7 @@ function merge(catalog,entry) {
     merge(handheld,{id,title,...await thumbnail(art,base+'/thumbnail.webp',480,360),url:'./'+base+'/index.html'});
   }
   const arcade=JSON.parse(fs.readFileSync(path.join(root,'assets/retro-arcade/catalog.json')));
-  for(const [folder,id,playable] of [['Grand Theft Sloth','grand-theft-sloth',true],['The Sloth King','the-sloth-king',true],['Sleavis and Slutthead Do America','sleavis-and-slutthead-do-america',false]]) {
+  for(const [folder,id,playable] of [['Grand Theft Sloth','grand-theft-sloth',true],['The Sloth King','the-sloth-king',true]]) {
     const source=path.join('C:/Retro Arcade',folder);
     const art=path.join(source,playable?'assets/title.png':'Sloth Road Trip_ Press Start.png');
     if(playable){
